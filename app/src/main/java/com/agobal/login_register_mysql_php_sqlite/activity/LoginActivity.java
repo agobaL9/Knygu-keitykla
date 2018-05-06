@@ -108,7 +108,7 @@ public class LoginActivity extends Activity {
 
         StringRequest strReq = new StringRequest(Method.POST,
                 AppConfig.URL_LOGIN, new Response.Listener<String>() {
-////
+//////
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "Login Response: " + response);
