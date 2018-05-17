@@ -1,4 +1,4 @@
-package com.agobal.login_register_mysql_php_sqlite;
+package com.agobal.KnyguKeitykla;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.agobal.login_register_mysql_php_sqlite", appContext.getPackageName());
+        assertEquals("com.agobal.KnyguKeitykla", appContext.getPackageName());
     }
 }

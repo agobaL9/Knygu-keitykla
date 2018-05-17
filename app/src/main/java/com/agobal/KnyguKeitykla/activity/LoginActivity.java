@@ -1,4 +1,4 @@
-package com.agobal.login_register_mysql_php_sqlite.activity;
+package com.agobal.KnyguKeitykla.activity;
 import android.os.Bundle;
 
 import android.app.Activity;
@@ -6,15 +6,18 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.agobal.login_register_mysql_php_sqlite.R;
-import com.agobal.login_register_mysql_php_sqlite.app.AppConfig;
-import com.agobal.login_register_mysql_php_sqlite.app.AppController;
-import com.agobal.login_register_mysql_php_sqlite.helper.SQLiteHandler;
-import com.agobal.login_register_mysql_php_sqlite.helper.SessionManager;
+import com.agobal.KnyguKeitykla.R;
+import com.agobal.KnyguKeitykla.app.AppConfig;
+import com.agobal.KnyguKeitykla.app.AppController;
+import com.agobal.KnyguKeitykla.helper.SQLiteHandler;
+import com.agobal.KnyguKeitykla.helper.SessionManager;
+import com.amitshekhar.DebugDB;
 import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -37,7 +40,15 @@ public class LoginActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        DebugDB.getAddressLog(); // barake
+
+        // remove title
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_login);
+
 
         inputEmail = findViewById(R.id.email);
         inputPassword = findViewById(R.id.password);
@@ -128,13 +139,15 @@ public class LoginActivity extends Activity {
                         String uid = jObj.getString("uid");
 
                         JSONObject user = jObj.getJSONObject("user");
-                        String name = user.getString("name");
+                        String userName = user.getString("userName");
+                        String firstName = user.getString("firstName");
+                        String lastName = user.getString("lastName");
                         String email = user.getString("email");
                         String created_at = user
                                 .getString("created_at");
 
                         // Inserting row in users table
-                        db.addUser(name, email, uid, created_at);
+                        db.addUser(userName, firstName, lastName, email, uid, created_at);
 
                         // Launch main activity
                         Intent intent = new Intent(LoginActivity.this,

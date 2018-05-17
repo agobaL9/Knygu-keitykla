@@ -1,4 +1,4 @@
-package com.agobal.login_register_mysql_php_sqlite;
+package com.agobal.KnyguKeitykla;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.agobal.login_register_mysql_php_sqlite.app;
+package com.agobal.KnyguKeitykla.app;
 
 import android.app.Application;
 import android.text.TextUtils;
