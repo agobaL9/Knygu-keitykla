@@ -27,32 +27,6 @@
             android:textColor="@color/input_register"
             android:textColorHint="@color/input_register_hint" />
 
-
-        <EditText
-            android:id="@+id/firstName"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:background="@color/input_register_bg"
-            android:hint="Vardas"
-            android:inputType="textCapWords"
-            android:padding="10dp"
-            android:singleLine="true"
-            android:textColor="@color/input_register"
-            android:textColorHint="@color/input_register_hint" />
-        <EditText
-            android:id="@+id/lastName"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:background="@color/input_register_bg"
-            android:hint="Pavardė"
-            android:inputType="textCapWords"
-            android:padding="10dp"
-            android:singleLine="true"
-            android:textColor="@color/input_register"
-            android:textColorHint="@color/input_register_hint" />
-
         <EditText
             android:id="@+id/email"
             android:layout_width="fill_parent"

@@ -15,7 +15,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 
     // All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 7;
 
     // Database Name
     private static final String DATABASE_NAME = "android_api";
@@ -26,8 +26,6 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     // Login Table Columns names
     private static final String KEY_ID = "id";
     private static final String KEY_USERNAME = "userName";
-    private static final String KEY_NAME = "firstName";
-    private static final String KEY_LASTNAME = "lastName";
     private static final String KEY_EMAIL = "email";
     private static final String KEY_UID = "uid";
     private static final String KEY_CREATED_AT = "created_at";
@@ -39,7 +37,8 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     // Creating Tables
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_USER + "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_USERNAME+ "TEXT" + KEY_NAME + " TEXT," +KEY_LASTNAME+ " TEXT,"+ KEY_EMAIL + " TEXT UNIQUE," + KEY_UID + " TEXT," + KEY_CREATED_AT + " TEXT" + ")";
+        String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_USER + "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_USERNAME+ " TEXT," +  KEY_EMAIL + " TEXT UNIQUE," + KEY_UID + " TEXT," + KEY_CREATED_AT + " TEXT" + ")";
+        //crete table user(id INTEGER PRIMARY KEY,userName lala,email text, uid text,created text)
         db.execSQL(CREATE_LOGIN_TABLE);
 
         Log.d(TAG, "Database tables created");
@@ -58,13 +57,11 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     /**
      * Storing user details in database
      * */
-    public void addUser(String userName, String firstName, String lastName, String email, String uid, String created_at) {
+    public void addUser(String userName, String email, String uid, String created_at) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(KEY_USERNAME, userName); // Name
-        values.put(KEY_NAME, firstName); // Name
-        values.put(KEY_LASTNAME, lastName); // Name
         values.put(KEY_EMAIL, email); // Email
         values.put(KEY_UID, uid); // Email
         values.put(KEY_CREATED_AT, created_at); // Created At
@@ -89,11 +86,9 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
             user.put("userName", cursor.getString(1));
-            user.put("firstName", cursor.getString(2));
-            user.put("lastName", cursor.getString(3));
-            user.put("email", cursor.getString(4));
-            user.put("uid", cursor.getString(5));
-            user.put("created_at", cursor.getString(6));
+            user.put("email", cursor.getString(2));
+            user.put("uid", cursor.getString(3));
+            user.put("created_at", cursor.getString(4));
         }
         cursor.close();
         db.close();

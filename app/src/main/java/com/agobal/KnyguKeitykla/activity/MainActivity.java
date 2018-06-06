@@ -69,16 +69,16 @@ public class MainActivity extends AppCompatActivity
         //Navigation viewer info
         NavigationView navigationView = findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
-        TextView navUsername = headerView.findViewById(R.id.FullName);
+        TextView navUsername = headerView.findViewById(R.id.userName);
         TextView navEmail = headerView.findViewById(R.id.email);
 
         // Fetching user details from sqlite
         HashMap<String, String> user = db.getUserDetails();
 
-        //String fullName = user.get("firstName")+" "+ user.get("lastName");
+        String userName = user.get("userName");
         String email = user.get("email");
 
-       // navUsername.setText(fullName);
+        navUsername.setText(userName);
         navEmail.setText(email);
 
         navigationView.setNavigationItemSelectedListener(this);
