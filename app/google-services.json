@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1011988315837",
+    "firebase_url": "https://knygukeitykla-bb05e.firebaseio.com",
+    "project_id": "knygukeitykla-bb05e",
+    "storage_bucket": "knygukeitykla-bb05e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1011988315837:android:35e81924a40b5107",
+        "android_client_info": {
+          "package_name": "com.agobal.KnyguKeitykla"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1011988315837-4kmqfultgfqmcigstmfbbagk06fp5h87.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.agobal.KnyguKeitykla",
+            "certificate_hash": "dc9d45f573c9ce6a1b07d021e4249108f5e7af78"
+          }
+        },
+        {
+          "client_id": "1011988315837-kn4jlpkag79hfvunv5o904bu7icirdvm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEkimyIsJxUQuhSjKOpywuZdNgbfnIuqU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1011988315837-kn4jlpkag79hfvunv5o904bu7icirdvm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
