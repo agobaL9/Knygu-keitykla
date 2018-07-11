@@ -156,13 +156,15 @@ public class RegisterActivity extends Activity {
                         // User successfully stored in MySQL
                         // Now store the user in sqlite
                         String uid = jObj.getString("uid");
-                        JSONObject user = jObj.getJSONObject("user");
+                        JSONObject user = jObj.getJSONObject("user"); //gal sukeist?
                         String userName = user.getString("userName");
                         String email = user.getString("email");
                         String created_at = user.getString("created_at");
 
                         // Inserting row in users table
                         db.addUser(uid, userName, email,  created_at);
+                        Log.d(TAG, "addUserRegistra " + uid +" "+ userName +" "+email );
+
 
                         Toast.makeText(getApplicationContext(), "User successfully registered. Try login now!", Toast.LENGTH_LONG).show();
 
@@ -194,7 +196,9 @@ public class RegisterActivity extends Activity {
                         error.getMessage(), Toast.LENGTH_LONG).show();
                 hideDialog();
             }
-        }) {
+        })
+
+        {
 
             @Override
             protected Map<String, String> getParams() {

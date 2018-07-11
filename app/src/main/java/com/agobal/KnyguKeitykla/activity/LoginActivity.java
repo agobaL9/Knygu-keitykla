@@ -41,7 +41,7 @@ public class LoginActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        DebugDB.getAddressLog(); // barake
+        DebugDB.getAddressLog();
 
         // remove title
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -119,7 +119,7 @@ public class LoginActivity extends Activity {
 
         StringRequest strReq = new StringRequest(Method.POST,
                 AppConfig.URL_LOGIN, new Response.Listener<String>() {
-//////
+
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "Login Response: " + response);
@@ -141,11 +141,10 @@ public class LoginActivity extends Activity {
                         JSONObject user = jObj.getJSONObject("user");
                         String userName = user.getString("userName");
                         String email = user.getString("email");
-                        String created_at = user
-                                .getString("created_at");
+                        String created_at = user.getString("created_at");
 
                         // Inserting row in users table
-                        db.addUser(userName, email, uid, created_at);
+                        db.addUser(uid, userName, email, created_at);
 
                         // Launch main activity
                         Intent intent = new Intent(LoginActivity.this,
@@ -174,19 +173,21 @@ public class LoginActivity extends Activity {
                         error.getMessage(), Toast.LENGTH_LONG).show();
                 hideDialog();
             }
-        }) {
+        })
+
+        {
 
             @Override
-            protected Map<String, String> getParams() {
-                // Posting parameters to login url
-                Map<String, String> params = new HashMap<>();
-                params.put("email", email);
-                params.put("password", password);
+        protected Map<String, String> getParams() {
+            // Posting parameters to login url
+            Map<String, String> params = new HashMap<>();
+            params.put("email", email);
+            params.put("password", password);
 
-                return params;
-            }
+            return params;
+        }
 
-        };
+    };
 
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req); // ?

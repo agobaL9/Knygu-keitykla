@@ -28,15 +28,13 @@
             android:launchMode="singleTop"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".activity.MainActivity"
-            android:label="Knygų keitykla"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
-        <activity
             android:name=".activity.ProfileActivity"
             android:label="@string/title_activity_profile"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activity.UserDataActivity" />
+        <activity
+            android:name=".activity.MainActivity"
+            android:label="@string/title_activity_main2">
 
         </activity>
     </application>

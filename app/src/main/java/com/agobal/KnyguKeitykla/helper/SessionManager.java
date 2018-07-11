@@ -17,7 +17,7 @@ public class SessionManager {
     private Editor editor;
 
     // Shared preferences file name
-    private static final String PREF_NAME = "AndroidHiveLogin";
+    private static final String PREF_NAME = "isLoggedIn";
 
     private static final String KEY_IS_LOGGED_IN = "isLoggedIn";
 
