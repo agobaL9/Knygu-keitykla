@@ -30,9 +30,11 @@ import java.util.Map;
 
 import com.agobal.KnyguKeitykla.R;
 
+import static android.webkit.ConsoleMessage.MessageLevel.LOG;
+
 public class RegisterActivity extends Activity {
     private static final String TAG = RegisterActivity.class.getSimpleName();
-    private EditText inputuserName;
+    private EditText inputUserName;
     private EditText inputEmail;
     private EditText inputPassword;
     private EditText inputPassword2;
@@ -48,7 +50,7 @@ public class RegisterActivity extends Activity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_register);
 
-        inputuserName = findViewById(R.id.userName);
+        inputUserName = findViewById(R.id.userName);
         inputEmail = findViewById(R.id.email);
         inputPassword = findViewById(R.id.password);
         inputPassword2 = findViewById(R.id.password2);
@@ -79,7 +81,7 @@ public class RegisterActivity extends Activity {
             public void onClick(View view) {
 
 
-                String userName = inputuserName.getText().toString().trim();
+                String userName = inputUserName.getText().toString().trim();
                 String email = inputEmail.getText().toString().trim();
                 String password = inputPassword.getText().toString().trim();
                 String password2 = inputPassword2.getText().toString().trim();
@@ -175,7 +177,7 @@ public class RegisterActivity extends Activity {
                         startActivity(intent);
                         finish();
                     } else {
-
+                        Log.e(TAG, "onResponse: " + userName);
                         // Error occurred in registration. Get the error
                         // message
                         String errorMsg = jObj.getString("error_msg");
