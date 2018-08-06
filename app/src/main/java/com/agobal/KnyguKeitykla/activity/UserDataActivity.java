@@ -1,6 +1,5 @@
 package com.agobal.KnyguKeitykla.activity;
 
-// TODO: įdėt city į mysql iš sqlite
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -86,12 +85,12 @@ public class UserDataActivity extends Activity implements AdapterView.OnItemSele
 
                 String Name = inputName.getText().toString().trim();
                 String LastName = inputLastName.getText().toString().trim();
-                String City = spinnerCity.getSelectedItem().toString(); //gaunu miestą
-                int CityID = (int) spinnerCity.getSelectedItemId();
+                String CityName = spinnerCity.getSelectedItem().toString(); //gaunu miestą
+                int CityID = (int) spinnerCity.getSelectedItemId() +1;
 
                 Log.d("CityID: ", String.valueOf(CityID));// ID +=1  vienu mazesniu duoda
 
-                Log.d("City response",  City);
+                Log.d("City response",  CityName);
 
                 if (Name.isEmpty()  || LastName.isEmpty())
                 {
@@ -107,13 +106,11 @@ public class UserDataActivity extends Activity implements AdapterView.OnItemSele
                 }
 
                 else
-                    WriteToDB(Name, LastName, City, email);
+                    WriteToDB(Name, LastName, CityName,  CityID, email);
             }
         });
 
         new  GetCities().execute();
-
-
 
     }
 
@@ -124,7 +121,7 @@ public class UserDataActivity extends Activity implements AdapterView.OnItemSele
                 "Negalima", Toast.LENGTH_LONG).show();
     }
 
-    void WriteToDB(final String Name, final String LastName, final String City, final String  Email)
+    void WriteToDB(final String Name, final String LastName, final String CityName, final int CityID, final String  Email)
     {
         // Tag used to cancel the request
         String tag_string_req = "req_userData";
@@ -151,8 +148,8 @@ public class UserDataActivity extends Activity implements AdapterView.OnItemSele
                         HashMap<String, String> userEmail = db.getUserDetails();
                         String email = userEmail.get("email");
 
-                        db.addUserData(firstName, lastName, City, email);
-                        Log.d(TAG, "addUserData " + firstName + lastName +email +City);
+                        db.addUserData(firstName, lastName, CityName, email);
+                        Log.d(TAG, "addUserData " + firstName + lastName +email +CityName);
 
                         Toast.makeText(getApplicationContext(), "User successfully registered. Try login now!", Toast.LENGTH_LONG).show();
 
@@ -193,7 +190,7 @@ public class UserDataActivity extends Activity implements AdapterView.OnItemSele
                 Map<String, String> params = new HashMap<>();
                 params.put("firstName", Name);
                 params.put("lastName", LastName);
-             //   params.put("city", String.valueOf(City)); //err?
+                params.put("cityID", String.valueOf(CityID)); //err?
                 params.put("email", Email);
 
                 return params;

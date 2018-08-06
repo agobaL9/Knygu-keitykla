@@ -21,10 +21,11 @@ public class ProfileActivity extends AppCompatActivity {
     private SQLiteHandler db;
     private SessionManager session;
 
-    TextView userName1;
-    TextView Desc;
-    TextView Hobies;
-    TextView City;
+    TextView T_firstAndLastName = findViewById(R.id.firstAndLastName);
+    TextView T_Desc =findViewById(R.id.desc);
+    TextView T_favoriteLiterature = findViewById(R.id.favoriteLiterature);
+    TextView T_City= findViewById(R.id.city);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,22 +33,25 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        userName1 = findViewById(R.id.userName);
-        Desc = findViewById(R.id.desc);
-        Hobies = findViewById(R.id.hobies);
-        City = findViewById(R.id.city);
-
+/*
+        T_firstAndLastName = findViewById(R.id.firstAndLastName);
+        T_Desc = findViewById(R.id.desc);
+        T_favoriteLiterature = findViewById(R.id.favoriteLiterature);
+        T_City = findViewById(R.id.city);
+*/
         // SqLite database handler
         db = new SQLiteHandler(getApplicationContext());
 
         HashMap<String, String> user = db.getUserDetails();
 
-        String userName = user.get("userName");
+        String firstName = user.get("firstName");
+        String lastName = user.get("lastName");
         String email = user.get("email");
+        String city = user.get("city");
 
-        userName1.setText(userName);
-        Desc.setText(email);
+        T_firstAndLastName.setText(firstName);
+        T_Desc.setText(email);
+        T_City.setText("miestass:");
 
 
     }

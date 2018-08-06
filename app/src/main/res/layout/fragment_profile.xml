@@ -30,7 +30,7 @@
             android:layout_marginTop="30dp">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/image"
+                android:id="@+id/profilePic"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_centerHorizontal="true"
@@ -59,12 +59,12 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/userName"
+                            android:id="@+id/firstAndLastName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="60dp"
-                            android:text="Tekstas"
+                            android:text="First name + Last name"
                             android:textSize="25sp"
                             android:textStyle="bold" />
 
@@ -78,7 +78,7 @@
                             android:textSize="15sp" />
 
                         <TextView
-                            android:id="@+id/hobies"
+                            android:id="@+id/favoriteLiterature"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"

@@ -15,6 +15,28 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+import java.io.ByteArrayOutputStream;
+
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Base64;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 import com.agobal.KnyguKeitykla.R;
 import com.agobal.KnyguKeitykla.helper.SQLiteHandler;
@@ -22,6 +44,7 @@ import com.agobal.KnyguKeitykla.helper.SessionManager;
 
 import java.util.HashMap;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 /**
@@ -29,21 +52,20 @@ import java.util.HashMap;
  */
 public class ProfileFragment extends Fragment {
 
+
     private SQLiteHandler db;
     private SessionManager session;
-
-    TextView userName1;
-    TextView Desc;
-    TextView Hobies;
-    TextView City;
-
-
+    ProgressDialog prgDialog;
+    String encodedString;
+    RequestParams params = new RequestParams();
+    String imgPath, fileName;
+    Bitmap bitmap;
+    private static int RESULT_LOAD_IMG = 1;
 
     public ProfileFragment() {
         // Required empty public constructor
 
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,31 +74,35 @@ public class ProfileFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        CircleImageView ProfilePic = v.findViewById(R.id.profilePic);
+
+        ProfilePic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getActivity(),"Profile pic!!",Toast.LENGTH_SHORT).show();
+            }
+        });
+
         SQLiteHandler db;
         SessionManager session;
 
-
-
-        TextView userName1 = (TextView) v.findViewById(R.id.userName);
-        TextView Desc = (TextView) v.findViewById(R.id.desc);
-        TextView Hobies = (TextView) v.findViewById(R.id.hobies);
-        TextView City= (TextView) v.findViewById(R.id.city);
+        TextView T_firstAndLastName = v.findViewById(R.id.firstAndLastName);
+        TextView T_Desc = v.findViewById(R.id.desc);
+        TextView T_favoriteLiterature = v.findViewById(R.id.favoriteLiterature);
+        TextView T_City= v.findViewById(R.id.city);
 
         db = new SQLiteHandler(getContext());
 
         HashMap<String, String> user = db.getUserDetails();
 
-        String userName = user.get("userName");
+        String firstName = user.get("firstName");
+        String lastName = user.get("lastName");
         String email = user.get("email");
+        String city = user.get("city");
 
-
-        userName1.setText(userName);
-        Desc.setText(email);
-        Hobies.setText("hobiai");
-        City.setText("miestas");
-
-
-
+        T_firstAndLastName.setText(firstName + " " +lastName);
+        T_Desc.setText(email);
+        T_City.setText(city);
 
         return v;
     }

@@ -58,14 +58,15 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/userName"
+                            android:id="@+id/firstAndLastName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="60dp"
-                            android:text="Tekstas"
                             android:textSize="25sp"
                             android:textStyle="bold" />
+                            <!--android:text="FirstName and LastName" -->
+
 
                         <TextView
                             android:id="@+id/desc"
@@ -77,12 +78,12 @@
                             android:textSize="15sp" />
 
                         <TextView
-                            android:id="@+id/hobies"
+                            android:id="@+id/favoriteLiterature"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="20dp"
-                            android:text="dar vienas aprašymas"
+                            android:text="favorite literature"
                             android:textAlignment="center"
                             android:textSize="15sp"
                             android:textStyle="italic" />
@@ -93,7 +94,6 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="10dp"
-                            android:text="Miestas"
                             android:textSize="18sp"
                             android:textStyle="bold" />
 
