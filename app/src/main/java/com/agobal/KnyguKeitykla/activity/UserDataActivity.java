@@ -85,10 +85,10 @@ public class UserDataActivity extends Activity implements AdapterView.OnItemSele
 
                 String Name = inputName.getText().toString().trim();
                 String LastName = inputLastName.getText().toString().trim();
-                String CityName = spinnerCity.getSelectedItem().toString(); //gaunu miestą
+                String CityName = spinnerCity.getSelectedItem().toString();
                 int CityID = (int) spinnerCity.getSelectedItemId() +1;
 
-                Log.d("CityID: ", String.valueOf(CityID));// ID +=1  vienu mazesniu duoda
+                Log.d("CityID: ", String.valueOf(CityID));// ID +=1
 
                 Log.d("City response",  CityName);
 

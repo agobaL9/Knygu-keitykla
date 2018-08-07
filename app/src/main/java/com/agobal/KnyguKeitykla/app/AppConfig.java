@@ -20,4 +20,8 @@ public class AppConfig {
     public static String URL_CITIES = "http://192.168.1.3/android_login_api/get_cities.php";
     //public static String URL_CITIES = "http://172.16.60.193/android_login_api/get_cities.php";
     //public static String URL_CITIES = "http://192.168.43.246/android_login_api/get_cities.php";
+
+    public static String UPLOAD_URL = "http://192.168.1.3/android_login_api/profilePicUpload.php";
+    //public static String UPLOAD_URL = "http://172.16.60.193/android_login_api/profilePicUpload.php";
+    //public static String UPLOAD_URL = "http://192.168.43.246/android_login_api/profilePicUpload.php";
 }
