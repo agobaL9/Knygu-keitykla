@@ -23,9 +23,8 @@ public class SessionManager {
 
     @SuppressLint("CommitPrefEdits")
     public SessionManager(Context context) {
-        Context _context = context;
         int PRIVATE_MODE = 0;
-        pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
+        pref = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
     }
 

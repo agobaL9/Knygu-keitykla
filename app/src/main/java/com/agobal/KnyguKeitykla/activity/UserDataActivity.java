@@ -1,6 +1,5 @@
 package com.agobal.KnyguKeitykla.activity;
 
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -61,17 +60,10 @@ public class UserDataActivity extends Activity implements AdapterView.OnItemSele
         inputName = findViewById(R.id.inputName);
         inputLastName = findViewById(R.id.inputLastName);
         btnNext = findViewById(R.id.btnNext);
-
         spinnerCity = findViewById(R.id.spinCity);
-
         citiesList = new ArrayList<>();
-
         // spinner item select listener
         spinnerCity.setOnItemSelectedListener(this);
-
-        // Session manager
-        //SessionManager session = new SessionManager(getApplicationContext());
-
         // SQLite database handler
         db = new SQLiteHandler(getApplicationContext());
 
@@ -190,7 +182,7 @@ public class UserDataActivity extends Activity implements AdapterView.OnItemSele
                 Map<String, String> params = new HashMap<>();
                 params.put("firstName", Name);
                 params.put("lastName", LastName);
-                params.put("cityID", String.valueOf(CityID)); //err?
+                params.put("cityID", String.valueOf(CityID));
                 params.put("email", Email);
 
                 return params;
@@ -207,18 +199,14 @@ public class UserDataActivity extends Activity implements AdapterView.OnItemSele
         for (int i = 0; i < citiesList.size(); i++) {
             lables.add(citiesList.get(i).getName());
         }
-
         // Creating adapter for spinner
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, lables);
-
         // Drop down layout style - list view with radio button
         spinnerAdapter
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
         // attaching data adapter to spinner
         spinnerCity.setAdapter(spinnerAdapter);
-
     }
 
     /**
@@ -234,14 +222,12 @@ public class UserDataActivity extends Activity implements AdapterView.OnItemSele
             pDialog.setMessage("Fetching cities..");
             pDialog.setCancelable(false);
             pDialog.show();
-
         }
 
         @Override
         protected Void doInBackground(Void... arg0) {
             ServiceHandler jsonParser = new ServiceHandler();
             String json = jsonParser.makeServiceCall(URL_CITIES, ServiceHandler.GET);
-
             Log.e("Response: ", "> " + json);
 
             if (json != null) {
@@ -276,9 +262,7 @@ public class UserDataActivity extends Activity implements AdapterView.OnItemSele
                 pDialog.dismiss();
             populateSpinner();
         }
-
     }
-
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

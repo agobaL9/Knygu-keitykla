@@ -19,7 +19,7 @@ import java.util.HashMap;
 public class ProfileActivity extends AppCompatActivity {
 
     private SQLiteHandler db;
-    private SessionManager session;
+    //private SessionManager session;
 
     TextView T_firstAndLastName = findViewById(R.id.firstAndLastName);
     TextView T_Desc =findViewById(R.id.desc);
@@ -51,8 +51,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         T_firstAndLastName.setText(firstName);
         T_Desc.setText(email);
-        T_City.setText("miestass:");
-
+        T_City.setText("NENAUDOTI");
 
     }
 }

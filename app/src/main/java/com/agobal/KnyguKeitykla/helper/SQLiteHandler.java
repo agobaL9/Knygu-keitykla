@@ -15,7 +15,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 
     // All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 10;
+    private static final int DATABASE_VERSION = 11;
 
     // Database Name
     private static final String DATABASE_NAME = "android_api";
@@ -72,7 +72,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         values.put(KEY_CREATED_AT, created_at);
 
         // Inserting Row
-        long id = db.insert(TABLE_USER, null, values);
+        long id = db.insert(TABLE_USER, null, values); // err
         db.close(); // Closing database connection
 
         Log.d(TAG, "New user inserted into sqlite: " + id +" "+ userName +" "+ email +" "+ uid);

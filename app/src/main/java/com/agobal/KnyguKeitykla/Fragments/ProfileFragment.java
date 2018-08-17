@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,17 +17,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.agobal.KnyguKeitykla.R;
-import com.agobal.KnyguKeitykla.activity.Category;
+import com.agobal.KnyguKeitykla.activity.LoginActivity;
+import com.agobal.KnyguKeitykla.activity.MainActivity;
 import com.agobal.KnyguKeitykla.helper.RequestHandler;
 import com.agobal.KnyguKeitykla.helper.SQLiteHandler;
+import com.agobal.KnyguKeitykla.helper.SessionManager;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -41,62 +45,21 @@ import static com.agobal.KnyguKeitykla.app.AppConfig.UPLOAD_URL;
  */
 public class ProfileFragment extends Fragment {
 
-/*
-    private SQLiteHandler db;
-    private SessionManager session;
-    ProgressDialog prgDialog;
-    String encodedString;
-    RequestParams params = new RequestParams();
-    String imgPath, fileName;
-    private static int RESULT_LOAD_IMG = 1;
-*/
-
-    //public static final String UPLOAD_URL = "http://192.168.1.3/android_login_api/profilePicUpload.php";
     public static final String UPLOAD_KEY = "photo";
-    //public static final String TAG = "MY MESSAGE";
-
     private int PICK_IMAGE_REQUEST = 1;
-
-
     private Bitmap bitmap;
-
-
+    public SQLiteHandler db;
+    public SessionManager session;
 
     public ProfileFragment() {
         // Required empty public constructor
-
-}
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        View v = inflater.inflate(R.layout.fragment_profile, container, false);
-        CircleImageView ProfilePic = v.findViewById(R.id.profilePic);
-
-        ArrayList<Category> picID = new ArrayList<>();
-
-
-
-        ProfilePic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Profile photo button
-
-                showFileChooser();
-                //Profile photo btn
-            }
-        });
-
-
-        SQLiteHandler db;
-        //SessionManager session;
-
-        TextView T_firstAndLastName = v.findViewById(R.id.firstAndLastName);
-        TextView T_Desc = v.findViewById(R.id.desc);
-        TextView T_favoriteLiterature = v.findViewById(R.id.favoriteLiterature);
-        TextView T_City= v.findViewById(R.id.city);
 
         db = new SQLiteHandler(getContext());
 
@@ -106,34 +69,46 @@ public class ProfileFragment extends Fragment {
         String lastName = user.get("lastName");
         String email = user.get("email");
         String city = user.get("city");
-        String userName =  user.get("userName");
+        final String userName =  user.get("userName");
+
+        session = new SessionManager(Objects.requireNonNull(getActivity()));
+
+        getImage(userName);
+
+        View v = inflater.inflate(R.layout.fragment_profile, container, false);
+        TextView T_firstAndLastName = v.findViewById(R.id.firstAndLastName);
+        TextView T_Desc = v.findViewById(R.id.desc);
+        TextView T_favoriteLiterature = v.findViewById(R.id.favoriteLiterature);
+        TextView T_City= v.findViewById(R.id.city);
 
         T_firstAndLastName.setText(firstName + " " +lastName);
         T_Desc.setText(email);
         T_City.setText(city);
 
+        CircleImageView ProfilePic = v.findViewById(R.id.profilePic);
+
+        ProfilePic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Profile photo button
+                showFileChooser();
+                }
+        });
+
         return v;
     }
-/*
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        CircleImageView ProfilePic = getView().findViewById(R.id.profilePic);
-        // or  (ImageView) view.findViewById(R.id.foo);
-    }
-*/
+
     private void showFileChooser() {
 
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
-
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
 
         CircleImageView Profile = Objects.requireNonNull(getView()).findViewById(R.id.profilePic);
 
@@ -153,7 +128,11 @@ public class ProfileFragment extends Fragment {
                 e.printStackTrace();
             }
         }
-        uploadImage();
+        HashMap<String, String> user = db.getUserDetails();
+        String userName =  user.get("userName");
+
+        uploadImage(userName);
+
     }
 
     public String getStringImage(Bitmap bmp){
@@ -161,10 +140,9 @@ public class ProfileFragment extends Fragment {
         bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] imageBytes = baos.toByteArray();
         return Base64.encodeToString(imageBytes, Base64.DEFAULT);
-
     }
 
-    private void uploadImage(){
+    private void uploadImage(final String userName){
         @SuppressLint("StaticFieldLeak")
         class UploadImage extends AsyncTask<Bitmap,Void,String>{
 
@@ -189,31 +167,57 @@ public class ProfileFragment extends Fragment {
             @Override
             protected String doInBackground(Bitmap... params) {
                 Bitmap bitmap = params[0];
-                String uploadImage = getStringImage(bitmap); //er
-
+                String uploadImage = getStringImage(bitmap);
                 HashMap<String,String> data = new HashMap<>();
                 data.put(UPLOAD_KEY, uploadImage);
-
+                data.put("userName", userName);
+                Log.d("userName: ", userName);
                 return rh.sendPostRequest(UPLOAD_URL,data);
             }
         }
-
         UploadImage ui = new UploadImage();
         ui.execute(bitmap);
-
-
     }
-/*
-    @Override
-    public void onClick(View v) {
-        if (v == buttonChoose) {
-            showFileChooser();
-        }
-        if(v == buttonUpload){
-            uploadImage();
-        }
-    }
-*/
 
+    private void getImage(final String userName) {
+
+        @SuppressLint("StaticFieldLeak")
+        class GetImage extends AsyncTask<String,Void,Bitmap>{
+           // ProgressDialog loading;
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                //loading = ProgressDialog.show(ViewImage.this, "Uploading...", null,true,true);
+            }
+
+            @Override
+            protected void onPostExecute(Bitmap b) {
+                super.onPostExecute(b);
+                //loading.dismiss();
+                CircleImageView Profile = Objects.requireNonNull(getView()).findViewById(R.id.profilePic);
+                Profile.setImageBitmap(b);
+            }
+
+            @Override
+            protected Bitmap doInBackground(String... params) {
+
+                    String add = "http://192.168.1.3/android_login_api/getProfilePic.php?userName=" + userName;
+                    URL url;
+                    Bitmap image = null;
+                    try {
+                        url = new URL(add);
+                        image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return image;
+            }
+        }
+
+        GetImage gi = new GetImage();
+        gi.execute(userName);
+    }
 
 }
+
+

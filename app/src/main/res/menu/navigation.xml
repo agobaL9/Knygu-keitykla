@@ -2,19 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_shop"
+        android:id="@+id/navigation_books"
         android:icon="@drawable/ic_store_white_24dp"
-        android:title="@string/title_shop" />
+        android:title="Books" />
 
     <item
-        android:id="@+id/navigation_gifts"
+        android:id="@+id/navigation_messages"
         android:icon="@drawable/ic_card_giftcard_white_24dp"
-        android:title="@string/title_gifts" />
+        android:title="Messages" />
 
     <item
-        android:id="@+id/navigation_cart"
+        android:id="@+id/navigation_contacts"
         android:icon="@drawable/ic_shopping_cart_white_24dp"
-        android:title="@string/title_cart" />
+        android:title="Contacts" />
 
     <item
         android:id="@+id/navigation_profile"

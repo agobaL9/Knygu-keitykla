@@ -40,7 +40,9 @@
 
     <TextView android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Select food category"/>
+        android:text="Select city"
+        android:textSize="20sp"
+        android:textColor="@color/input_register"/>
 
     <Spinner android:id="@+id/spinCity"
         android:layout_width="fill_parent"
