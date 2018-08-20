@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.agobal.KnyguKeitykla.Entities.Category;
 import com.agobal.KnyguKeitykla.R;
 import com.agobal.KnyguKeitykla.app.AppConfig;
 import com.agobal.KnyguKeitykla.app.AppController;

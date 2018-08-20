@@ -1,4 +1,4 @@
-package com.agobal.KnyguKeitykla.activity;
+package com.agobal.KnyguKeitykla.Entities;
 
 public class Category {
 
@@ -7,7 +7,7 @@ public class Category {
 
     public Category(){}
 
-    Category(int id, String name){
+    public Category(int id, String name){
         this.id = id;
         this.name = name;
     }

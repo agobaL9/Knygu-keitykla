@@ -21,17 +21,30 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.agobal.KnyguKeitykla.Entities.UserData;
 import com.agobal.KnyguKeitykla.R;
 import com.agobal.KnyguKeitykla.activity.LoginActivity;
 import com.agobal.KnyguKeitykla.activity.MainActivity;
+import com.agobal.KnyguKeitykla.activity.UserDataActivity;
+import com.agobal.KnyguKeitykla.app.AppConfig;
+import com.agobal.KnyguKeitykla.app.AppController;
 import com.agobal.KnyguKeitykla.helper.RequestHandler;
 import com.agobal.KnyguKeitykla.helper.SQLiteHandler;
 import com.agobal.KnyguKeitykla.helper.SessionManager;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.text.BreakIterator;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -50,6 +63,7 @@ public class ProfileFragment extends Fragment {
     private Bitmap bitmap;
     public SQLiteHandler db;
     public SessionManager session;
+    private static final String TAG = UserDataActivity.class.getSimpleName();
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -59,34 +73,18 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
+        View v = inflater.inflate(R.layout.fragment_profile, container, false);
 
         db = new SQLiteHandler(getContext());
-
-        HashMap<String, String> user = db.getUserDetails();
-
-        String firstName = user.get("firstName");
-        String lastName = user.get("lastName");
-        String email = user.get("email");
-        String city = user.get("city");
-        final String userName =  user.get("userName");
-
         session = new SessionManager(Objects.requireNonNull(getActivity()));
 
+        HashMap<String, String> user = db.getUserDetails();
+        final String userName =  user.get("userName");
+
         getImage(userName);
-
-        View v = inflater.inflate(R.layout.fragment_profile, container, false);
-        TextView T_firstAndLastName = v.findViewById(R.id.firstAndLastName);
-        TextView T_Desc = v.findViewById(R.id.desc);
-        TextView T_favoriteLiterature = v.findViewById(R.id.favoriteLiterature);
-        TextView T_City= v.findViewById(R.id.city);
-
-        T_firstAndLastName.setText(firstName + " " +lastName);
-        T_Desc.setText(email);
-        T_City.setText(city);
+        sendToServer(userName);
 
         CircleImageView ProfilePic = v.findViewById(R.id.profilePic);
-
         ProfilePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -96,6 +94,79 @@ public class ProfileFragment extends Fragment {
         });
 
         return v;
+    }
+
+    void sendToServer(final String userName) {
+        String tag_string_req = "req_userData";
+
+        StringRequest strReq = new StringRequest(Request.Method.POST, AppConfig.URL_GETUSERDATA, new Response.Listener<String>() {
+
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "UserData Response: " + response);
+
+                try {
+                    JSONObject jObj = new JSONObject(response); //
+                    boolean error = jObj.getBoolean("error");
+                    if (!error) {
+                        // User successfully stored in MySQL
+
+                        JSONObject userData = jObj.getJSONObject("user");
+                        String email = userData.getString("email");
+                        String firstName = userData.getString("firstName");
+                        String lastName = userData.getString("lastName");
+                        String cityName = userData.getString("cityName");
+
+                        TextView T_firstAndLastName1 = getActivity().findViewById(R.id.firstAndLastName);
+                        TextView T_Desc = getActivity().findViewById(R.id.desc);
+                        TextView T_favoriteLiterature = getActivity().findViewById(R.id.favoriteLiterature);
+                        TextView T_City= getActivity().findViewById(R.id.city);
+
+                        T_firstAndLastName1.setText(firstName+ " " + lastName);
+                        T_Desc.setText(email);
+                        T_City.setText(cityName);
+
+                        Log.d(TAG, "get user data:  " + firstName + lastName +email +cityName);
+
+                    } else {
+
+                        // Error occurred in registration. Get the error
+                        // message
+                        String errorMsg = jObj.getString("error_msg");
+                        Toast.makeText(getActivity(),
+                                errorMsg, Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "getUserdata Error: " + error.getMessage());
+                Toast.makeText(getActivity(),
+                        error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        })
+
+        {
+
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting params to user data url
+                Map<String, String> params = new HashMap<>();
+                params.put("userName", userName);
+
+                return params;
+            }
+        };
+
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+
     }
 
     private void showFileChooser() {
