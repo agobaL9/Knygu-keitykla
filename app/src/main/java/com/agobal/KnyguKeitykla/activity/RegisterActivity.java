@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.agobal.KnyguKeitykla.R;
 import com.agobal.KnyguKeitykla.app.AppConfig;
 import com.agobal.KnyguKeitykla.app.AppController;
 import com.agobal.KnyguKeitykla.helper.SQLiteHandler;
@@ -21,16 +23,16 @@ import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import com.agobal.KnyguKeitykla.R;
-
-import static android.webkit.ConsoleMessage.MessageLevel.LOG;
 
 public class RegisterActivity extends Activity {
     private static final String TAG = RegisterActivity.class.getSimpleName();
@@ -39,7 +41,7 @@ public class RegisterActivity extends Activity {
     private EditText inputPassword;
     private EditText inputPassword2;
     private ProgressDialog pDialog;
-    private SQLiteHandler db;
+    private FirebaseAuth auth;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,17 +63,12 @@ public class RegisterActivity extends Activity {
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
 
-        // Session manager
-        SessionManager session = new SessionManager(getApplicationContext());
-
-        // SQLite database handler
-        db = new SQLiteHandler(getApplicationContext());
-
         // Check if user is already logged in or not
-        if (session.isLoggedIn()) {
-            // User is already logged in. Take him to main activity
-            Intent intent = new Intent(RegisterActivity.this,
-                    MainActivity.class);
+        auth = FirebaseAuth.getInstance();
+
+        if (auth.getCurrentUser() != null) {
+            // User is logged in
+            Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
         }
@@ -80,17 +77,14 @@ public class RegisterActivity extends Activity {
         btnRegister.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
 
-
                 String userName = inputUserName.getText().toString().trim();
                 String email = inputEmail.getText().toString().trim();
                 String password = inputPassword.getText().toString().trim();
                 String password2 = inputPassword2.getText().toString().trim();
 
-
                 if (!isValidEmail(inputEmail.getText().toString())) {
                     Toast.makeText(getApplicationContext(), "your email is not valid", Toast.LENGTH_LONG).show();
                 }
-
 
                 else if (userName.isEmpty()  || email.isEmpty() || password.isEmpty() || password2.isEmpty())
                 {
@@ -112,8 +106,30 @@ public class RegisterActivity extends Activity {
                 else if (password.length()<6)
                     Toast.makeText(getApplicationContext(),  "Slaptažodis per trumpas", Toast.LENGTH_LONG).show();
 
-                else
+                else {
                     registerUser(userName, email, password);
+
+                    //Google firebase
+                    auth.createUserWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    Toast.makeText(RegisterActivity.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
+                                    //progressBar.setVisibility(View.GONE);
+                                    // If sign in fails, display a message to the user. If sign in succeeds
+                                    // the auth state listener will be notified and logic to handle the
+                                    // signed in user can be handled in the listener.
+                                    if (!task.isSuccessful()) {
+                                        Toast.makeText(RegisterActivity.this, "Authentication failed." + task.getException(),
+                                                Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                                        finish();
+                                    }
+                                }
+                            });
+                    //firebase
+                }
 
             }
         });
@@ -156,17 +172,13 @@ public class RegisterActivity extends Activity {
                     boolean error = jObj.getBoolean("error");
                     if (!error) {
                         // User successfully stored in MySQL
-                        // Now store the user in sqlite
                         String uid = jObj.getString("uid");
-                        JSONObject user = jObj.getJSONObject("user"); //gal sukeist?
+                        JSONObject user = jObj.getJSONObject("user");
                         String userName = user.getString("userName");
                         String email = user.getString("email");
                         String created_at = user.getString("created_at");
 
-                        // Inserting row in users table
-                        db.addUser(uid, userName, email,  created_at);
                         Log.d(TAG, "addUserRegistra " + uid +" "+ userName +" "+email );
-
 
                         Toast.makeText(getApplicationContext(), "User successfully registered. Try login now!", Toast.LENGTH_LONG).show();
 

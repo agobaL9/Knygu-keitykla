@@ -46,12 +46,13 @@ import java.text.BreakIterator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.app.Activity.RESULT_OK;
 import static com.agobal.KnyguKeitykla.app.AppConfig.UPLOAD_URL;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -63,6 +64,7 @@ public class ProfileFragment extends Fragment {
     private Bitmap bitmap;
     public SQLiteHandler db;
     public SessionManager session;
+    private ProgressDialog pDialog;
     private static final String TAG = UserDataActivity.class.getSimpleName();
 
     public ProfileFragment() {
@@ -75,12 +77,15 @@ public class ProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        pDialog = new ProgressDialog(getActivity());
+        pDialog.setCancelable(false);
         db = new SQLiteHandler(getContext());
         session = new SessionManager(Objects.requireNonNull(getActivity()));
 
         HashMap<String, String> user = db.getUserDetails();
         final String userName =  user.get("userName");
 
+        ShowDialog();
         getImage(userName);
         sendToServer(userName);
 
@@ -118,9 +123,9 @@ public class ProfileFragment extends Fragment {
                         String lastName = userData.getString("lastName");
                         String cityName = userData.getString("cityName");
 
-                        TextView T_firstAndLastName1 = getActivity().findViewById(R.id.firstAndLastName);
+                        TextView T_firstAndLastName1 = Objects.requireNonNull(getActivity()).findViewById(R.id.firstAndLastName);
                         TextView T_Desc = getActivity().findViewById(R.id.desc);
-                        TextView T_favoriteLiterature = getActivity().findViewById(R.id.favoriteLiterature);
+                        //TextView T_favoriteLiterature = getActivity().findViewById(R.id.favoriteLiterature);
                         TextView T_City= getActivity().findViewById(R.id.city);
 
                         T_firstAndLastName1.setText(firstName+ " " + lastName);
@@ -128,6 +133,7 @@ public class ProfileFragment extends Fragment {
                         T_City.setText(cityName);
 
                         Log.d(TAG, "get user data:  " + firstName + lastName +email +cityName);
+
 
                     } else {
 
@@ -166,7 +172,6 @@ public class ProfileFragment extends Fragment {
 
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
-
     }
 
     private void showFileChooser() {
@@ -264,7 +269,6 @@ public class ProfileFragment extends Fragment {
             @Override
             protected void onPostExecute(Bitmap b) {
                 super.onPostExecute(b);
-                //loading.dismiss();
                 CircleImageView Profile = Objects.requireNonNull(getView()).findViewById(R.id.profilePic);
                 Profile.setImageBitmap(b);
             }
@@ -272,7 +276,7 @@ public class ProfileFragment extends Fragment {
             @Override
             protected Bitmap doInBackground(String... params) {
 
-                    String add = "http://192.168.1.3/android_login_api/getProfilePic.php?userName=" + userName;
+                String add = AppConfig.URL_GETPROFILEPIC + "?userName="+ userName;
                     URL url;
                     Bitmap image = null;
                     try {
@@ -287,6 +291,18 @@ public class ProfileFragment extends Fragment {
 
         GetImage gi = new GetImage();
         gi.execute(userName);
+    }
+
+    void ShowDialog()
+    {
+        pDialog = ProgressDialog.show(getActivity(), "Updating information", "Please wait...",true,true);
+        final Timer t = new Timer();
+        t.schedule(new TimerTask() {
+            public void run() {
+                pDialog.dismiss();
+                t.cancel();
+            }
+        }, 1000);
     }
 
 }

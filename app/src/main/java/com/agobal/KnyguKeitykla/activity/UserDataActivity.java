@@ -50,9 +50,6 @@ public class UserDataActivity extends Activity implements AdapterView.OnItemSele
     private ArrayList<Category> citiesList;
     ProgressDialog pDialog;
 
-    private SQLiteHandler db;
-    // Url to get all categories
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,14 +60,9 @@ public class UserDataActivity extends Activity implements AdapterView.OnItemSele
         btnNext = findViewById(R.id.btnNext);
         spinnerCity = findViewById(R.id.spinCity);
         citiesList = new ArrayList<>();
+
         // spinner item select listener
         spinnerCity.setOnItemSelectedListener(this);
-        // SQLite database handler
-        db = new SQLiteHandler(getApplicationContext());
-
-        HashMap<String, String> user = db.getUserDetails();
-
-        final String email = user.get("email");
 
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,8 +90,16 @@ public class UserDataActivity extends Activity implements AdapterView.OnItemSele
                             "Netinka spec simboliai", Toast.LENGTH_LONG).show();
                 }
 
-                else
-                    WriteToDB(Name, LastName, CityName,  CityID, email);
+                else {
+                    Toast.makeText(getApplicationContext(), "User successfully registered. Try login now!"
+                            , Toast.LENGTH_LONG).show();
+                    // Launch main activity
+                    Intent intent = new Intent(
+                            UserDataActivity.this,
+                            MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
             }
         });
 
@@ -112,86 +112,6 @@ public class UserDataActivity extends Activity implements AdapterView.OnItemSele
         // Do Here what ever you want do on back press;
         Toast.makeText(getApplicationContext(),
                 "Negalima", Toast.LENGTH_LONG).show();
-    }
-
-    void WriteToDB(final String Name, final String LastName, final String CityName, final int CityID, final String  Email)
-    {
-        // Tag used to cancel the request
-        String tag_string_req = "req_userData";
-
-        StringRequest strReq = new StringRequest(Method.POST, AppConfig.URL_USERDATA, new Response.Listener<String>() {
-
-            @Override
-            public void onResponse(String response) {
-                Log.d(TAG, "UserData Response: " + response);
-
-                try {
-                    JSONObject jObj = new JSONObject(response); //
-                    boolean error = jObj.getBoolean("error");
-                    if (!error) {
-                        // User successfully stored in MySQL
-
-                        //now sqlite
-                        JSONObject userData = jObj.getJSONObject("user");
-                        String firstName = userData.getString("firstName");
-                        String lastName = userData.getString("lastName");
-                        //String city = userData.getString("city");
-
-
-                        HashMap<String, String> userEmail = db.getUserDetails();
-                        String email = userEmail.get("email");
-
-                        db.addUserData(firstName, lastName, CityName, email);
-                        Log.d(TAG, "addUserData " + firstName + lastName +email +CityName);
-
-                        Toast.makeText(getApplicationContext(), "User successfully registered. Try login now!", Toast.LENGTH_LONG).show();
-
-                        // Launch main activity
-                        Intent intent = new Intent(
-                                UserDataActivity.this,
-                                MainActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-
-                        // Error occurred in registration. Get the error
-                        // message
-                        String errorMsg = jObj.getString("error_msg");
-                        Toast.makeText(getApplicationContext(),
-                                errorMsg, Toast.LENGTH_LONG).show();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "userdata enter Error: " + error.getMessage());
-                Toast.makeText(getApplicationContext(),
-                        error.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        })
-
-        {
-
-            @Override
-            protected Map<String, String> getParams() {
-                // Posting params to user data url
-                Map<String, String> params = new HashMap<>();
-                params.put("firstName", Name);
-                params.put("lastName", LastName);
-                params.put("cityID", String.valueOf(CityID));
-                params.put("email", Email);
-
-                return params;
-            }
-        };
-
-        // Adding request to request queue
-        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
     }
 
     private void populateSpinner() {

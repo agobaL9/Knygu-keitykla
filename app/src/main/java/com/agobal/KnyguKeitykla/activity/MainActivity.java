@@ -14,20 +14,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.agobal.KnyguKeitykla.Fragments.CartFragment;
-import com.agobal.KnyguKeitykla.Fragments.GiftsFragment;
+import com.agobal.KnyguKeitykla.Fragments.ContactsFragment;
+import com.agobal.KnyguKeitykla.Fragments.MessagesFragment;
 import com.agobal.KnyguKeitykla.Fragments.ProfileFragment;
-import com.agobal.KnyguKeitykla.Fragments.StoreFragment;
+import com.agobal.KnyguKeitykla.Fragments.BookFragment;
 import com.agobal.KnyguKeitykla.R;
 import com.agobal.KnyguKeitykla.helper.BottomNavigationBehavior;
 import com.agobal.KnyguKeitykla.helper.SQLiteHandler;
 import com.agobal.KnyguKeitykla.helper.SessionManager;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
     private ActionBar toolbar;
-    private SQLiteHandler db;
-    private SessionManager session;
+    private FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,26 +43,15 @@ public class MainActivity extends AppCompatActivity {
 
         if (isFirstRun) {
             //show start activity
-            Log.d("FIRST RUN??", "TAAAAIP");
+            Log.d("FIRST RUN?", "YES");
             startActivity(new Intent(MainActivity.this, UserDataActivity.class));
             Toast.makeText(MainActivity.this, "First Run", Toast.LENGTH_LONG)
                     .show();
         }
 
-
         getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit()
                 .putBoolean("isFirstRun", false).apply();
         //first time
-
-
-        db = new SQLiteHandler(getApplicationContext());
-
-        // session manager
-        session = new SessionManager(getApplicationContext());
-
-        if (!session.isLoggedIn()) {
-            logoutUser();
-        }
 
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -72,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
         // load the store fragment by default
         toolbar.setTitle("Shop");
-        loadFragment(new StoreFragment());
+        loadFragment(new BookFragment());
     }
 
     @Override
@@ -103,17 +93,17 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_books:
                     toolbar.setTitle("Books");
-                    fragment = new StoreFragment();
+                    fragment = new BookFragment();
                     loadFragment(fragment);
                     return true;
                 case R.id.navigation_messages:
                     toolbar.setTitle("Messages");
-                    fragment = new GiftsFragment();
+                    fragment = new MessagesFragment();
                     loadFragment(fragment);
                     return true;
                 case R.id.navigation_contacts:
                     toolbar.setTitle("Contacts");
-                    fragment = new CartFragment();
+                    fragment = new ContactsFragment();
                     loadFragment(fragment);
                     return true;
                 case R.id.navigation_profile:
@@ -136,12 +126,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void logoutUser() {
-        session.setLogin(false);
-        db.deleteUsers();
-        // Launching the login activity
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-        startActivity(intent);
-        finish();
+
+        FirebaseAuth.getInstance().signOut();
+        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+
+// this listener will be called when there is change in firebase user session
+        FirebaseAuth.AuthStateListener authListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user == null) {
+                    // user auth state is changed - user is null
+                    // launch login activity
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    finish();
+                }
+            }
+        };
     }
 
 }

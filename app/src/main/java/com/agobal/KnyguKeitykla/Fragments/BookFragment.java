@@ -13,10 +13,10 @@ import com.agobal.KnyguKeitykla.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class StoreFragment extends Fragment {
+public class BookFragment extends Fragment {
 
 
-    public StoreFragment() {
+    public BookFragment() {
         // Required empty public constructor
     }
 

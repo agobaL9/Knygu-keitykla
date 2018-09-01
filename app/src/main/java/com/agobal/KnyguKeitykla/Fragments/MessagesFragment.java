@@ -13,10 +13,10 @@ import com.agobal.KnyguKeitykla.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CartFragment extends Fragment {
+public class MessagesFragment extends Fragment {
 
 
-    public CartFragment() {
+    public MessagesFragment() {
         // Required empty public constructor
     }
 
@@ -25,7 +25,7 @@ public class CartFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_contacts, container, false);
+        return inflater.inflate(R.layout.fragment_messages, container, false);
     }
 
 }
