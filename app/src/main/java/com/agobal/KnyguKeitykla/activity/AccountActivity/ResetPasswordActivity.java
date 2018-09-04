@@ -1,4 +1,4 @@
-package com.agobal.KnyguKeitykla.activity;
+package com.agobal.KnyguKeitykla.activity.AccountActivity;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;

@@ -19,9 +19,9 @@ import com.agobal.KnyguKeitykla.Fragments.MessagesFragment;
 import com.agobal.KnyguKeitykla.Fragments.ProfileFragment;
 import com.agobal.KnyguKeitykla.Fragments.BookFragment;
 import com.agobal.KnyguKeitykla.R;
+import com.agobal.KnyguKeitykla.activity.AccountActivity.LoginActivity;
+import com.agobal.KnyguKeitykla.activity.AccountActivity.UserDataActivity;
 import com.agobal.KnyguKeitykla.helper.BottomNavigationBehavior;
-import com.agobal.KnyguKeitykla.helper.SQLiteHandler;
-import com.agobal.KnyguKeitykla.helper.SessionManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 

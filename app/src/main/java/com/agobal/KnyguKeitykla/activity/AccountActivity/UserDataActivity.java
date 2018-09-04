@@ -1,4 +1,4 @@
-package com.agobal.KnyguKeitykla.activity;
+package com.agobal.KnyguKeitykla.activity.AccountActivity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -17,15 +17,12 @@ import android.widget.Toast;
 
 import com.agobal.KnyguKeitykla.Entities.Category;
 import com.agobal.KnyguKeitykla.R;
-import com.agobal.KnyguKeitykla.app.AppConfig;
-import com.agobal.KnyguKeitykla.app.AppController;
-import com.agobal.KnyguKeitykla.helper.SQLiteHandler;
+import com.agobal.KnyguKeitykla.activity.MainActivity;
 import com.agobal.KnyguKeitykla.helper.ServiceHandler;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 //import com.agobal.KnyguKeitykla.helper.SessionManager;
-import com.android.volley.Request.Method;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -91,8 +88,16 @@ public class UserDataActivity extends Activity implements AdapterView.OnItemSele
                 }
 
                 else {
-                    Toast.makeText(getApplicationContext(), "User successfully registered. Try login now!"
-                            , Toast.LENGTH_LONG).show();
+                    FirebaseDatabase  database = FirebaseDatabase.getInstance();
+                    DatabaseReference mDatabaseRef = database.getReference("Users");
+
+                    Map<String, Object> hopperUpdates = new HashMap<>();
+
+                    hopperUpdates.put(FirebaseAuth.getInstance().getCurrentUser().getUid() + "/Name", Name);
+                    hopperUpdates.put(FirebaseAuth.getInstance().getCurrentUser().getUid() + "/LastName", LastName);
+                    hopperUpdates.put(FirebaseAuth.getInstance().getCurrentUser().getUid() + "/CityName", CityName);
+                    mDatabaseRef.updateChildren(hopperUpdates);
+
                     // Launch main activity
                     Intent intent = new Intent(
                             UserDataActivity.this,

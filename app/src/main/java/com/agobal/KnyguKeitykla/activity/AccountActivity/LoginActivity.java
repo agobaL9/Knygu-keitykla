@@ -1,11 +1,10 @@
-package com.agobal.KnyguKeitykla.activity;
+package com.agobal.KnyguKeitykla.activity.AccountActivity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -14,25 +13,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.agobal.KnyguKeitykla.R;
-import com.agobal.KnyguKeitykla.app.AppConfig;
-import com.agobal.KnyguKeitykla.app.AppController;
-import com.agobal.KnyguKeitykla.helper.SQLiteHandler;
-import com.agobal.KnyguKeitykla.helper.SessionManager;
+import com.agobal.KnyguKeitykla.activity.MainActivity;
 import com.amitshekhar.DebugDB;
-import com.android.volley.Request.Method;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = RegisterActivity.class.getSimpleName();

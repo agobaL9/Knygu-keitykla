@@ -1,4 +1,4 @@
-package com.agobal.KnyguKeitykla.activity;
+package com.agobal.KnyguKeitykla.activity.AccountActivity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -14,11 +14,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.agobal.KnyguKeitykla.Entities.UserData;
 import com.agobal.KnyguKeitykla.R;
+import com.agobal.KnyguKeitykla.activity.MainActivity;
 import com.agobal.KnyguKeitykla.app.AppConfig;
 import com.agobal.KnyguKeitykla.app.AppController;
-import com.agobal.KnyguKeitykla.helper.SQLiteHandler;
-import com.agobal.KnyguKeitykla.helper.SessionManager;
 import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -27,12 +27,15 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class RegisterActivity extends Activity {
     private static final String TAG = RegisterActivity.class.getSimpleName();
@@ -77,8 +80,8 @@ public class RegisterActivity extends Activity {
         btnRegister.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
 
-                String userName = inputUserName.getText().toString().trim();
-                String email = inputEmail.getText().toString().trim();
+                final String userName = inputUserName.getText().toString().trim();
+                final String email = inputEmail.getText().toString().trim();
                 String password = inputPassword.getText().toString().trim();
                 String password2 = inputPassword2.getText().toString().trim();
 
@@ -115,14 +118,21 @@ public class RegisterActivity extends Activity {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     Toast.makeText(RegisterActivity.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
-                                    //progressBar.setVisibility(View.GONE);
-                                    // If sign in fails, display a message to the user. If sign in succeeds
-                                    // the auth state listener will be notified and logic to handle the
-                                    // signed in user can be handled in the listener.
+
                                     if (!task.isSuccessful()) {
                                         Toast.makeText(RegisterActivity.this, "Authentication failed." + task.getException(),
                                                 Toast.LENGTH_SHORT).show();
                                     } else {
+
+                                        UserData userData = new UserData(userName, email);
+
+                                        FirebaseDatabase  database = FirebaseDatabase.getInstance();
+                                        DatabaseReference mDatabaseRef = database.getReference("Users");
+
+                                        Map<String, Object> Updates = new HashMap<>();
+                                        Updates.put(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid(), userData);
+                                        mDatabaseRef.updateChildren(Updates);
+
                                         startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                                         finish();
                                     }
@@ -130,7 +140,6 @@ public class RegisterActivity extends Activity {
                             });
                     //firebase
                 }
-
             }
         });
 
@@ -182,12 +191,13 @@ public class RegisterActivity extends Activity {
 
                         Toast.makeText(getApplicationContext(), "User successfully registered. Try login now!", Toast.LENGTH_LONG).show();
 
-                        // Launch login activity
+                      /*  // Launch login activity
                         Intent intent = new Intent(
                                 RegisterActivity.this,
                                 LoginActivity.class);
                         startActivity(intent);
                         finish();
+                        */
                     } else {
                         Log.e(TAG, "onResponse: " + userName);
                         // Error occurred in registration. Get the error
