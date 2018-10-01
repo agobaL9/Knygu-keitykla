@@ -1,5 +1,6 @@
 package com.agobal.KnyguKeitykla.activity.AccountActivity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.agobal.KnyguKeitykla.R;
@@ -20,8 +22,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class LoginActivity extends AppCompatActivity {
-    private static final String TAG = RegisterActivity.class.getSimpleName();
+public class LoginActivity extends Activity {
 
     private ProgressDialog pDialog;
     private FirebaseAuth auth;
@@ -33,23 +34,24 @@ public class LoginActivity extends AppCompatActivity {
         DebugDB.getAddressLog();
 
         // remove title
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //Remove notification bar
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_login);
 
         final EditText inputEmail = findViewById(R.id.email);
         final EditText inputPassword = findViewById(R.id.password);
         Button btnLogin = findViewById(R.id.btnLogin);
         Button btnLinkToRegister = findViewById(R.id.btnLinkToRegisterScreen);
-        Button btn_reset_password = findViewById(R.id.btn_reset_password);
+        TextView btn_reset_password = findViewById(R.id.btn_reset_password);
 
         auth = FirebaseAuth.getInstance();
-
         // Progress dialog
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
 
+        //tikrinimas ar vartotojas prisijungęs
         auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
             // User is logged in
@@ -64,18 +66,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String email = inputEmail.getText().toString().trim();
                 String password = inputPassword.getText().toString().trim();
-
-                // Check for empty data in the form
-                if (!email.isEmpty() && !password.isEmpty()) {
-                    // login user
-                    //checkLogin(email, password);
-                    login(email, password);
-                } else {
-                    // Prompt user to enter credentials
-                    Toast.makeText(getApplicationContext(),
-                            "Please enter the credentials!", Toast.LENGTH_LONG)
-                            .show();
-                }
+                login(email, password);
             }
 
         });
@@ -91,6 +82,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        //link to reset password
         btn_reset_password.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -105,6 +97,7 @@ public class LoginActivity extends AppCompatActivity {
 
     void login(final String email, final String password)
     {
+        if (!email.isEmpty() && !password.isEmpty()) {
         //firebase
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
@@ -113,19 +106,28 @@ public class LoginActivity extends AppCompatActivity {
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
-                            // there was an error
-                                Toast.makeText(getApplicationContext(), "samething wrong", Toast.LENGTH_LONG).show();
-                            }
-                            else {
-                            //session.setLogin(true);
-
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            startActivity(intent);
-                            finish();
-                            }
+                        if (!task.isSuccessful())
+                        {
+                            //there was an error
+                            Toast.makeText(getApplicationContext(), "something wrong", Toast.LENGTH_LONG).show();
+                        }
+                        else
+                        {
+                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                             startActivity(intent);
+                             finish();
+                        }
                     }
                 });
+        }
+        else
+        {
+            // Prompt user to enter credentials
+            Toast.makeText(getApplicationContext(), "Please enter the credentials!", Toast.LENGTH_LONG)
+                    .show();
+        }
+
+
     }
         //firebase
 

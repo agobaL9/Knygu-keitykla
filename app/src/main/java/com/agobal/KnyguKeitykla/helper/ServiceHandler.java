@@ -21,10 +21,10 @@ import android.util.Log;
 
 public class ServiceHandler {
 
-    static InputStream is = null;
-    static String response = null;
+    private static InputStream is = null;
+    private static String response = null;
     public final static int GET = 1;
-    public final static int POST = 2;
+    private final static int POST = 2;
 
     public ServiceHandler() {
 
@@ -45,8 +45,8 @@ public class ServiceHandler {
      * @method - http request method
      * @params - http request params
      * */
-    public String makeServiceCall(String url, int method,
-                                  List<NameValuePair> params) {
+    private String makeServiceCall(String url, int method,
+                                   List<NameValuePair> params) {
         try {
             // http client
             DefaultHttpClient httpClient = new DefaultHttpClient();

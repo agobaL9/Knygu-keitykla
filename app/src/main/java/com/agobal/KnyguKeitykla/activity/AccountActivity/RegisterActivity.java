@@ -51,8 +51,7 @@ public class RegisterActivity extends Activity {
         super.onCreate(savedInstanceState);
         // remove title
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_register);
 
         inputUserName = findViewById(R.id.userName);
@@ -85,61 +84,8 @@ public class RegisterActivity extends Activity {
                 String password = inputPassword.getText().toString().trim();
                 String password2 = inputPassword2.getText().toString().trim();
 
-                if (!isValidEmail(inputEmail.getText().toString())) {
-                    Toast.makeText(getApplicationContext(), "your email is not valid", Toast.LENGTH_LONG).show();
-                }
+                checkRegistrationData(userName, email, password, password2);
 
-                else if (userName.isEmpty()  || email.isEmpty() || password.isEmpty() || password2.isEmpty())
-                {
-                    Toast.makeText(getApplicationContext(),
-                            "Užpildykite visus laukus!", Toast.LENGTH_LONG)
-                            .show();
-                }
-
-                else if(!userName.matches("[a-zA-Z.? ]*"))
-                {
-                    Toast.makeText(getApplicationContext(),
-                            "Netinka spec simboliai", Toast.LENGTH_LONG).show();
-                }
-
-                else if  (!password.matches(password2))
-                    Toast.makeText(getApplicationContext(),  "Slaptažodžiai nesutampa", Toast.LENGTH_LONG).show();
-
-
-                else if (password.length()<6)
-                    Toast.makeText(getApplicationContext(),  "Slaptažodis per trumpas", Toast.LENGTH_LONG).show();
-
-                else {
-                    registerUser(userName, email, password);
-
-                    //Google firebase
-                    auth.createUserWithEmailAndPassword(email, password)
-                            .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    Toast.makeText(RegisterActivity.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
-
-                                    if (!task.isSuccessful()) {
-                                        Toast.makeText(RegisterActivity.this, "Authentication failed." + task.getException(),
-                                                Toast.LENGTH_SHORT).show();
-                                    } else {
-
-                                        UserData userData = new UserData(userName, email);
-
-                                        FirebaseDatabase  database = FirebaseDatabase.getInstance();
-                                        DatabaseReference mDatabaseRef = database.getReference("Users");
-
-                                        Map<String, Object> Updates = new HashMap<>();
-                                        Updates.put(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid(), userData);
-                                        mDatabaseRef.updateChildren(Updates);
-
-                                        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                                        finish();
-                                    }
-                                }
-                            });
-                    //firebase
-                }
             }
         });
 
@@ -165,11 +111,10 @@ public class RegisterActivity extends Activity {
         // Tag used to cancel the request
         String tag_string_req = "req_register";
 
-        pDialog.setMessage("Registering ...");
+        pDialog.setMessage("Vykdoma ...");
         showDialog();
 
-        StringRequest strReq = new StringRequest(Method.POST,
-                AppConfig.URL_REGISTER, new Response.Listener<String>() {
+        StringRequest strReq = new StringRequest(Method.POST, AppConfig.URL_REGISTER, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
@@ -189,15 +134,6 @@ public class RegisterActivity extends Activity {
 
                         Log.d(TAG, "addUserRegistra " + uid +" "+ userName +" "+email );
 
-                        Toast.makeText(getApplicationContext(), "User successfully registered. Try login now!", Toast.LENGTH_LONG).show();
-
-                      /*  // Launch login activity
-                        Intent intent = new Intent(
-                                RegisterActivity.this,
-                                LoginActivity.class);
-                        startActivity(intent);
-                        finish();
-                        */
                     } else {
                         Log.e(TAG, "onResponse: " + userName);
                         // Error occurred in registration. Get the error
@@ -227,7 +163,7 @@ public class RegisterActivity extends Activity {
             @Override
             protected Map<String, String> getParams() {
                 // Posting params to register url
-                Map<String, String> params = new HashMap<String, String>();
+                Map<String, String> params = new HashMap<>();
                 params.put("userName", userName);
                 params.put("email", email);
                 params.put("password", password);
@@ -239,7 +175,64 @@ public class RegisterActivity extends Activity {
 
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+
+        //Google firebase
+        auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Toast.makeText(RegisterActivity.this, "Registracija sėkminga!", Toast.LENGTH_SHORT).show();
+
+                        if (!task.isSuccessful()) {
+                            Toast.makeText(RegisterActivity.this, "Registracija nesėkminga!" ,Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            FirebaseDatabase  database = FirebaseDatabase.getInstance();
+                            DatabaseReference mDatabaseRef = database.getReference("Users");
+
+                            Map<String, Object> Updates = new HashMap<>();
+                            Updates.put(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()+ "/userName", userName);
+                            Updates.put(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()+ "/email", email);
+                            Updates.put(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()+ "/image", "default");
+                            Updates.put(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()+ "/thumb_image", "default");
+
+                            mDatabaseRef.updateChildren(Updates);
+
+                            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                            finish();
+                        }
+                    }
+                });
+        //firebase
     }
+
+    void checkRegistrationData(String userName, String email, String password, String password2)
+    {
+
+        if (!isValidEmail(inputEmail.getText().toString()))
+            Toast.makeText(getApplicationContext(), "Įveskite galiojantį el. paštą!", Toast.LENGTH_LONG).show();
+
+
+        else if (userName.isEmpty()  || email.isEmpty() || password.isEmpty() || password2.isEmpty())
+            Toast.makeText(getApplicationContext(),"Užpildykite visus laukus!", Toast.LENGTH_LONG).show();
+
+
+        else if(!userName.matches("[a-zA-Z.? ]*"))
+            Toast.makeText(getApplicationContext(),"Netinka specialūs simboliai!", Toast.LENGTH_LONG).show();
+
+
+        else if  (!password.matches(password2))
+            Toast.makeText(getApplicationContext(),"Slaptažodžiai nesutampa!", Toast.LENGTH_LONG).show();
+
+
+        else if (password.length()<6)
+            Toast.makeText(getApplicationContext(),"Slaptažodis per trumpas!", Toast.LENGTH_LONG).show();
+
+        else
+            registerUser(userName, email, password);
+    }
+
 
     private void showDialog() {
         if (!pDialog.isShowing())

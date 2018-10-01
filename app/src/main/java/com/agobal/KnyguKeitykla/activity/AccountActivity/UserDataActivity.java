@@ -6,8 +6,11 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -16,12 +19,16 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.agobal.KnyguKeitykla.Entities.Category;
+import com.agobal.KnyguKeitykla.Entities.UserData;
 import com.agobal.KnyguKeitykla.R;
 import com.agobal.KnyguKeitykla.activity.MainActivity;
 import com.agobal.KnyguKeitykla.helper.ServiceHandler;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 //import com.agobal.KnyguKeitykla.helper.SessionManager;
 
 import org.json.JSONArray;
@@ -32,12 +39,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.agobal.KnyguKeitykla.app.AppConfig.URL_CITIES;
 
-public class UserDataActivity extends Activity implements AdapterView.OnItemSelectedListener{
-
-    private static final String TAG = UserDataActivity.class.getSimpleName();
+public class UserDataActivity extends Activity{
 
     EditText inputName;
     EditText inputLastName;
@@ -50,6 +56,11 @@ public class UserDataActivity extends Activity implements AdapterView.OnItemSele
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // remove title
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_user_data);
 
         inputName = findViewById(R.id.inputName);
@@ -59,64 +70,101 @@ public class UserDataActivity extends Activity implements AdapterView.OnItemSele
         citiesList = new ArrayList<>();
 
         // spinner item select listener
-        spinnerCity.setOnItemSelectedListener(this);
+        //spinnerCity.setOnItemSelectedListener(this);
 
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                String Name = inputName.getText().toString().trim();
+                String FirstName = inputName.getText().toString().trim();
                 String LastName = inputLastName.getText().toString().trim();
                 String CityName = spinnerCity.getSelectedItem().toString();
-                int CityID = (int) spinnerCity.getSelectedItemId() +1;
+                //int CityID = (int) spinnerCity.getSelectedItemId() +1;
 
-                Log.d("CityID: ", String.valueOf(CityID));// ID +=1
+                checkUserData(FirstName, LastName);
+                storeUserData(FirstName, LastName, CityName);
 
-                Log.d("City response",  CityName);
-
-                if (Name.isEmpty()  || LastName.isEmpty())
-                {
-                    Toast.makeText(getApplicationContext(),
-                            "Užpildykite visus laukus!", Toast.LENGTH_LONG)
-                            .show();
-                }
-
-                else if(!Name.matches("[a-zA-Z.? ]*") || !LastName.matches("[a-zA-Z.? ]*"))
-                {
-                    Toast.makeText(getApplicationContext(),
-                            "Netinka spec simboliai", Toast.LENGTH_LONG).show();
-                }
-
-                else {
-                    FirebaseDatabase  database = FirebaseDatabase.getInstance();
-                    DatabaseReference mDatabaseRef = database.getReference("Users");
-
-                    Map<String, Object> hopperUpdates = new HashMap<>();
-
-                    hopperUpdates.put(FirebaseAuth.getInstance().getCurrentUser().getUid() + "/Name", Name);
-                    hopperUpdates.put(FirebaseAuth.getInstance().getCurrentUser().getUid() + "/LastName", LastName);
-                    hopperUpdates.put(FirebaseAuth.getInstance().getCurrentUser().getUid() + "/CityName", CityName);
-                    mDatabaseRef.updateChildren(hopperUpdates);
-
-                    // Launch main activity
-                    Intent intent = new Intent(
-                            UserDataActivity.this,
-                            MainActivity.class);
+                // Launch main activity
+                Intent intent = new Intent(UserDataActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
-                }
             }
         });
 
-        new  GetCities().execute();
+        selectCity();
 
+        //new  GetCities().execute();
+
+    }
+
+    private void selectCity() {
+
+
+        FirebaseDatabase  database = FirebaseDatabase.getInstance();
+        DatabaseReference mDatabaseRef = database.getReference("City");
+
+        mDatabaseRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // Is better to use a List, because you don't know the size
+                // of the iterator returned by dataSnapshot.getChildren() to
+                // initialize the array
+                final List<String> areas = new ArrayList<String>();
+
+                for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
+                    String areaName = areaSnapshot.child("cityName").getValue(String.class);
+                    areas.add(areaName);
+                }
+
+                Spinner areaSpinner = (Spinner) findViewById(R.id.spinCity);
+                ArrayAdapter<String> areasAdapter = new ArrayAdapter<String>(UserDataActivity.this, android.R.layout.simple_spinner_item, areas);
+                areasAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                areaSpinner.setAdapter(areasAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+            });
+    }
+
+    private void checkUserData(String FirstName, String LastName) {
+
+        if (FirstName.isEmpty()  || LastName.isEmpty())
+        {
+            Toast.makeText(getApplicationContext(),
+                    "Užpildykite visus laukus!", Toast.LENGTH_LONG)
+                    .show();
+        }
+
+        else if(!FirstName.matches("[a-zA-Z.? ]*") || !LastName.matches("[a-zA-Z.? ]*"))
+        {
+            Toast.makeText(getApplicationContext(),
+                    "Netinka specialūs simboliai!", Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    private void storeUserData(String FirstName, String LastName, String CityName) {
+        //store userData in firebase
+        FirebaseDatabase  database = FirebaseDatabase.getInstance();
+        DatabaseReference mDatabaseRef = database.getReference("Users");
+
+        Map<String, Object> hopperUpdates = new HashMap<>();
+
+        hopperUpdates.put(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid() + "/firstName", FirstName);
+        hopperUpdates.put(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid() + "/lastName", LastName);
+        hopperUpdates.put(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid() + "/cityName", CityName);
+        mDatabaseRef.updateChildren(hopperUpdates);
+        //store userData in firebase
     }
 
     @Override
     public void onBackPressed() {
         // Do Here what ever you want do on back press;
         Toast.makeText(getApplicationContext(),
-                "Negalima", Toast.LENGTH_LONG).show();
+                "Turite užpildyti duomenis!", Toast.LENGTH_LONG).show();
     }
 
     private void populateSpinner() {
@@ -134,16 +182,19 @@ public class UserDataActivity extends Activity implements AdapterView.OnItemSele
         // attaching data adapter to spinner
         spinnerCity.setAdapter(spinnerAdapter);
     }
-
+/*
     /**
-     * Async task to get all food categories
+     * Async task to get all cities
      * */
+
+/*
     @SuppressLint("StaticFieldLeak")
     private class GetCities extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+
             pDialog = new ProgressDialog(UserDataActivity.this);
             pDialog.setMessage("Fetching cities..");
             pDialog.setCancelable(false);
@@ -154,7 +205,6 @@ public class UserDataActivity extends Activity implements AdapterView.OnItemSele
         protected Void doInBackground(Void... arg0) {
             ServiceHandler jsonParser = new ServiceHandler();
             String json = jsonParser.makeServiceCall(URL_CITIES, ServiceHandler.GET);
-            Log.e("Response: ", "> " + json);
 
             if (json != null) {
                 try {
@@ -167,7 +217,6 @@ public class UserDataActivity extends Activity implements AdapterView.OnItemSele
                         Category cat = new Category(cityObj.getInt("id"),
                                 cityObj.getString("cityName"));
                         citiesList.add(cat);
-                        Log.e ( "cat: ", "" + cityObj );
                     }
 
                 } catch (JSONException e) {
@@ -202,5 +251,7 @@ public class UserDataActivity extends Activity implements AdapterView.OnItemSele
     public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
+
+    */
 }
 

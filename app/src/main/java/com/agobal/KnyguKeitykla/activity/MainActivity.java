@@ -45,8 +45,6 @@ public class MainActivity extends AppCompatActivity {
             //show start activity
             Log.d("FIRST RUN?", "YES");
             startActivity(new Intent(MainActivity.this, UserDataActivity.class));
-            Toast.makeText(MainActivity.this, "First Run", Toast.LENGTH_LONG)
-                    .show();
         }
 
         getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit()
@@ -61,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         layoutParams.setBehavior(new BottomNavigationBehavior());
 
         // load the store fragment by default
-        toolbar.setTitle("Shop");
+        toolbar.setTitle("Books");
         loadFragment(new BookFragment());
     }
 
@@ -129,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseAuth.getInstance().signOut();
         startActivity(new Intent(MainActivity.this, LoginActivity.class));
-
+/*
 // this listener will be called when there is change in firebase user session
         FirebaseAuth.AuthStateListener authListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -142,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
                     finish();
                 }
             }
-        };
+        };*/
     }
 
 }
