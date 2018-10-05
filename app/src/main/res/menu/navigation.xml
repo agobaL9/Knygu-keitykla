@@ -4,21 +4,21 @@
     <item
         android:id="@+id/navigation_books"
         android:icon="@drawable/ic_store_white_24dp"
-        android:title="Books" />
+        android:title="Knygos" />
 
     <item
         android:id="@+id/navigation_messages"
-        android:icon="@drawable/ic_card_giftcard_white_24dp"
-        android:title="Messages" />
+        android:icon="@drawable/ic_question_answer_black_24dp"
+        android:title="Pranešimai" />
 
     <item
         android:id="@+id/navigation_contacts"
-        android:icon="@drawable/ic_shopping_cart_white_24dp"
-        android:title="Contacts" />
+        android:icon="@drawable/ic_local_library_black_24dp"
+        android:title="Biblioteka" />
 
     <item
         android:id="@+id/navigation_profile"
         android:icon="@drawable/ic_person_white_24dp"
-        android:title="@string/title_profile" />
+        android:title="Profilis" />
 
 </menu>

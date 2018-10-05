@@ -109,15 +109,15 @@ public class UserDataActivity extends Activity{
                 // Is better to use a List, because you don't know the size
                 // of the iterator returned by dataSnapshot.getChildren() to
                 // initialize the array
-                final List<String> areas = new ArrayList<String>();
+                final List<String> areas = new ArrayList<>();
 
                 for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
                     String areaName = areaSnapshot.child("cityName").getValue(String.class);
                     areas.add(areaName);
                 }
 
-                Spinner areaSpinner = (Spinner) findViewById(R.id.spinCity);
-                ArrayAdapter<String> areasAdapter = new ArrayAdapter<String>(UserDataActivity.this, android.R.layout.simple_spinner_item, areas);
+                Spinner areaSpinner = findViewById(R.id.spinCity);
+                ArrayAdapter<String> areasAdapter = new ArrayAdapter<>(UserDataActivity.this, android.R.layout.simple_spinner_item, areas);
                 areasAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 areaSpinner.setAdapter(areasAdapter);
             }

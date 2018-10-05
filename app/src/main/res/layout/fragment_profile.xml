@@ -51,7 +51,7 @@
 
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="367dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="85dp"
                     app:cardCornerRadius="10dp"
                     app:contentPaddingBottom="15dp"
@@ -68,9 +68,11 @@
                             android:id="@+id/profileEditBtn"
                             android:layout_width="34dp"
                             android:layout_height="34dp"
-                            app:srcCompat="@drawable/edit_btn"
+                            app:srcCompat="@drawable/ic_create_black_24dp"
                             android:layout_gravity="end"
                             android:background="@color/white"
+                            android:clickable="true"
+                            android:focusable="true"
                             android:tint="@color/colorAccent" />
 
 
@@ -80,7 +82,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="30dp"
-                            android:text="Test"
+                            android:text=""
                             android:textSize="25sp"
                             android:textStyle="bold" />
 
@@ -91,17 +93,17 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="10dp"
-                            android:text="Test"
+                            android:text=""
                             android:textSize="15sp" />
 
 
                         <TextView
-                            android:id="@+id/favoriteLiterature"
+                            android:id="@+id/about"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="20dp"
-                            android:text="Būsena"
+                            android:text=""
                             android:textAlignment="center"
                             android:textSize="15sp"
                             android:textStyle="italic" />
@@ -113,7 +115,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="10dp"
-                            android:text="Test"
+                            android:text=""
                             android:textSize="18sp"
                             android:textStyle="bold" />
 

@@ -12,9 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import com.agobal.KnyguKeitykla.Fragments.ContactsFragment;
+import com.agobal.KnyguKeitykla.Fragments.LibraryFragment;
 import com.agobal.KnyguKeitykla.Fragments.MessagesFragment;
 import com.agobal.KnyguKeitykla.Fragments.ProfileFragment;
 import com.agobal.KnyguKeitykla.Fragments.BookFragment;
@@ -23,7 +22,6 @@ import com.agobal.KnyguKeitykla.activity.AccountActivity.LoginActivity;
 import com.agobal.KnyguKeitykla.activity.AccountActivity.UserDataActivity;
 import com.agobal.KnyguKeitykla.helper.BottomNavigationBehavior;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -90,22 +88,22 @@ public class MainActivity extends AppCompatActivity {
             Fragment fragment;
             switch (item.getItemId()) {
                 case R.id.navigation_books:
-                    toolbar.setTitle("Books");
+                    toolbar.setTitle("Knygos");
                     fragment = new BookFragment();
                     loadFragment(fragment);
                     return true;
                 case R.id.navigation_messages:
-                    toolbar.setTitle("Messages");
+                    toolbar.setTitle("Pranešimai");
                     fragment = new MessagesFragment();
                     loadFragment(fragment);
                     return true;
                 case R.id.navigation_contacts:
-                    toolbar.setTitle("Contacts");
-                    fragment = new ContactsFragment();
+                    toolbar.setTitle("Biblioteka");
+                    fragment = new LibraryFragment();
                     loadFragment(fragment);
                     return true;
                 case R.id.navigation_profile:
-                    toolbar.setTitle("Profile");
+                    toolbar.setTitle("Profilis");
                     fragment = new ProfileFragment();
                     loadFragment(fragment);
                     return true;

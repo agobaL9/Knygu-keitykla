@@ -12,11 +12,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.agobal.KnyguKeitykla.Entities.UserData;
 import com.agobal.KnyguKeitykla.R;
+import com.agobal.KnyguKeitykla.activity.AccountActivity.LoginActivity;
+import com.agobal.KnyguKeitykla.activity.AccountActivity.ProfileEdit;
+import com.agobal.KnyguKeitykla.activity.MainActivity;
+import com.agobal.KnyguKeitykla.helper.CustomProgressBar;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -59,6 +65,15 @@ public class ProfileFragment extends Fragment {
     private StorageReference mImageStorage;
     private DatabaseReference mUserDatabase;
     private static final int GALLERY_PICK = 1;
+    private static CustomProgressBar progressBar = new CustomProgressBar();
+
+    String userName;
+    String email;
+    String firstName;
+    String lastName;
+    String cityName;
+    String about;
+
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -68,17 +83,20 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        progressBar.show(getActivity(),"Loading..");
         View v = inflater.inflate(R.layout.fragment_profile, container, false);
+
 
         pDialog = new ProgressDialog(getActivity());
         pDialog.setCancelable(false);
 
-        showDialog();
+        //showDialog();
         final TextView T_firstAndLastName = v.findViewById(R.id.firstAndLastName);
         final TextView T_Desc = v.findViewById(R.id.desc);
-        //TextView T_favoriteLiterature = getActivity().findViewById(R.id.favoriteLiterature);
+        final TextView T_About = v.findViewById(R.id.about);
         final TextView T_City= v.findViewById(R.id.city);
         final CircleImageView ProfilePic = v.findViewById(R.id.profilePic);
+        ImageButton BtnProfileEdit = v.findViewById(R.id.profileEditBtn);
 
 
         mImageStorage = FirebaseStorage.getInstance().getReference();
@@ -94,25 +112,27 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+
         FirebaseAuth auth = FirebaseAuth.getInstance();
-        FirebaseUser user = auth.getCurrentUser();
+        final FirebaseUser user = auth.getCurrentUser();
         final String userID = Objects.requireNonNull(user).getUid();
 
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         DatabaseReference usersRef = rootRef.child("Users").child(userID);
         usersRef.keepSynced(true);
 
-        showDialog();
+        //showDialog();
 
         usersRef.addValueEventListener(new ValueEventListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String userName = dataSnapshot.child("userName").getValue(String.class);
-                String email = dataSnapshot.child("email").getValue(String.class);
-                String firstName = dataSnapshot.child("firstName").getValue(String.class);
-                String lastName = dataSnapshot.child("lastName").getValue(String.class);
+                userName = dataSnapshot.child("userName").getValue(String.class);
+                email = dataSnapshot.child("email").getValue(String.class);
+                firstName = dataSnapshot.child("firstName").getValue(String.class);
+                lastName = dataSnapshot.child("lastName").getValue(String.class);
                 String cityName = dataSnapshot.child("cityName").getValue(String.class);
+                about = dataSnapshot.child("about").getValue(String.class);
                 String thumb_image = dataSnapshot.child("thumb_image").getValue(String.class);
                 final String image = dataSnapshot.child("image").getValue(String.class);
 
@@ -148,8 +168,11 @@ public class ProfileFragment extends Fragment {
                 T_firstAndLastName.setText(userData.firstName+" "+userData.lastName);
                 T_Desc.setText(userData.email);
                 T_City.setText(userData.cityName);
+                T_About.setText(about);
 
-                hideDialog();
+                //hideDialog();
+                progressBar.getDialog().dismiss();
+
             }
 
             @Override
@@ -158,9 +181,25 @@ public class ProfileFragment extends Fragment {
             }
         }) ;
 
+        BtnProfileEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Profile edit button
+
+                Intent intent = new Intent(getActivity(), ProfileEdit.class);
+                intent.putExtra("firstName", firstName);
+                intent.putExtra("lastName", lastName);
+                intent.putExtra("email", email);
+                intent.putExtra("userName", userName);
+                intent.putExtra("cityName", cityName);
+                intent.putExtra("about", about);
+                startActivity(intent);
+
+            }
+        });
+
         return v;
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/new_login_gradients"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="10dp"
+    tools:context=".activity.AccountActivity.ProfileEdit">
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="#fff">
+
+        <EditText
+            android:id="@+id/ProfileInputName"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="12dp"
+            android:background="@android:color/transparent"
+            android:hint="Vardas"
+            android:inputType="textCapWords"
+            android:singleLine="true"
+            android:textColorHint="#fff"  />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#f9d7db" />
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="#fff">
+
+        <EditText
+            android:id="@+id/ProfileInputLastName"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="12dp"
+            android:background="@android:color/transparent"
+            android:hint="Pavardė"
+            android:inputType="textCapWords"
+            android:singleLine="true"
+            android:textColorHint="#fff"  />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#f9d7db" />
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="#fff">
+
+        <EditText
+            android:id="@+id/ProfileInputEmail"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="12dp"
+            android:background="@android:color/transparent"
+            android:hint="El. paštas"
+            android:inputType="textEmailAddress"
+            android:singleLine="true"
+            android:textColorHint="#fff"  />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#f9d7db" />
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="#fff">
+
+        <EditText
+            android:id="@+id/ProfileInputUsername"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="12dp"
+            android:background="@android:color/transparent"
+            android:hint="Vartotojo Vardas"
+            android:inputType="textCapWords"
+            android:singleLine="true"
+            android:textColorHint="#fff"  />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#f9d7db" />
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="#fff">
+
+        <EditText
+            android:id="@+id/ProfileInputAbout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="12dp"
+            android:background="@android:color/transparent"
+            android:hint="Trumpai apie mane"
+            android:inputType="textCapWords"
+            android:singleLine="true"
+            android:textColorHint="#fff"  />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#f9d7db" />
+
+    <TextView android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Pasirinkite miestą"
+        android:textSize="18sp"
+        android:paddingTop="10dp"
+        android:textColor="@color/white"/>
+
+    <Spinner android:id="@+id/ProfileSpinCity"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:textColor="#FFF"
+        android:padding="10dip"/>
+
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dip"
+        android:background="@drawable/background_login"
+        android:text="Išsaugoti"
+        android:textColor="#f16f7d"  />
+
+</LinearLayout >
