@@ -2,6 +2,7 @@ package com.agobal.KnyguKeitykla.activity;
 
 import android.app.ActionBar;
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,8 @@ import android.support.v7.widget.SearchView;
 import android.app.SearchManager;
 import android.widget.ProgressBar;
 import android.widget.SearchView.OnQueryTextListener;
+import android.widget.Toast;
+
 import com.agobal.KnyguKeitykla.Entities.Book;
 import com.agobal.KnyguKeitykla.Fragments.LibraryFragment;
 import com.agobal.KnyguKeitykla.R;
@@ -55,19 +58,25 @@ public class LibraryActivity extends AppCompatActivity {
         ArrayList<Book> aBooks = new ArrayList<>();
         bookAdapter = new BookAdapter(this, aBooks);
         lvBooks.setAdapter(bookAdapter);
+        fetchBooks("Lord of");
 
         setupBookSelectedListener();
+
+        FloatingActionButton fab = findViewById(R.id.fab);
+
+
+        fab.setOnClickListener(view -> {
+            Intent intent = new Intent(LibraryActivity.this, AddNewBook.class);
+            startActivity(intent);
+        });
     }
 
     public void setupBookSelectedListener() {
-        lvBooks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Launch the detail view passing book as an extra
-                Intent intent = new Intent(LibraryActivity.this, BookDetailActivity.class);
-                intent.putExtra(BOOK_DETAIL_KEY, bookAdapter.getItem(position));
-                startActivity(intent);
-            }
+        lvBooks.setOnItemClickListener((parent, view, position, id) -> {
+            // Launch the detail view passing book as an extra
+            Intent intent = new Intent(LibraryActivity.this, BookDetailActivity.class);
+            intent.putExtra(BOOK_DETAIL_KEY, bookAdapter.getItem(position));
+            startActivity(intent);
         });
     }
 
@@ -75,7 +84,6 @@ public class LibraryActivity extends AppCompatActivity {
 
         progressBar.show(this,"Loading..");
 
-        //progress.setVisibility(ProgressBar.VISIBLE);
         BookClient client = new BookClient();
         client.getBooks(query, new JsonHttpResponseHandler() {
             @Override
@@ -110,7 +118,6 @@ public class LibraryActivity extends AppCompatActivity {
             }
         });
     }
-
 
 
     @Override

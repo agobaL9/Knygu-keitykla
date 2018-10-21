@@ -43,41 +43,35 @@ public class ResetPasswordActivity extends Activity {
 
         auth = FirebaseAuth.getInstance();
 
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(),
-                        LoginActivity.class);
-                startActivity(i);
-                finish();
-            }
+        btnBack.setOnClickListener(v -> {
+            Intent i = new Intent(getApplicationContext(),
+                    LoginActivity.class);
+            startActivity(i);
+            finish();
         });
 
-        btnReset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        btnReset.setOnClickListener(v -> {
 
-                String email = inputEmail.getText().toString().trim();
-                if (TextUtils.isEmpty(email)) {
-                    Toast.makeText(getApplication(), "Įveskite prisijungimo informaciją!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                progressBar.setVisibility(View.VISIBLE);
-                auth.sendPasswordResetEmail(email)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(ResetPasswordActivity.this, "Mes išsiuntėmė jums instrukcijas į jūsų el. paštą!", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(ResetPasswordActivity.this, "Nepavyko išsiųsti laiško!", Toast.LENGTH_SHORT).show();
-                                }
-
-                                progressBar.setVisibility(View.GONE);
-                            }
-                        });
+            String email = inputEmail.getText().toString().trim();
+            if (TextUtils.isEmpty(email)) {
+                Toast.makeText(getApplication(), "Įveskite prisijungimo informaciją!", Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            progressBar.setVisibility(View.VISIBLE);
+            auth.sendPasswordResetEmail(email)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(ResetPasswordActivity.this, "Mes išsiuntėmė jums instrukcijas į jūsų el. paštą!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(ResetPasswordActivity.this, "Nepavyko išsiųsti laiško!", Toast.LENGTH_SHORT).show();
+                            }
+
+                            progressBar.setVisibility(View.GONE);
+                        }
+                    });
         });
     }
 

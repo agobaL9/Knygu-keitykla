@@ -72,23 +72,20 @@ public class UserDataActivity extends Activity{
         // spinner item select listener
         //spinnerCity.setOnItemSelectedListener(this);
 
-        btnNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        btnNext.setOnClickListener(view -> {
 
-                String FirstName = inputName.getText().toString().trim();
-                String LastName = inputLastName.getText().toString().trim();
-                String CityName = spinnerCity.getSelectedItem().toString();
-                //int CityID = (int) spinnerCity.getSelectedItemId() +1;
+            String FirstName = inputName.getText().toString().trim();
+            String LastName = inputLastName.getText().toString().trim();
+            String CityName = spinnerCity.getSelectedItem().toString();
+            //int CityID = (int) spinnerCity.getSelectedItemId() +1;
 
-                checkUserData(FirstName, LastName);
-                storeUserData(FirstName, LastName, CityName);
+            checkUserData(FirstName, LastName);
+            storeUserData(FirstName, LastName, CityName);
 
-                // Launch main activity
-                Intent intent = new Intent(UserDataActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-            }
+            // Launch main activity
+            Intent intent = new Intent(UserDataActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
         });
 
         selectCity();

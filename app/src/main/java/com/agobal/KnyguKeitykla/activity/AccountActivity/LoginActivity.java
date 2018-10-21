@@ -61,36 +61,25 @@ public class LoginActivity extends Activity {
         }
 
         // Login button Click Event
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View view) {
-                String email = inputEmail.getText().toString().trim();
-                String password = inputPassword.getText().toString().trim();
-                login(email, password);
-            }
-
+        btnLogin.setOnClickListener(view -> {
+            String email = inputEmail.getText().toString().trim();
+            String password = inputPassword.getText().toString().trim();
+            login(email, password);
         });
 
         // Link to Register Screen
-        btnLinkToRegister.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(),
-                        RegisterActivity.class);
-                startActivity(i);
-                finish();
-            }
+        btnLinkToRegister.setOnClickListener(view -> {
+            Intent i = new Intent(getApplicationContext(),
+                    RegisterActivity.class);
+            startActivity(i);
+            finish();
         });
 
         //link to reset password
-        btn_reset_password.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(),
-                        ResetPasswordActivity.class);
-                startActivity(i);
-                finish();
-            }
+        btn_reset_password.setOnClickListener(view -> {
+            Intent i = new Intent(getApplicationContext(), ResetPasswordActivity.class);
+            startActivity(i);
+            finish();
         });
 
     }
@@ -100,23 +89,20 @@ public class LoginActivity extends Activity {
         if (!email.isEmpty() && !password.isEmpty()) {
         //firebase
         auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful())
-                        {
-                            //there was an error
-                            Toast.makeText(getApplicationContext(), "something wrong", Toast.LENGTH_LONG).show();
-                        }
-                        else
-                        {
-                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                             startActivity(intent);
-                             finish();
-                        }
+                .addOnCompleteListener(LoginActivity.this, task -> {
+                    // If sign in fails, display a message to the user. If sign in succeeds
+                    // the auth state listener will be notified and logic to handle the
+                    // signed in user can be handled in the listener.
+                    if (!task.isSuccessful())
+                    {
+                        //there was an error
+                        Toast.makeText(getApplicationContext(), "something wrong", Toast.LENGTH_LONG).show();
+                    }
+                    else
+                    {
+                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                         startActivity(intent);
+                         finish();
                     }
                 });
         }

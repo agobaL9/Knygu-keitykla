@@ -38,14 +38,11 @@ public class LibraryFragment extends Fragment {
         FloatingActionButton fab = v.findViewById(R.id.fab);
 
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        fab.setOnClickListener(view -> {
 
-                Intent intent = new Intent(getActivity(), LibraryActivity.class);
-                startActivity(intent);
+            Intent intent = new Intent(getActivity(), LibraryActivity.class);
+            startActivity(intent);
 
-            }
         });
 
         return v;

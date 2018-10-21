@@ -19,6 +19,7 @@ import com.agobal.KnyguKeitykla.R;
 import com.agobal.KnyguKeitykla.activity.MainActivity;
 import com.agobal.KnyguKeitykla.app.AppConfig;
 import com.agobal.KnyguKeitykla.app.AppController;
+import com.agobal.KnyguKeitykla.helper.CustomProgressBar;
 import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -43,8 +44,10 @@ public class RegisterActivity extends Activity {
     private EditText inputEmail;
     private EditText inputPassword;
     private EditText inputPassword2;
-    private ProgressDialog pDialog;
+    //private ProgressDialog pDialog;
     private FirebaseAuth auth;
+    private static CustomProgressBar progressBar = new CustomProgressBar();
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,10 +64,6 @@ public class RegisterActivity extends Activity {
         Button btnRegister = findViewById(R.id.btnRegister);
         Button btnLinkToLogin = findViewById(R.id.btnLinkToLoginScreen);
 
-        // Progress dialog
-        pDialog = new ProgressDialog(this);
-        pDialog.setCancelable(false);
-
         // Check if user is already logged in or not
         auth = FirebaseAuth.getInstance();
 
@@ -76,139 +75,31 @@ public class RegisterActivity extends Activity {
         }
 
         // Register Button Click event
-        btnRegister.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
+        btnRegister.setOnClickListener(view -> {
 
-                final String userName = inputUserName.getText().toString().trim();
-                final String email = inputEmail.getText().toString().trim();
-                String password = inputPassword.getText().toString().trim();
-                String password2 = inputPassword2.getText().toString().trim();
+            final String userName = inputUserName.getText().toString().trim();
+            final String email = inputEmail.getText().toString().trim();
+            String password = inputPassword.getText().toString().trim();
+            String password2 = inputPassword2.getText().toString().trim();
 
-                checkRegistrationData(userName, email, password, password2);
+            checkRegistrationData(userName, email, password, password2);
 
-            }
         });
 
         // Link to Login Screen
-        btnLinkToLogin.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(),
-                        LoginActivity.class);
-                startActivity(i);
-                finish();
-            }
+        btnLinkToLogin.setOnClickListener(view -> {
+            Intent i = new Intent(getApplicationContext(),
+                    LoginActivity.class);
+            startActivity(i);
+            finish();
         });
 
-    }
-
-    /**
-     * Function to store user in MySQL database will post params(tag, name,
-     * email, password) to register url
-     * */
-    private void registerUser(final String userName, final String email,
-                              final String password) {
-        // Tag used to cancel the request
-        String tag_string_req = "req_register";
-
-        pDialog.setMessage("Vykdoma ...");
-        showDialog();
-
-        StringRequest strReq = new StringRequest(Method.POST, AppConfig.URL_REGISTER, new Response.Listener<String>() {
-
-            @Override
-            public void onResponse(String response) {
-                Log.d(TAG, "Register Response: " + response);
-                hideDialog();
-
-                try {
-                    JSONObject jObj = new JSONObject(response);
-                    boolean error = jObj.getBoolean("error");
-                    if (!error) {
-                        // User successfully stored in MySQL
-                        String uid = jObj.getString("uid");
-                        JSONObject user = jObj.getJSONObject("user");
-                        String userName = user.getString("userName");
-                        String email = user.getString("email");
-                        String created_at = user.getString("created_at");
-
-                        Log.d(TAG, "addUserRegistra " + uid +" "+ userName +" "+email );
-
-                    } else {
-                        Log.e(TAG, "onResponse: " + userName);
-                        // Error occurred in registration. Get the error
-                        // message
-                        String errorMsg = jObj.getString("error_msg");
-                        Toast.makeText(getApplicationContext(),
-                                errorMsg, Toast.LENGTH_LONG).show();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "Registration Error: " + error.getMessage());
-                Toast.makeText(getApplicationContext(),
-                        error.getMessage(), Toast.LENGTH_LONG).show();
-                hideDialog();
-            }
-        })
-
-        {
-
-            @Override
-            protected Map<String, String> getParams() {
-                // Posting params to register url
-                Map<String, String> params = new HashMap<>();
-                params.put("userName", userName);
-                params.put("email", email);
-                params.put("password", password);
-
-                return params;
-            }
-
-        };
-
-        // Adding request to request queue
-        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
-
-        //Google firebase
-        auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Toast.makeText(RegisterActivity.this, "Registracija sėkminga!", Toast.LENGTH_SHORT).show();
-
-                        if (!task.isSuccessful()) {
-                            Toast.makeText(RegisterActivity.this, "Registracija nesėkminga!" ,Toast.LENGTH_SHORT).show();
-                        }
-                        else
-                        {
-                            FirebaseDatabase  database = FirebaseDatabase.getInstance();
-                            DatabaseReference mDatabaseRef = database.getReference("Users");
-
-                            Map<String, Object> Updates = new HashMap<>();
-                            Updates.put(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()+ "/userName", userName);
-                            Updates.put(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()+ "/email", email);
-                            Updates.put(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()+ "/image", "default");
-                            Updates.put(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()+ "/thumb_image", "default");
-
-                            mDatabaseRef.updateChildren(Updates);
-
-                            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                            finish();
-                        }
-                    }
-                });
-        //firebase
     }
 
     void checkRegistrationData(String userName, String email, String password, String password2)
     {
+        progressBar.show(this,"Loading..");
+
 
         if (!isValidEmail(inputEmail.getText().toString()))
             Toast.makeText(getApplicationContext(), "Įveskite galiojantį el. paštą!", Toast.LENGTH_LONG).show();
@@ -234,6 +125,101 @@ public class RegisterActivity extends Activity {
     }
 
 
+    /**
+     * Function to store user in MySQL database will post params(tag, name,
+     * email, password) to register url
+     * */
+    private void registerUser(final String userName, final String email,
+                              final String password) {
+        // Tag used to cancel the request
+
+        /*
+        String tag_string_req = "req_register";
+        progressBar.show(this,"Loading..");
+
+        StringRequest strReq = new StringRequest(Method.POST, AppConfig.URL_REGISTER, response -> {
+            Log.d(TAG, "Register Response: " + response);
+
+            try {
+                JSONObject jObj = new JSONObject(response);
+                boolean error = jObj.getBoolean("error");
+                if (!error) {
+                    // User successfully stored in MySQL
+                    String uid = jObj.getString("uid");
+                    JSONObject user = jObj.getJSONObject("user");
+                    String userName1 = user.getString("userName");
+                    String email1 = user.getString("email");
+                    String created_at = user.getString("created_at");
+
+                    Log.d(TAG, "addUserRegistra " + uid +" "+ userName1 +" "+ email1);
+
+                } else {
+                    Log.e(TAG, "onResponse: " + userName);
+                    // Error occurred in registration. Get the error
+                    // message
+                    String errorMsg = jObj.getString("error_msg");
+                    //Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_LONG).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }, error -> {
+            Log.e(TAG, "Registration Error: " + error.getMessage());
+            //Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+            //hideDialog();
+        })
+
+        {
+
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting params to register url
+                Map<String, String> params = new HashMap<>();
+                params.put("userName", userName);
+                params.put("email", email);
+                params.put("password", password);
+
+                return params;
+            }
+
+        };
+
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+*/
+        //Google firebase
+        auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(RegisterActivity.this, task -> {
+                    Toast.makeText(RegisterActivity.this, "Registracija sėkminga!", Toast.LENGTH_SHORT).show();
+
+                    if (!task.isSuccessful()) {
+                        Toast.makeText(RegisterActivity.this, "Registracija nesėkminga!" ,Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                    {
+                        FirebaseDatabase  database = FirebaseDatabase.getInstance();
+                        DatabaseReference mDatabaseRef = database.getReference("Users");
+
+                        Map<String, Object> Updates = new HashMap<>();
+                        Updates.put(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()+ "/userName", userName);
+                        Updates.put(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()+ "/email", email);
+                        Updates.put(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()+ "/image", "default");
+                        Updates.put(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()+ "/thumb_image", "default");
+
+                        mDatabaseRef.updateChildren(Updates);
+
+                        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                        finish();
+                    }
+                });
+        progressBar.getDialog().dismiss();
+
+        //firebase
+    }
+
+
+/*
     private void showDialog() {
         if (!pDialog.isShowing())
             pDialog.show();
@@ -243,7 +229,7 @@ public class RegisterActivity extends Activity {
         if (pDialog.isShowing())
             pDialog.dismiss();
     }
-
+*/
     public static boolean isValidEmail(CharSequence target) {
         return !TextUtils.isEmpty(target) && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }

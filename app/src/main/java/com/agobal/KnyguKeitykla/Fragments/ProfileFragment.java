@@ -104,12 +104,9 @@ public class ProfileFragment extends Fragment {
         String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
 
-        ProfilePic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Profile photo button
-                showFileChooser();
-            }
+        ProfilePic.setOnClickListener(view -> {
+            //Profile photo button
+            showFileChooser();
         });
 
 
@@ -181,21 +178,18 @@ public class ProfileFragment extends Fragment {
             }
         }) ;
 
-        BtnProfileEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Profile edit button
+        BtnProfileEdit.setOnClickListener(view -> {
+            //Profile edit button
 
-                Intent intent = new Intent(getActivity(), ProfileEdit.class);
-                intent.putExtra("firstName", firstName);
-                intent.putExtra("lastName", lastName);
-                intent.putExtra("email", email);
-                intent.putExtra("userName", userName);
-                intent.putExtra("cityName", cityName);
-                intent.putExtra("about", about);
-                startActivity(intent);
+            Intent intent = new Intent(getActivity(), ProfileEdit.class);
+            intent.putExtra("firstName", firstName);
+            intent.putExtra("lastName", lastName);
+            intent.putExtra("email", email);
+            intent.putExtra("userName", userName);
+            intent.putExtra("cityName", cityName);
+            intent.putExtra("about", about);
+            startActivity(intent);
 
-            }
         });
 
         return v;
@@ -260,38 +254,20 @@ public class ProfileFragment extends Fragment {
                 final StorageReference filepath = mImageStorage.child("profile_images").child(current_user_id + ".jpg");
                 final StorageReference thumb_filepath = mImageStorage.child("profile_images").child("thumbs").child(current_user_id + ".jpg");
 
-                filepath.putFile(resultUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
+                filepath.putFile(resultUri).addOnSuccessListener(taskSnapshot -> filepath.getDownloadUrl().addOnSuccessListener(uri -> {
 
-                        filepath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
+                    String download_url = uri.toString();
+                    mUserDatabase.child("image").setValue(download_url);
+                    pDialog.dismiss();
+                }));
 
-                                String download_url = uri.toString();
-                                mUserDatabase.child("image").setValue(download_url);
-                                pDialog.dismiss();
-                            }
+                thumb_filepath.putFile(resultUri).addOnSuccessListener(taskSnapshot -> thumb_filepath.getDownloadUrl().addOnSuccessListener(uri -> {
+                    String thumb_download_url = uri.toString();
+                    Log.d("URL: ", thumb_download_url);
+                    mUserDatabase.child("thumb_image").setValue(thumb_download_url);
+                    pDialog.dismiss();
 
-                        });
-                    }
-                });
-
-                thumb_filepath.putFile(resultUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        thumb_filepath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                String thumb_download_url = uri.toString();
-                                Log.d("URL: ", thumb_download_url);
-                                mUserDatabase.child("thumb_image").setValue(thumb_download_url);
-                                pDialog.dismiss();
-
-                            }
-                        });
-                    }
-                });
+                }));
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
 
