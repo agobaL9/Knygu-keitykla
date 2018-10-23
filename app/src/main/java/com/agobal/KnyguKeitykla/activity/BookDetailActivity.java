@@ -1,12 +1,9 @@
 package com.agobal.KnyguKeitykla.activity;
 
 import android.net.Uri;
-import android.preference.PreferenceActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -43,7 +40,7 @@ public class BookDetailActivity extends AppCompatActivity {
             tvPublisher = findViewById(R.id.tvPublisher);
             tvPageCount = findViewById(R.id.tvPageCount);
             // Use the book to populate the data into our views
-            Book book = (Book) getIntent().getSerializableExtra(LibraryActivity.BOOK_DETAIL_KEY);
+            Book book = (Book) getIntent().getSerializableExtra(SearchBookActivity.BOOK_DETAIL_KEY);
             loadBook(book);
 
     }

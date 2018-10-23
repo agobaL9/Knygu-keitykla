@@ -109,7 +109,6 @@ public class ProfileFragment extends Fragment {
             showFileChooser();
         });
 
-
         FirebaseAuth auth = FirebaseAuth.getInstance();
         final FirebaseUser user = auth.getCurrentUser();
         final String userID = Objects.requireNonNull(user).getUid();
@@ -117,8 +116,6 @@ public class ProfileFragment extends Fragment {
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         DatabaseReference usersRef = rootRef.child("Users").child(userID);
         usersRef.keepSynced(true);
-
-        //showDialog();
 
         usersRef.addValueEventListener(new ValueEventListener() {
             @SuppressLint("SetTextI18n")
@@ -284,19 +281,6 @@ public class ProfileFragment extends Fragment {
         startActivityForResult(Intent.createChooser(galleryIntent, "SELECT IMAGE"), GALLERY_PICK);
     }
 
-/*
-    void ShowDialog()
-    {
-        pDialog = ProgressDialog.show(getActivity(), "Updating information", "Please wait...",true,true);
-        final Timer t = new Timer();
-        t.schedule(new TimerTask() {
-            public void run() {
-                pDialog.dismiss();
-                t.cancel();
-            }
-        }, 1000);
-    }
-*/
     private void showDialog() {
         if (!pDialog.isShowing())
             pDialog.show();

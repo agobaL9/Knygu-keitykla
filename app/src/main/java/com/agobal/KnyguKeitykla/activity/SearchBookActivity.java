@@ -1,25 +1,16 @@
 package com.agobal.KnyguKeitykla.activity;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.support.v7.widget.SearchView;
-import android.app.SearchManager;
 import android.widget.ProgressBar;
-import android.widget.SearchView.OnQueryTextListener;
-import android.widget.Toast;
 
 import com.agobal.KnyguKeitykla.Entities.Book;
-import com.agobal.KnyguKeitykla.Fragments.LibraryFragment;
 import com.agobal.KnyguKeitykla.R;
 import com.agobal.KnyguKeitykla.activity.adapters.BookAdapter;
 import com.agobal.KnyguKeitykla.helper.BookClient;
@@ -34,7 +25,7 @@ import cz.msebera.android.httpclient.Header;
 
 import java.util.ArrayList;
 
-public class LibraryActivity extends AppCompatActivity {
+public class SearchBookActivity extends AppCompatActivity {
 
     public static final String BOOK_DETAIL_KEY = "book";
     private BookAdapter bookAdapter;
@@ -46,7 +37,7 @@ public class LibraryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_library);
+        setContentView(R.layout.activity_search_book);
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -66,7 +57,7 @@ public class LibraryActivity extends AppCompatActivity {
 
 
         fab.setOnClickListener(view -> {
-            Intent intent = new Intent(LibraryActivity.this, AddNewBook.class);
+            Intent intent = new Intent(SearchBookActivity.this, AddNewBook.class);
             startActivity(intent);
         });
     }
@@ -74,7 +65,7 @@ public class LibraryActivity extends AppCompatActivity {
     public void setupBookSelectedListener() {
         lvBooks.setOnItemClickListener((parent, view, position, id) -> {
             // Launch the detail view passing book as an extra
-            Intent intent = new Intent(LibraryActivity.this, BookDetailActivity.class);
+            Intent intent = new Intent(SearchBookActivity.this, BookDetailActivity.class);
             intent.putExtra(BOOK_DETAIL_KEY, bookAdapter.getItem(position));
             startActivity(intent);
         });
@@ -138,7 +129,7 @@ public class LibraryActivity extends AppCompatActivity {
                 searchView.setIconified(true);
                 searchItem.collapseActionView();
                 // Set activity title to search query
-                LibraryActivity.this.setTitle(query);
+                SearchBookActivity.this.setTitle(query);
                 return true;
             }
 

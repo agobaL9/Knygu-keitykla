@@ -2,13 +2,17 @@ package com.agobal.KnyguKeitykla.activity;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +30,7 @@ import android.widget.Toast;
 
 import com.agobal.KnyguKeitykla.R;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -41,6 +46,10 @@ import com.mlsdev.rximagepicker.RxImagePicker;
 import com.mlsdev.rximagepicker.Sources;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
+import com.bumptech.glide.annotation.GlideModule;
+import com.bumptech.glide.module.AppGlideModule;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,10 +61,12 @@ import io.reactivex.Observable;
 public class AddNewBook extends AppCompatActivity {
 
     private StorageReference mImageStorage;
-    private DatabaseReference mUserDatabase;
     private DatabaseReference mBookDatabase;
+    DatabaseReference mUserDatabase;
 
-    //ImageButton ivBookCover;
+    FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+    String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
+
     EditText etBookName;
     EditText etBookAuthor;
     EditText etBookAbout;
@@ -72,6 +83,7 @@ public class AddNewBook extends AppCompatActivity {
     int BookYear;
     String key;
     String download_url;
+    Boolean isPhotoSelected= false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,8 +94,6 @@ public class AddNewBook extends AppCompatActivity {
         setContentView(R.layout.activity_add_new_book);
 
         mImageStorage = FirebaseStorage.getInstance().getReference();
-        FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-        String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
         mBookDatabase = FirebaseDatabase.getInstance().getReference().child("Books");
 
@@ -112,28 +122,27 @@ public class AddNewBook extends AppCompatActivity {
 
         selectCategory();
 
-
     }
 
 
     @SuppressLint("CheckResult")
     private void pickImageFromSource(Sources source) {
-        RxImagePicker.with(getFragmentManager()).requestImage(source)
-                .flatMap(uri -> {
+        RxImagePicker.with(getFragmentManager()).requestImage(source).flatMap(uri -> {
 
                     //TODO: reikia gauti key
                     key = mBookDatabase.push().getKey();
 
                     final StorageReference filepath = mImageStorage.child("book_images").child(key + ".jpg");
 
-                    filepath.putFile(uri).addOnSuccessListener(taskSnapshot -> filepath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri1) {
-                            String download_url = uri1.toString();
-                            mBookDatabase.child(key).child("image").setValue(download_url);
-                        }
+                    Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    bmp.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+                    byte[] data = baos.toByteArray();
 
-                    }));
+                    filepath.putBytes(data)
+                            .addOnSuccessListener(taskSnapshot -> filepath.getDownloadUrl()
+                            .addOnSuccessListener(uri1 ->
+                                    download_url = uri1.toString()));
 
                             return Observable.just(uri);
 
@@ -141,32 +150,38 @@ public class AddNewBook extends AppCompatActivity {
                 })
                 .subscribe(this::onImagePicked, throwable -> Toast.makeText(AddNewBook.this, String.format("Error: %s", throwable), Toast.LENGTH_LONG).show());
 
-
-
-
+        isPhotoSelected=true;
 
     }
 
-    private void onImagePicked(Object result) {
+    private void onImagePicked(Object result)
+    {
         Toast.makeText(this, String.format("Result: %s", result), Toast.LENGTH_LONG).show();
-        if (result instanceof Bitmap) {
+
+        if (result instanceof Bitmap)
+        {
             ivPickedImage.setImageBitmap((Bitmap) result);
+            Log.d("IF", "IFAS SUVEIKE");
 
-
-        } else {
+        }
+        else
+        {
             Glide.with(this)
                     .load(result) // works for File or Uri
                     .transition(withCrossFade())
+                    .apply(new RequestOptions().centerCrop())
                     .into(ivPickedImage);
+
+            Log.d("IF", "ELSAS SUVEIKE");
         }
     }
 
     private void selectCategory() {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference mDatabaseRef = database.getReference("Category");
+        DatabaseReference mDatabaseCategory = database.getReference("Category");
 
-        mDatabaseRef.addValueEventListener(new ValueEventListener() {
+        mDatabaseCategory.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // Is better to use a List, because you don't know the size
@@ -201,24 +216,39 @@ public class AddNewBook extends AppCompatActivity {
 
         String CategoryBook = spinCategory.getSelectedItem().toString();
 
-
         String bookCondition = ((RadioButton)findViewById(radioGroup.getCheckedRadioButtonId())).getText().toString();
 
-        mBookDatabase.child(Objects.requireNonNull(key)).child("bookName").setValue(BookName);
+        if(!isPhotoSelected) {
+            Toast.makeText(getApplicationContext(), "Pasirinkite nuotrauką!",
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if(TextUtils.isEmpty(BookName)) {
+            etBookName.setError("Knygos pavadinimas negali būti tuščias!");
+            return;
+        }
+
+        if(TextUtils.isEmpty(BookAuthor)) {
+            etBookAuthor.setError("Knygos autorius negali būti tuščias!");
+            return;
+        }
+
+        if (radioGroup.getCheckedRadioButtonId() == -1)
+        {
+            Toast.makeText(getApplicationContext(), "Turite pasirinkti knygos būklę!",
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        mBookDatabase.child(key).child("bookName").setValue(BookName);
         mBookDatabase.child(key).child("bookAuthor").setValue(BookAuthor);
         mBookDatabase.child(key).child("bookAbout").setValue(BookAbout);
         mBookDatabase.child(key).child("categoryBook").setValue(CategoryBook);
         mBookDatabase.child(key).child("bookCondition").setValue(bookCondition);
-
         mBookDatabase.child(key).child("bookYear").setValue(BookYear);
-
-        //final StorageReference filepath = mImageStorage.child("book_images").child(key + ".jpg");
-
-
-        //mBookDatabase.child(key).child("image").setValue(download_url);
-
-
-
+        mBookDatabase.child(key).child("image").setValue(download_url);
+        mBookDatabase.child(key).child("userID").setValue(current_uid);
 
     }
 
@@ -241,6 +271,9 @@ public class AddNewBook extends AppCompatActivity {
         d.setPositiveButton("Done", (dialogInterface, i) -> {
             Log.d("TAG1", "onClick: " + numberPicker.getValue());
             BookYear = numberPicker.getValue();
+
+            btnYear.setText("Pasirinkti metai: "+BookYear);
+
         });
 
 
@@ -249,6 +282,8 @@ public class AddNewBook extends AppCompatActivity {
 
         AlertDialog alertDialog = d.create();
         alertDialog.show();
+
+
     }
 
 }

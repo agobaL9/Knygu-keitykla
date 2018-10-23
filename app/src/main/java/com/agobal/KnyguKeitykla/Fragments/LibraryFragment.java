@@ -5,16 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.agobal.KnyguKeitykla.R;
-import com.agobal.KnyguKeitykla.activity.AccountActivity.LoginActivity;
-import com.agobal.KnyguKeitykla.activity.LibraryActivity;
-import com.agobal.KnyguKeitykla.activity.MainActivity;
+import com.agobal.KnyguKeitykla.activity.SearchBookActivity;
 
 
 /**
@@ -40,7 +37,7 @@ public class LibraryFragment extends Fragment {
 
         fab.setOnClickListener(view -> {
 
-            Intent intent = new Intent(getActivity(), LibraryActivity.class);
+            Intent intent = new Intent(getActivity(), SearchBookActivity.class);
             startActivity(intent);
 
         });
