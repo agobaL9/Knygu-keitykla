@@ -63,6 +63,8 @@ public class AddNewBook extends AppCompatActivity {
     private StorageReference mImageStorage;
     private DatabaseReference mBookDatabase;
     DatabaseReference mUserDatabase;
+    DatabaseReference mUserBookDatabase;
+    //TODO: kurti userBooks table
 
     FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
     String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
@@ -96,6 +98,7 @@ public class AddNewBook extends AppCompatActivity {
         mImageStorage = FirebaseStorage.getInstance().getReference();
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
         mBookDatabase = FirebaseDatabase.getInstance().getReference().child("Books");
+        mUserBookDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks");
 
         etBookName = findViewById(R.id.etBookName);
         etBookAuthor = findViewById(R.id.etBookAuthor);
@@ -216,7 +219,6 @@ public class AddNewBook extends AppCompatActivity {
 
         String CategoryBook = spinCategory.getSelectedItem().toString();
 
-        String bookCondition = ((RadioButton)findViewById(radioGroup.getCheckedRadioButtonId())).getText().toString();
 
         if(!isPhotoSelected) {
             Toast.makeText(getApplicationContext(), "Pasirinkite nuotrauką!",
@@ -241,6 +243,8 @@ public class AddNewBook extends AppCompatActivity {
             return;
         }
 
+        String bookCondition = ((RadioButton)findViewById(radioGroup.getCheckedRadioButtonId())).getText().toString();
+
         mBookDatabase.child(key).child("bookName").setValue(BookName);
         mBookDatabase.child(key).child("bookAuthor").setValue(BookAuthor);
         mBookDatabase.child(key).child("bookAbout").setValue(BookAbout);
@@ -248,7 +252,18 @@ public class AddNewBook extends AppCompatActivity {
         mBookDatabase.child(key).child("bookCondition").setValue(bookCondition);
         mBookDatabase.child(key).child("bookYear").setValue(BookYear);
         mBookDatabase.child(key).child("image").setValue(download_url);
-        mBookDatabase.child(key).child("userID").setValue(current_uid);
+        //mBookDatabase.child(key).child("userID").setValue(current_uid);
+
+        mUserBookDatabase.child(current_uid).child(key).child("bookName").setValue(BookName);
+        mUserBookDatabase.child(current_uid).child(key).child("bookAuthor").setValue(BookAuthor);
+        mUserBookDatabase.child(current_uid).child(key).child("bookAbout").setValue(BookAbout);
+        mUserBookDatabase.child(current_uid).child(key).child("categoryBook").setValue(CategoryBook);
+        mUserBookDatabase.child(current_uid).child(key).child("bookCondition").setValue(bookCondition);
+        mUserBookDatabase.child(current_uid).child(key).child("bookYear").setValue(BookYear);
+        mUserBookDatabase.child(current_uid).child(key).child("image").setValue(download_url);
+
+
+        //mUserDatabase.child("bookID").setValue(key);
 
     }
 

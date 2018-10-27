@@ -191,13 +191,14 @@ public class RegisterActivity extends Activity {
         //Google firebase
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(RegisterActivity.this, task -> {
-                    Toast.makeText(RegisterActivity.this, "Registracija sėkminga!", Toast.LENGTH_SHORT).show();
 
                     if (!task.isSuccessful()) {
-                        Toast.makeText(RegisterActivity.this, "Registracija nesėkminga!" ,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, "Registuojantis įvyko klaida!" ,Toast.LENGTH_SHORT).show();
                     }
                     else
                     {
+                        Toast.makeText(RegisterActivity.this, "Registracija sėkminga!", Toast.LENGTH_SHORT).show();
+
                         FirebaseDatabase  database = FirebaseDatabase.getInstance();
                         DatabaseReference mDatabaseRef = database.getReference("Users");
 

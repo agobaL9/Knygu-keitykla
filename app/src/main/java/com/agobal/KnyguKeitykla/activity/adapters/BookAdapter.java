@@ -18,6 +18,10 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class BookAdapter extends ArrayAdapter<Book> {
+
+
+
+
     // View lookup cache
     private static class ViewHolder {
         ImageView ivCover;
@@ -55,5 +59,10 @@ public class BookAdapter extends ArrayAdapter<Book> {
         Picasso.get().load(Uri.parse(book.getCoverUrl())).error(R.drawable.ic_nocover).into(viewHolder.ivCover); //TODO: check this
         // Return the completed view to render on screen
         return convertView;
+    }
+
+    public void add(String bookName) {
+
+
     }
 }
