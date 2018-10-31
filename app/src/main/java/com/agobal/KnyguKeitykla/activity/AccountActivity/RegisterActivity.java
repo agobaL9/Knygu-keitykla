@@ -89,8 +89,6 @@ public class RegisterActivity extends Activity {
 
             pDialog.dismissWithAnimation();
 
-            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-            finish();
 
         });
 
@@ -131,11 +129,6 @@ public class RegisterActivity extends Activity {
             registerUser(userName, email, password);
     }
 
-
-    /**
-     * Function to store user in MySQL database will post params(tag, name,
-     * email, password) to register url
-     * */
     private void registerUser(final String userName, final String email, final String password) {
         //Google firebase
         auth.createUserWithEmailAndPassword(email, password)
@@ -158,6 +151,9 @@ public class RegisterActivity extends Activity {
                         Updates.put(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()+ "/thumb_image", "default");
 
                         mDatabaseRef.updateChildren(Updates);
+
+                        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                        finish();
 
                     }
                 });

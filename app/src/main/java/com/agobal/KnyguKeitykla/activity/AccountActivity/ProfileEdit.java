@@ -96,12 +96,6 @@ public class ProfileEdit extends AppCompatActivity {
             String CityName = spinnerCity.getSelectedItem().toString();
 
             saveChanges(FirstName, LastName, Email, UserName, About, CityName);
-
-            Intent intent = new Intent(ProfileEdit.this, MainActivity.class);
-            startActivity(intent);
-
-            Toast.makeText(getApplicationContext(),"Duomenys atnaujinti!", Toast.LENGTH_LONG).show();
-
         });
 
         selectCity();
@@ -168,6 +162,10 @@ public class ProfileEdit extends AppCompatActivity {
 
         new SweetAlertDialog(this)
                 .setTitleText("Duomenys atnaujinti! ")
+                .setConfirmClickListener(sweetAlertDialog -> {
+                    Intent intent = new Intent(ProfileEdit.this, MainActivity.class);
+                    startActivity(intent);
+                })
                 .show();
 
     }
