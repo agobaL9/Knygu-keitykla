@@ -28,7 +28,7 @@ import java.util.List;
 public class MyBookAdapter extends ArrayAdapter<MyBook> {
 
     private Context mContext;
-    private List<MyBook> myBookList = new ArrayList<>();
+    private List<MyBook> myBookList;
 
 
 
@@ -46,25 +46,17 @@ public class MyBookAdapter extends ArrayAdapter<MyBook> {
 
         View listItem = convertView;
         if(listItem == null)
-            listItem = LayoutInflater.from(mContext).inflate(R.layout.item_book,parent,false);
+            listItem = LayoutInflater.from(mContext).inflate(R.layout.item_mybook,parent,false);
 
         MyBook currentBook = myBookList.get(position);
 
         ImageView image = listItem.findViewById(R.id.ivBookCover);
-
-
-
-        //Glide.with(getContext()).load(urlImage).into(image);
 
         Picasso.get().load(currentBook.getBookImage())
                 .rotate(90)
                 .resize(200,200)
                 .centerCrop()
                 .into(image);
-
-
-        //Picasso.get().load(image).into(image);
-
 
         TextView name = listItem.findViewById(R.id.tvTitle);
         name.setText(currentBook.getBookName());

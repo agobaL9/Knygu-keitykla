@@ -1,17 +1,11 @@
 package com.agobal.KnyguKeitykla.activity.AccountActivity;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,10 +13,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.agobal.KnyguKeitykla.Entities.Category;
-import com.agobal.KnyguKeitykla.Entities.UserData;
 import com.agobal.KnyguKeitykla.R;
 import com.agobal.KnyguKeitykla.activity.MainActivity;
-import com.agobal.KnyguKeitykla.helper.ServiceHandler;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,17 +23,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 //import com.agobal.KnyguKeitykla.helper.SessionManager;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
-import static com.agobal.KnyguKeitykla.app.AppConfig.URL_CITIES;
 
 public class UserDataActivity extends Activity{
 
@@ -51,7 +37,6 @@ public class UserDataActivity extends Activity{
 
     private Spinner spinnerCity;
     private ArrayList<Category> citiesList;
-    ProgressDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,15 +54,11 @@ public class UserDataActivity extends Activity{
         spinnerCity = findViewById(R.id.spinCity);
         citiesList = new ArrayList<>();
 
-        // spinner item select listener
-        //spinnerCity.setOnItemSelectedListener(this);
-
         btnNext.setOnClickListener(view -> {
 
             String FirstName = inputName.getText().toString().trim();
             String LastName = inputLastName.getText().toString().trim();
             String CityName = spinnerCity.getSelectedItem().toString();
-            //int CityID = (int) spinnerCity.getSelectedItemId() +1;
 
             checkUserData(FirstName, LastName);
             storeUserData(FirstName, LastName, CityName);
@@ -89,9 +70,6 @@ public class UserDataActivity extends Activity{
         });
 
         selectCity();
-
-        //new  GetCities().execute();
-
     }
 
     private void selectCity() {
@@ -163,92 +141,5 @@ public class UserDataActivity extends Activity{
         Toast.makeText(getApplicationContext(),
                 "Turite užpildyti duomenis!", Toast.LENGTH_LONG).show();
     }
-
-    private void populateSpinner() {
-        List<String> lables = new ArrayList<>();
-
-        for (int i = 0; i < citiesList.size(); i++) {
-            lables.add(citiesList.get(i).getName());
-        }
-        // Creating adapter for spinner
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, lables);
-        // Drop down layout style - list view with radio button
-        spinnerAdapter
-                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // attaching data adapter to spinner
-        spinnerCity.setAdapter(spinnerAdapter);
-    }
-/*
-    /**
-     * Async task to get all cities
-     * */
-
-/*
-    @SuppressLint("StaticFieldLeak")
-    private class GetCities extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            pDialog = new ProgressDialog(UserDataActivity.this);
-            pDialog.setMessage("Fetching cities..");
-            pDialog.setCancelable(false);
-            pDialog.show();
-        }
-
-        @Override
-        protected Void doInBackground(Void... arg0) {
-            ServiceHandler jsonParser = new ServiceHandler();
-            String json = jsonParser.makeServiceCall(URL_CITIES, ServiceHandler.GET);
-
-            if (json != null) {
-                try {
-                    JSONObject jsonObj = new JSONObject(json);
-                    JSONArray cities = jsonObj
-                            .getJSONArray("cities");
-
-                    for (int i = 0; i < cities.length(); i++) {
-                        JSONObject cityObj = (JSONObject) cities.get(i);
-                        Category cat = new Category(cityObj.getInt("id"),
-                                cityObj.getString("cityName"));
-                        citiesList.add(cat);
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            } else {
-                Log.e("JSON Data", "Didn't receive any data from server!");
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            if (pDialog.isShowing())
-                pDialog.dismiss();
-            populateSpinner();
-        }
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(
-                getApplicationContext(),
-                parent.getItemAtPosition(position).toString() + " Selected" ,
-                Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-
-    }
-
-    */
 }
 

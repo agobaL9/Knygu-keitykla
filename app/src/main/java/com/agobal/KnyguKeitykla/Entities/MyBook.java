@@ -38,5 +38,9 @@ public class MyBook {
         BookImage = bookImage;
     }
 
+    public String toString(){
+        return "name : " + BookName + "\nAge : " + BookAuthor + "\nColor : " + BookImage;
+    }
+
 
 }

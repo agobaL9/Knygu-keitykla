@@ -20,6 +20,7 @@ import com.agobal.KnyguKeitykla.Entities.Category;
 import com.agobal.KnyguKeitykla.Entities.UserData;
 import com.agobal.KnyguKeitykla.Fragments.ProfileFragment;
 import com.agobal.KnyguKeitykla.R;
+import com.agobal.KnyguKeitykla.activity.AddNewBook;
 import com.agobal.KnyguKeitykla.activity.MainActivity;
 import com.agobal.KnyguKeitykla.helper.CustomProgressBar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,15 +38,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileEdit extends AppCompatActivity {
 
-    private static CustomProgressBar progressBar = new CustomProgressBar();
-    private StorageReference mImageStorage;
-    private DatabaseReference mUserDatabase;
     Spinner spinnerCity;
-    private ArrayList<Category> citiesList;
+    ArrayList<Category> citiesList;
 
     EditText E_ProfileInputName;
     EditText E_ProfileInputLastName;
@@ -59,6 +58,9 @@ public class ProfileEdit extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_edit);
+
+        setTitle("Profilio redagavimas");
+
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -82,38 +84,24 @@ public class ProfileEdit extends AppCompatActivity {
         String about = getIntent().getStringExtra("about");
         cityName= getIntent().getStringExtra("cityName");
 
-
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        final FirebaseUser user = auth.getCurrentUser();
-        final String userID = Objects.requireNonNull(user).getUid();
-
-        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference usersRef = rootRef.child("Users").child(userID);
-
-
-
         getUserData(firstName, lastName, email, userName, about);
 
+        BtnProfileSave.setOnClickListener(view -> {
 
-        BtnProfileSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+            String FirstName = E_ProfileInputName.getText().toString().trim();
+            String LastName = E_ProfileInputLastName.getText().toString().trim();
+            String Email = E_ProfileInputEmail.getText().toString().trim();
+            String UserName = E_ProfileInputUsername.getText().toString().trim();
+            String About = E_ProfileInputAbout.getText().toString().trim();
+            String CityName = spinnerCity.getSelectedItem().toString();
 
-                String FirstName = E_ProfileInputName.getText().toString().trim();
-                String LastName = E_ProfileInputLastName.getText().toString().trim();
-                String Email = E_ProfileInputEmail.getText().toString().trim();
-                String UserName = E_ProfileInputUsername.getText().toString().trim();
-                String About = E_ProfileInputAbout.getText().toString().trim();
-                String CityName = spinnerCity.getSelectedItem().toString();
+            saveChanges(FirstName, LastName, Email, UserName, About, CityName);
 
-                saveChanges(FirstName, LastName, Email, UserName, About, CityName);
+            Intent intent = new Intent(ProfileEdit.this, MainActivity.class);
+            startActivity(intent);
 
-                Intent intent = new Intent(ProfileEdit.this, MainActivity.class);
-                startActivity(intent);
+            Toast.makeText(getApplicationContext(),"Duomenys atnaujinti!", Toast.LENGTH_LONG).show();
 
-                Toast.makeText(getApplicationContext(),"Duomenys atnaujinti!", Toast.LENGTH_LONG).show();
-
-            }
         });
 
         selectCity();
@@ -178,17 +166,22 @@ public class ProfileEdit extends AppCompatActivity {
         hopperUpdates.put(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid() + "/about", about);
         mDatabaseRef.updateChildren(hopperUpdates);
 
+        new SweetAlertDialog(this)
+                .setTitleText("Duomenys atnaujinti! ")
+                .show();
+
     }
 
     public void onBackPressed() {
         int backstack = getSupportFragmentManager().getBackStackEntryCount();
 
-        if (backstack > 0) {
+        if (backstack > 0)
+        {
             getSupportFragmentManager().popBackStack();
         }
-        else{
+        else
+        {
             super.onBackPressed();
-            //System.exit(0);
         }
     }
 

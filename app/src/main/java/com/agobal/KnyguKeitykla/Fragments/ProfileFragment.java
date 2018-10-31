@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -51,6 +52,7 @@ import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 import id.zelory.compressor.Compressor;
 
@@ -61,11 +63,9 @@ import static android.app.Activity.RESULT_OK;
  */
 public class ProfileFragment extends Fragment {
 
-    private ProgressDialog pDialog;
     private StorageReference mImageStorage;
     private DatabaseReference mUserDatabase;
     private static final int GALLERY_PICK = 1;
-    private static CustomProgressBar progressBar = new CustomProgressBar();
 
     String userName;
     String email;
@@ -83,21 +83,20 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        progressBar.show(getActivity(),"Loading..");
         View v = inflater.inflate(R.layout.fragment_profile, container, false);
 
-
-        pDialog = new ProgressDialog(getActivity());
+        SweetAlertDialog pDialog = new SweetAlertDialog(Objects.requireNonNull(getContext()), SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.setTitleText("Prašome palaukti");
         pDialog.setCancelable(false);
+        pDialog.show();
 
-        //showDialog();
         final TextView T_firstAndLastName = v.findViewById(R.id.firstAndLastName);
         final TextView T_Desc = v.findViewById(R.id.desc);
         final TextView T_About = v.findViewById(R.id.about);
         final TextView T_City= v.findViewById(R.id.city);
         final CircleImageView ProfilePic = v.findViewById(R.id.profilePic);
         ImageButton BtnProfileEdit = v.findViewById(R.id.profileEditBtn);
-
 
         mImageStorage = FirebaseStorage.getInstance().getReference();
         FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -142,7 +141,6 @@ public class ProfileFragment extends Fragment {
                         @Override
                         public void onError(Exception e) {
                             Picasso.get().load(image).placeholder(R.drawable.unknown_profile_pic).into(ProfilePic);
-
                         }
 
                     });
@@ -165,7 +163,7 @@ public class ProfileFragment extends Fragment {
                 T_About.setText(about);
 
                 //hideDialog();
-                progressBar.getDialog().dismiss();
+                pDialog.dismiss();
 
             }
 
@@ -177,7 +175,6 @@ public class ProfileFragment extends Fragment {
 
         BtnProfileEdit.setOnClickListener(view -> {
             //Profile edit button
-
             Intent intent = new Intent(getActivity(), ProfileEdit.class);
             intent.putExtra("firstName", firstName);
             intent.putExtra("lastName", lastName);
@@ -186,7 +183,6 @@ public class ProfileFragment extends Fragment {
             intent.putExtra("cityName", cityName);
             intent.putExtra("about", about);
             startActivity(intent);
-
         });
 
         return v;
@@ -204,25 +200,24 @@ public class ProfileFragment extends Fragment {
                     .start(Objects.requireNonNull(getActivity()),this);
         }
 
-
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
 
                 //progress dialog
-                pDialog = new ProgressDialog(getActivity());
-                pDialog.setTitle("Įkeliame nuotrauką");
-                pDialog.setMessage("Prašome palaukti");
-                pDialog.setCanceledOnTouchOutside(false);
+                SweetAlertDialog pDialog = new SweetAlertDialog(Objects.requireNonNull(getContext()), SweetAlertDialog.PROGRESS_TYPE);
+                pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                pDialog.setTitleText("Prašome palaukti");
+                pDialog.setCancelable(false);
                 pDialog.show();
 
                 Uri resultUri = result.getUri();
 
-                File thumb_filePath = new File(resultUri.getPath());
+                File thumb_filePath = new File(Objects.requireNonNull(resultUri.getPath()));
 
                 FirebaseAuth auth = FirebaseAuth.getInstance();
                 FirebaseUser user = auth.getCurrentUser();
-                String current_user_id = user.getUid();
+                String current_user_id = Objects.requireNonNull(user).getUid();
 
                 Bitmap thumb_bitmap = null;
 
@@ -237,7 +232,6 @@ public class ProfileFragment extends Fragment {
                     e.printStackTrace();
                     Log.d("Compresor:", "NO");
                 }
-
 
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 if (thumb_bitmap != null) {
@@ -278,18 +272,9 @@ public class ProfileFragment extends Fragment {
         galleryIntent.setType("image/*");
         galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
 
-        startActivityForResult(Intent.createChooser(galleryIntent, "SELECT IMAGE"), GALLERY_PICK);
+        startActivityForResult(Intent.createChooser(galleryIntent, "Pasirinkite nuotrauką"), GALLERY_PICK);
     }
 
-    private void showDialog() {
-        if (!pDialog.isShowing())
-            pDialog.show();
-    }
-
-    private void hideDialog() {
-        if (pDialog.isShowing())
-            pDialog.dismiss();
-    }
 }
 
 

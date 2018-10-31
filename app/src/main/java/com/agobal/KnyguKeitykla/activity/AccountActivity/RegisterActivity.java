@@ -3,6 +3,7 @@ package com.agobal.KnyguKeitykla.activity.AccountActivity;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -17,8 +18,6 @@ import android.widget.Toast;
 import com.agobal.KnyguKeitykla.Entities.UserData;
 import com.agobal.KnyguKeitykla.R;
 import com.agobal.KnyguKeitykla.activity.MainActivity;
-import com.agobal.KnyguKeitykla.app.AppConfig;
-import com.agobal.KnyguKeitykla.app.AppController;
 import com.agobal.KnyguKeitykla.helper.CustomProgressBar;
 import com.android.volley.Request.Method;
 import com.android.volley.Response;
@@ -38,16 +37,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 public class RegisterActivity extends Activity {
-    private static final String TAG = RegisterActivity.class.getSimpleName();
     private EditText inputUserName;
     private EditText inputEmail;
     private EditText inputPassword;
     private EditText inputPassword2;
-    //private ProgressDialog pDialog;
     private FirebaseAuth auth;
-    private static CustomProgressBar progressBar = new CustomProgressBar();
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,7 +79,18 @@ public class RegisterActivity extends Activity {
             String password = inputPassword.getText().toString().trim();
             String password2 = inputPassword2.getText().toString().trim();
 
+            SweetAlertDialog pDialog = new SweetAlertDialog(RegisterActivity.this, SweetAlertDialog.PROGRESS_TYPE);
+            pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+            pDialog.setTitleText("Prašome palaukti");
+            pDialog.setCancelable(false);
+            pDialog.show();
+
             checkRegistrationData(userName, email, password, password2);
+
+            pDialog.dismissWithAnimation();
+
+            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+            finish();
 
         });
 
@@ -98,7 +106,6 @@ public class RegisterActivity extends Activity {
 
     void checkRegistrationData(String userName, String email, String password, String password2)
     {
-        progressBar.show(this,"Loading..");
 
 
         if (!isValidEmail(inputEmail.getText().toString()))
@@ -129,65 +136,7 @@ public class RegisterActivity extends Activity {
      * Function to store user in MySQL database will post params(tag, name,
      * email, password) to register url
      * */
-    private void registerUser(final String userName, final String email,
-                              final String password) {
-        // Tag used to cancel the request
-
-        /*
-        String tag_string_req = "req_register";
-        progressBar.show(this,"Loading..");
-
-        StringRequest strReq = new StringRequest(Method.POST, AppConfig.URL_REGISTER, response -> {
-            Log.d(TAG, "Register Response: " + response);
-
-            try {
-                JSONObject jObj = new JSONObject(response);
-                boolean error = jObj.getBoolean("error");
-                if (!error) {
-                    // User successfully stored in MySQL
-                    String uid = jObj.getString("uid");
-                    JSONObject user = jObj.getJSONObject("user");
-                    String userName1 = user.getString("userName");
-                    String email1 = user.getString("email");
-                    String created_at = user.getString("created_at");
-
-                    Log.d(TAG, "addUserRegistra " + uid +" "+ userName1 +" "+ email1);
-
-                } else {
-                    Log.e(TAG, "onResponse: " + userName);
-                    // Error occurred in registration. Get the error
-                    // message
-                    String errorMsg = jObj.getString("error_msg");
-                    //Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_LONG).show();
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }, error -> {
-            Log.e(TAG, "Registration Error: " + error.getMessage());
-            //Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
-            //hideDialog();
-        })
-
-        {
-
-            @Override
-            protected Map<String, String> getParams() {
-                // Posting params to register url
-                Map<String, String> params = new HashMap<>();
-                params.put("userName", userName);
-                params.put("email", email);
-                params.put("password", password);
-
-                return params;
-            }
-
-        };
-
-        // Adding request to request queue
-        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
-*/
+    private void registerUser(final String userName, final String email, final String password) {
         //Google firebase
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(RegisterActivity.this, task -> {
@@ -210,27 +159,10 @@ public class RegisterActivity extends Activity {
 
                         mDatabaseRef.updateChildren(Updates);
 
-                        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                        finish();
                     }
                 });
-        progressBar.getDialog().dismiss();
-
         //firebase
     }
-
-
-/*
-    private void showDialog() {
-        if (!pDialog.isShowing())
-            pDialog.show();
-    }
-
-    private void hideDialog() {
-        if (pDialog.isShowing())
-            pDialog.dismiss();
-    }
-*/
     public static boolean isValidEmail(CharSequence target) {
         return !TextUtils.isEmpty(target) && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }

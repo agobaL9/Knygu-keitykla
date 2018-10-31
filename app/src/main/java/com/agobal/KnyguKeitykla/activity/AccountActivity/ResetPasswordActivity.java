@@ -15,9 +15,13 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.agobal.KnyguKeitykla.R;
+import com.agobal.KnyguKeitykla.activity.AddNewBook;
+import com.agobal.KnyguKeitykla.activity.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class ResetPasswordActivity extends Activity {
 
@@ -60,17 +64,28 @@ public class ResetPasswordActivity extends Activity {
 
             progressBar.setVisibility(View.VISIBLE);
             auth.sendPasswordResetEmail(email)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(ResetPasswordActivity.this, "Mes išsiuntėmė jums instrukcijas į jūsų el. paštą!", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(ResetPasswordActivity.this, "Nepavyko išsiųsti laiško!", Toast.LENGTH_SHORT).show();
-                            }
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
 
-                            progressBar.setVisibility(View.GONE);
+                            new SweetAlertDialog(this)
+                                    .setTitleText("Slaptažodžio pakeitimo nuoroda Jums išsiųsta į el. pašto adresą! ")
+                                    .setConfirmClickListener(sweetAlertDialog -> {
+                                        Intent intent = new Intent(ResetPasswordActivity.this, MainActivity.class);
+                                        startActivity(intent);
+                                    })
+                                    .show();
+
+                        } else {
+                            new SweetAlertDialog(this)
+                                    .setTitleText("Nuorodos su slaptažodžiu išsiųsti nepavyko. Prašome patikrinti duomenis! ")
+                                    .setConfirmClickListener(sweetAlertDialog -> {
+                                        Intent intent = new Intent(ResetPasswordActivity.this, MainActivity.class);
+                                        startActivity(intent);
+                                    })
+                                    .show();
                         }
+
+                        progressBar.setVisibility(View.GONE);
                     });
         });
     }

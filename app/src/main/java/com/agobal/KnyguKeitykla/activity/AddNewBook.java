@@ -1,6 +1,7 @@
 package com.agobal.KnyguKeitykla.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -15,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -26,6 +28,7 @@ import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.agobal.KnyguKeitykla.R;
@@ -55,6 +58,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.reactivex.Observable;
 
 
@@ -79,6 +83,7 @@ public class AddNewBook extends AppCompatActivity {
     Button btnYear;
     Button btnSave;
     RadioGroup radioGroup;
+    Switch switchButton;
 
     ImageView ivPickedImage;
 
@@ -91,9 +96,14 @@ public class AddNewBook extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setTitle("Pridėti naują knygą");
+
         setContentView(R.layout.activity_add_new_book);
+
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         mImageStorage = FirebaseStorage.getInstance().getReference();
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
@@ -108,6 +118,8 @@ public class AddNewBook extends AppCompatActivity {
         rbBookNew = findViewById(R.id.rbBookNew);
         rbBookGood = findViewById(R.id.rbBookGood);
         rbBookFair = findViewById(R.id.rbBookFair);
+        switchButton = findViewById(R.id.switchButton);
+        switchButton.setChecked(true);
         btnSave = findViewById(R.id.btnSave);
         btnYear = findViewById(R.id.btnYear);
 
@@ -164,8 +176,6 @@ public class AddNewBook extends AppCompatActivity {
         if (result instanceof Bitmap)
         {
             ivPickedImage.setImageBitmap((Bitmap) result);
-            Log.d("IF", "IFAS SUVEIKE");
-
         }
         else
         {
@@ -174,8 +184,6 @@ public class AddNewBook extends AppCompatActivity {
                     .transition(withCrossFade())
                     .apply(new RequestOptions().centerCrop())
                     .into(ivPickedImage);
-
-            Log.d("IF", "ELSAS SUVEIKE");
         }
     }
 
@@ -212,6 +220,7 @@ public class AddNewBook extends AppCompatActivity {
     }
 
     private void saveBook() {
+
 
         String BookName = etBookName.getText().toString().trim();
         String BookAuthor = etBookAuthor.getText().toString().trim();
@@ -262,7 +271,22 @@ public class AddNewBook extends AppCompatActivity {
         mUserBookDatabase.child(current_uid).child(key).child("bookYear").setValue(BookYear);
         mUserBookDatabase.child(current_uid).child(key).child("image").setValue(download_url);
 
+        if (switchButton.isChecked()) {
+            //
+        }
 
+        else {
+            //
+        }
+
+
+        new SweetAlertDialog(this)
+                .setTitleText("Knygą pridėta! ")
+                .setConfirmClickListener(sweetAlertDialog -> {
+                    Intent intent = new Intent(AddNewBook.this, MainActivity.class);
+                    startActivity(intent);
+                })
+                .show();
         //mUserDatabase.child("bookID").setValue(key);
 
     }
@@ -299,6 +323,28 @@ public class AddNewBook extends AppCompatActivity {
         alertDialog.show();
 
 
+    }
+
+    public void onBackPressed() {
+        int backstack = getSupportFragmentManager().getBackStackEntryCount();
+
+        if (backstack > 0) {
+            getSupportFragmentManager().popBackStack();
+        }
+        else{
+            super.onBackPressed();
+            //System.exit(0);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

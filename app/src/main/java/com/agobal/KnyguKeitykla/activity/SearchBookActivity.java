@@ -1,6 +1,7 @@
 package com.agobal.KnyguKeitykla.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,6 +23,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 
 import java.util.ArrayList;
 
@@ -29,22 +32,20 @@ public class SearchBookActivity extends AppCompatActivity {
 
     public static final String BOOK_DETAIL_KEY = "book";
     private BookAdapter bookAdapter;
-    private ProgressBar progress;
     private ListView lvBooks;
-    private static CustomProgressBar progressBar = new CustomProgressBar();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_book);
 
+        setTitle("Knygų paieška");
+
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        progress = findViewById(R.id.progress);
         lvBooks = findViewById(R.id.listViewBooks);
         ArrayList<Book> aBooks = new ArrayList<>();
         bookAdapter = new BookAdapter(this, aBooks);
@@ -73,15 +74,18 @@ public class SearchBookActivity extends AppCompatActivity {
 
     private void fetchBooks(String query) {
 
-        progressBar.show(this,"Loading..");
+        SweetAlertDialog pDialog = new SweetAlertDialog(SearchBookActivity.this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.setTitleText("Prašome palaukti");
+        pDialog.setCancelable(false);
+        pDialog.show();
 
         BookClient client = new BookClient();
         client.getBooks(query, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
-                    progress.setVisibility(ProgressBar.GONE);
-                    progressBar.getDialog().dismiss();
+                    pDialog.dismissWithAnimation();
 
                     JSONArray docs = null;
                     if(response != null) {
@@ -104,8 +108,8 @@ public class SearchBookActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                //progress.setVisibility(ProgressBar.GONE);
-                progressBar.getDialog().dismiss();
+                pDialog.dismissWithAnimation();
+
             }
         });
     }

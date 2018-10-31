@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,6 +33,11 @@ public class BookDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_detail);
+
+            android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setDisplayHomeAsUpEnabled(true);
+            }
 
             // Fetch views
             ivBookCover = findViewById(R.id.ivBookCover);
@@ -78,6 +84,28 @@ public class BookDetailActivity extends AppCompatActivity {
             }
 
         });
+    }
+
+    public void onBackPressed() {
+        int backstack = getSupportFragmentManager().getBackStackEntryCount();
+
+        if (backstack > 0) {
+            getSupportFragmentManager().popBackStack();
+        }
+        else{
+            super.onBackPressed();
+            //System.exit(0);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

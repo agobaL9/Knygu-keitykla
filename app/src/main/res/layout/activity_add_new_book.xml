@@ -24,7 +24,7 @@
 
         <ImageView
             android:id="@+id/ivPicedImage"
-            android:src="@drawable/unknown_profile_pic"
+            android:src="@drawable/unknow_book"
             android:layout_width="200dp"
             android:layout_height="300dp"
             android:layout_gravity="end" />
@@ -175,6 +175,13 @@
             android:layout_height="match_parent"
             android:text="Patenkinama" />
     </RadioGroup>
+
+    <Switch
+        android:id="@+id/switchButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Ar šią knygą norite keisti?" />
 
 
     <Button

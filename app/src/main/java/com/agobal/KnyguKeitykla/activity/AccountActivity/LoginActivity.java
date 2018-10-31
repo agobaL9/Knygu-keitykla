@@ -3,6 +3,7 @@ package com.agobal.KnyguKeitykla.activity.AccountActivity;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -22,22 +23,23 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 public class LoginActivity extends Activity {
 
-    private ProgressDialog pDialog;
     private FirebaseAuth auth;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         DebugDB.getAddressLog();
-
         // remove title
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         //Remove notification bar
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//
+
         setContentView(R.layout.activity_login);
 
         final EditText inputEmail = findViewById(R.id.email);
@@ -47,9 +49,6 @@ public class LoginActivity extends Activity {
         TextView btn_reset_password = findViewById(R.id.btn_reset_password);
 
         auth = FirebaseAuth.getInstance();
-        // Progress dialog
-        pDialog = new ProgressDialog(this);
-        pDialog.setCancelable(false);
 
         //tikrinimas ar vartotojas prisijungęs
         auth = FirebaseAuth.getInstance();
@@ -86,6 +85,12 @@ public class LoginActivity extends Activity {
 
     void login(final String email, final String password)
     {
+
+        SweetAlertDialog pDialog = new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.setTitleText("Prašome palaukti");
+        pDialog.setCancelable(false);
+        pDialog.show();
         if (!email.isEmpty() && !password.isEmpty()) {
         //firebase
         auth.signInWithEmailAndPassword(email, password)
@@ -96,10 +101,12 @@ public class LoginActivity extends Activity {
                     if (!task.isSuccessful())
                     {
                         //there was an error
-                        Toast.makeText(getApplicationContext(), "something wrong", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Prisijungti nepavyko, prašome patikrinti įvestus duomenis", Toast.LENGTH_LONG).show();
+                        pDialog.dismissWithAnimation();
                     }
                     else
                     {
+                         pDialog.dismissWithAnimation();
                          Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                          startActivity(intent);
                          finish();
@@ -109,21 +116,10 @@ public class LoginActivity extends Activity {
         else
         {
             // Prompt user to enter credentials
-            Toast.makeText(getApplicationContext(), "Please enter the credentials!", Toast.LENGTH_LONG)
+            Toast.makeText(getApplicationContext(), "Prošome užpildyti laukus!", Toast.LENGTH_LONG)
                     .show();
         }
 
-
-    }
-        //firebase
-
-    private void showDialog() {
-        if (!pDialog.isShowing())
-            pDialog.show();
     }
 
-    private void hideDialog() {
-        if (pDialog.isShowing())
-            pDialog.dismiss();
-    }
 }

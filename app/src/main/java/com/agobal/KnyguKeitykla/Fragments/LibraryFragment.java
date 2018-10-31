@@ -3,6 +3,8 @@ package com.agobal.KnyguKeitykla.Fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -14,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.agobal.KnyguKeitykla.Entities.Book;
 import com.agobal.KnyguKeitykla.Entities.MyBook;
 import com.agobal.KnyguKeitykla.R;
 import com.agobal.KnyguKeitykla.activity.SearchBookActivity;
@@ -30,14 +33,14 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class LibraryFragment extends Fragment {
 
-    private StorageReference mImageStorage;
-    private DatabaseReference mBookDatabase;
     DatabaseReference mUserDatabase;
     DatabaseReference mUserBookDatabase;
     DatabaseReference mUserBooksDatabase;
@@ -46,6 +49,9 @@ public class LibraryFragment extends Fragment {
 
     private ListView listView;
     private MyBookAdapter myBookAdapter;
+    ArrayList<MyBook> MyBookList = new ArrayList<>();
+
+
 
     FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
     String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
@@ -55,7 +61,6 @@ public class LibraryFragment extends Fragment {
     String tempID;
     TextView tvEmpty;
     Boolean isUserHaveBooks=false;
-
     String tempKey;
 
 
@@ -71,32 +76,28 @@ public class LibraryFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_library, container, false);
 
+        SweetAlertDialog pDialog = new SweetAlertDialog(Objects.requireNonNull(getContext()), SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.setTitleText("Prašome palaukti");
+        pDialog.setCancelable(false);
+        pDialog.show();
+
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
-        mBookDatabase = FirebaseDatabase.getInstance().getReference().child("Books");
         mUserBookDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks");
 
         listView = v.findViewById(R.id.listMyBooks);
-
-        /*
-        lvBooks = v.findViewById(R.id.listMyBooks);
-        ArrayList<Book> aBooks = new ArrayList<>();
-        bookAdapter = new BookAdapter(getActivity(), aBooks);
-        lvBooks.setAdapter(bookAdapter);
-*/
-
-
         tvEmpty = v.findViewById(R.id.tvEmpty);
-
+        tvEmpty.setVisibility(View.GONE);
 
         mUserBookDatabase.keepSynced(true);
 
-        mUserBookDatabase.addValueEventListener(new ValueEventListener() {
+        mUserBookDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //TODO: for ciklas
 
                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                    //Log.d("All userID",""+ childDataSnapshot.getKey()); //gaunu visus user ID
+                    //Log.d("All userID",""+ childDataSnapshot.getKey()); //got all users ID
 
                     userID  =  childDataSnapshot.getKey().toString();
 
@@ -107,7 +108,6 @@ public class LibraryFragment extends Fragment {
                         isUserHaveBooks =true;
                         tempID = userID;
                     }
-
                 }
 
                 Log.d("tempID123"," "+tempID);
@@ -115,16 +115,15 @@ public class LibraryFragment extends Fragment {
                 if(!current_uid.equals(tempID))
                 {
                     tvEmpty.setVisibility(View.VISIBLE);
+                    pDialog.dismissWithAnimation();
+
                 }
                 else
                     tvEmpty.setVisibility(View.GONE);
 
-
-
                 fetchBooks();
-
+                pDialog.dismissWithAnimation();
             }
-
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -132,11 +131,7 @@ public class LibraryFragment extends Fragment {
             }
         }) ;
 
-
-
         FloatingActionButton fab = v.findViewById(R.id.fab);
-
-        //Log.d("tempID", " "+tempID); // null
 
         fab.setOnClickListener(view -> {
 
@@ -152,62 +147,42 @@ public class LibraryFragment extends Fragment {
 
         if(isUserHaveBooks)
         {
-            mUserBooksDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks").child(tempID);
+            mUserBooksDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks").child(tempID); //temp id is user id
+            MyBookList = new ArrayList<>();
 
             mUserBooksDatabase.keepSynced(true);
-
-            mUserBooksDatabase.addValueEventListener(new ValueEventListener() {
+            mUserBooksDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @SuppressLint("SetTextI18n")
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     //String BookName = dataSnapshot.child("bookName").getValue(String.class);
                     for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                        Log.d("get key", "" + childDataSnapshot.getKey());   //displays the key for the node
+                        //Log.d("get key", "" + childDataSnapshot.getKey());   //displays the key for the node 2
 
                         tempKey = childDataSnapshot.getKey();
+                        mUserBooksDatabaseTest = FirebaseDatabase.getInstance().getReference().child("UserBooks").child(tempID).child(tempKey);
 
+                        mUserBooksDatabaseTest.keepSynced(true);
+                        mUserBooksDatabaseTest.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                String BookName = dataSnapshot.child("bookName").getValue(String.class);
+                                String BookAuthor = dataSnapshot.child("bookAuthor").getValue(String.class);
+                                String Image = dataSnapshot.child("image").getValue(String.class);
 
-                        //Log.d("get book name",""+ childDataSnapshot.child("bookName").getValue());   //gives the
+                                MyBookList.add(new MyBook(BookName, BookAuthor, Image));
+                                myBookAdapter = new MyBookAdapter(Objects.requireNonNull(getContext()), MyBookList);
+                                listView.setAdapter(myBookAdapter);
+                                myBookAdapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
                     }
-
-                    mUserBooksDatabaseTest = FirebaseDatabase.getInstance().getReference().child("UserBooks").child(tempID).child(tempKey);
-
-                    mUserBooksDatabaseTest.keepSynced(true);
-                    mUserBooksDatabaseTest.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            String BookName = dataSnapshot.child("bookName").getValue(String.class);
-                            String BookAuthor =  dataSnapshot.child("bookAuthor").getValue(String.class);
-                            String Image =  dataSnapshot.child("image").getValue(String.class);
-
-                            Log.d("BookName: ", BookName);
-                            Log.d("bookAuthor: ", BookAuthor);
-                            Log.d("image: ", Image);
-
-                            //bookAdapter.add(BookName);
-
-                            ArrayList<MyBook> MyBookList = new ArrayList<>();
-
-                            MyBookList.add(new MyBook(BookName, BookAuthor, Image));
-
-                            
-
-
-                            myBookAdapter = new MyBookAdapter(getContext(), MyBookList);
-
-                            listView.setAdapter(myBookAdapter);
-
-                            myBookAdapter.notifyDataSetChanged();
-
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-
 
                 }
 
@@ -217,13 +192,11 @@ public class LibraryFragment extends Fragment {
                 }
             });
 
+
+
         }
 
-
-
     }
-
-
 
 
 }

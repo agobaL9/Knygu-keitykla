@@ -47,13 +47,8 @@ public class UserData {
     {
 
     }
-/*
-    public UserData(String userName, String email)
-    {
-        this.userName = userName;
-        this.email = email;
-    }*/
 
+    /*
     public UserData(String userName, String FirstName, String LastName, String email, String CityName)
     {
         this.userName=userName;
@@ -62,6 +57,7 @@ public class UserData {
         this.email=email;
         this.cityName=CityName;
     }
+    */
 
 }
 
