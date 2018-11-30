@@ -68,7 +68,6 @@ public class AddNewBook extends AppCompatActivity {
     private DatabaseReference mBookDatabase;
     DatabaseReference mUserDatabase;
     DatabaseReference mUserBookDatabase;
-    //TODO: kurti userBooks table
 
     FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
     String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
@@ -132,7 +131,6 @@ public class AddNewBook extends AppCompatActivity {
         fabGallery.setOnClickListener(view -> pickImageFromSource(Sources.GALLERY));
 
         btnYear.setOnClickListener(view -> selectYear());
-
         btnSave.setOnClickListener(view -> saveBook());
 
         selectCategory();
@@ -161,18 +159,15 @@ public class AddNewBook extends AppCompatActivity {
 
                             return Observable.just(uri);
 
-
                 })
                 .subscribe(this::onImagePicked, throwable -> Toast.makeText(AddNewBook.this, String.format("Error: %s", throwable), Toast.LENGTH_LONG).show());
 
         isPhotoSelected=true;
-
     }
 
     private void onImagePicked(Object result)
     {
         Toast.makeText(this, String.format("Result: %s", result), Toast.LENGTH_LONG).show();
-
         if (result instanceof Bitmap)
         {
             ivPickedImage.setImageBitmap((Bitmap) result);
@@ -191,7 +186,6 @@ public class AddNewBook extends AppCompatActivity {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference mDatabaseCategory = database.getReference("Category");
-
         mDatabaseCategory.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -204,7 +198,6 @@ public class AddNewBook extends AppCompatActivity {
                     String areaName = areaSnapshot.child("categoryName").getValue(String.class);
                     categories.add(areaName);
                 }
-
                 Spinner categorySpinner = findViewById(R.id.spinCategory);
                 ArrayAdapter<String> areasAdapter = new ArrayAdapter<>(AddNewBook.this, android.R.layout.simple_spinner_item, categories);
                 areasAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -225,15 +218,14 @@ public class AddNewBook extends AppCompatActivity {
         String BookName = etBookName.getText().toString().trim();
         String BookAuthor = etBookAuthor.getText().toString().trim();
         String BookAbout = etBookAbout.getText().toString().trim();
-
         String CategoryBook = spinCategory.getSelectedItem().toString();
-
 
         if(!isPhotoSelected) {
             Toast.makeText(getApplicationContext(), "Pasirinkite nuotrauką!",
                     Toast.LENGTH_LONG).show();
             return;
         }
+
 
         if(TextUtils.isEmpty(BookName)) {
             etBookName.setError("Knygos pavadinimas negali būti tuščias!");
@@ -261,7 +253,6 @@ public class AddNewBook extends AppCompatActivity {
         mBookDatabase.child(key).child("bookCondition").setValue(bookCondition);
         mBookDatabase.child(key).child("bookYear").setValue(BookYear);
         mBookDatabase.child(key).child("image").setValue(download_url);
-        //mBookDatabase.child(key).child("userID").setValue(current_uid);
 
         mUserBookDatabase.child(current_uid).child(key).child("bookName").setValue(BookName);
         mUserBookDatabase.child(current_uid).child(key).child("bookAuthor").setValue(BookAuthor);
@@ -272,13 +263,11 @@ public class AddNewBook extends AppCompatActivity {
         mUserBookDatabase.child(current_uid).child(key).child("image").setValue(download_url);
 
         if (switchButton.isChecked()) {
-            //
+            mUserBookDatabase.child(current_uid).child(key).child("tradable").setValue("true");
         }
-
         else {
-            //
+            mUserBookDatabase.child(current_uid).child(key).child("tradable").setValue("false");
         }
-
 
         new SweetAlertDialog(this)
                 .setTitleText("Knygą pridėta! ")
@@ -287,7 +276,6 @@ public class AddNewBook extends AppCompatActivity {
                     startActivity(intent);
                 })
                 .show();
-        //mUserDatabase.child("bookID").setValue(key);
 
     }
 

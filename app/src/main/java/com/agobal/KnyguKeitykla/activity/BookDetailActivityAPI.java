@@ -20,7 +20,7 @@ import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
 
-public class BookDetailActivity extends AppCompatActivity {
+public class BookDetailActivityAPI extends AppCompatActivity {
 
     private BookClient client;
     private ImageView ivBookCover;

@@ -10,11 +10,11 @@
 
     <application
         android:allowBackup="true"
-        tools:replace="android:icon"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:replace="android:icon">
         <activity
             android:name=".activity.AccountActivity.LoginActivity"
             android:label="@string/app_name"
@@ -39,11 +39,10 @@
             android:label="@string/title_activity_main2" />
         <activity android:name=".activity.AccountActivity.ResetPasswordActivity" />
         <activity android:name=".activity.SearchBookActivity" />
-        <activity android:name=".activity.BookDetailActivity" />
+        <activity android:name=".activity.BookDetailActivityAPI" />
         <activity android:name=".activity.AccountActivity.ProfileEdit" />
-        <activity android:name=".activity.AddNewBook">
-
-        </activity>
+        <activity android:name=".activity.AddNewBook"></activity>
+        <activity android:name=".activity.MyBookDetail"></activity>
     </application>
 
 </manifest>

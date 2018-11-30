@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -19,37 +18,26 @@ import com.agobal.KnyguKeitykla.Fragments.ProfileFragment;
 import com.agobal.KnyguKeitykla.Fragments.BookFragment;
 import com.agobal.KnyguKeitykla.R;
 import com.agobal.KnyguKeitykla.activity.AccountActivity.LoginActivity;
-import com.agobal.KnyguKeitykla.activity.AccountActivity.UserDataActivity;
 import com.agobal.KnyguKeitykla.helper.BottomNavigationBehavior;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
     private ActionBar toolbar;
-    private FirebaseAuth auth;
+
+    FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+    String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-
         toolbar = getSupportActionBar();
 
-        //first time user data entry
-        Boolean isFirstRun = getSharedPreferences("PREFERENCE", MODE_PRIVATE)
-                .getBoolean("isFirstRun", true);
 
-        if (isFirstRun) {
-            //show start activity
-            Log.d("FIRST RUN?", "YES");
-            startActivity(new Intent(MainActivity.this, UserDataActivity.class));
-        }
-
-        getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit()
-                .putBoolean("isFirstRun", false).apply();
-        //first time
 
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -59,8 +47,9 @@ public class MainActivity extends AppCompatActivity {
         layoutParams.setBehavior(new BottomNavigationBehavior());
 
         // load the store fragment by default
-        toolbar.setTitle("Books");
+        toolbar.setTitle("Knygos");
         loadFragment(new BookFragment());
+
     }
 
     @Override
@@ -99,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                     fragment = new MessagesFragment();
                     loadFragment(fragment);
                     return true;
-                case R.id.navigation_contacts:
+                case R.id.navigation_library:
                     toolbar.setTitle("Biblioteka");
                     fragment = new LibraryFragment();
                     loadFragment(fragment);

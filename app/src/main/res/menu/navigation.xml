@@ -12,7 +12,7 @@
         android:title="Pranešimai" />
 
     <item
-        android:id="@+id/navigation_contacts"
+        android:id="@+id/navigation_library"
         android:icon="@drawable/ic_local_library_black_24dp"
         android:title="Biblioteka" />
 

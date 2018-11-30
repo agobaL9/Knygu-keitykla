@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
@@ -15,13 +17,23 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.agobal.KnyguKeitykla.Fragments.BookFragment;
 import com.agobal.KnyguKeitykla.R;
 import com.agobal.KnyguKeitykla.activity.MainActivity;
+import com.agobal.KnyguKeitykla.helper.BottomNavigationBehavior;
 import com.amitshekhar.DebugDB;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.Objects;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -50,12 +62,10 @@ public class LoginActivity extends Activity {
 
         auth = FirebaseAuth.getInstance();
 
-        //tikrinimas ar vartotojas prisijungęs
         auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
-            // User is logged in
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(intent);
+            Intent i = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(i);
             finish();
         }
 
@@ -106,10 +116,34 @@ public class LoginActivity extends Activity {
                     }
                     else
                     {
-                         pDialog.dismissWithAnimation();
-                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                         startActivity(intent);
-                         finish();
+                        FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+                        String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
+                        DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
+
+                        mUserDatabase.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                if (dataSnapshot.child("cityName").exists()) {
+                                    //isUserDataExist = true;
+                                    pDialog.dismissWithAnimation();
+                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                                else
+                                {
+                                    pDialog.dismissWithAnimation();
+                                    startActivity(new Intent(LoginActivity.this, UserDataActivity.class));
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
                     }
                 });
         }

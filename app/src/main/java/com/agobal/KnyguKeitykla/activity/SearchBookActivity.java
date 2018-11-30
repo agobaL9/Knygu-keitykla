@@ -9,13 +9,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 import android.support.v7.widget.SearchView;
-import android.widget.ProgressBar;
 
 import com.agobal.KnyguKeitykla.Entities.Book;
 import com.agobal.KnyguKeitykla.R;
 import com.agobal.KnyguKeitykla.activity.adapters.BookAdapter;
 import com.agobal.KnyguKeitykla.helper.BookClient;
-import com.agobal.KnyguKeitykla.helper.CustomProgressBar;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -66,7 +64,7 @@ public class SearchBookActivity extends AppCompatActivity {
     public void setupBookSelectedListener() {
         lvBooks.setOnItemClickListener((parent, view, position, id) -> {
             // Launch the detail view passing book as an extra
-            Intent intent = new Intent(SearchBookActivity.this, BookDetailActivity.class);
+            Intent intent = new Intent(SearchBookActivity.this, BookDetailActivityAPI.class);
             intent.putExtra(BOOK_DETAIL_KEY, bookAdapter.getItem(position));
             startActivity(intent);
         });

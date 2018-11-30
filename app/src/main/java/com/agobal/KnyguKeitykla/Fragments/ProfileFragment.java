@@ -136,6 +136,7 @@ public class ProfileFragment extends Fragment {
                         @Override
                         public void onSuccess() {
 
+                            pDialog.dismissWithAnimation();
                         }
 
                         @Override

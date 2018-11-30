@@ -1,7 +1,6 @@
 package com.agobal.KnyguKeitykla.Entities;
 
-
-public class MyBook {
+public class AllBooks {
 
     String BookName;
     String BookAuthor;
@@ -11,7 +10,7 @@ public class MyBook {
 
     String BookTradable;
 
-    public MyBook (String BookName, String BookAuthor, String BookImage, String BookTradable)
+    public AllBooks (String BookName, String BookAuthor, String BookImage, String BookTradable)
     {
         this.BookName = BookName;
         this.BookAuthor = BookAuthor;
@@ -55,6 +54,5 @@ public class MyBook {
     public String toString(){
         return "name : " + BookName + "\nAge : " + BookAuthor + "\nColor : " + BookImage;
     }
-
 
 }

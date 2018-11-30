@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.agobal.KnyguKeitykla.Entities.Book;
@@ -35,7 +36,6 @@ import java.util.Objects;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -44,18 +44,14 @@ public class LibraryFragment extends Fragment {
     DatabaseReference mUserDatabase;
     DatabaseReference mUserBookDatabase;
     DatabaseReference mUserBooksDatabase;
-
-    DatabaseReference mUserBooksDatabaseTest;
+    DatabaseReference mUserBooksUserDatabase;
 
     private ListView listView;
     private MyBookAdapter myBookAdapter;
     ArrayList<MyBook> MyBookList = new ArrayList<>();
 
-
-
     FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
     String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
-
 
     String userID;
     String tempID;
@@ -99,7 +95,7 @@ public class LibraryFragment extends Fragment {
                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
                     //Log.d("All userID",""+ childDataSnapshot.getKey()); //got all users ID
 
-                    userID  =  childDataSnapshot.getKey().toString();
+                    userID  = childDataSnapshot.getKey();
 
                     Log.d("userID", userID);
 
@@ -160,17 +156,19 @@ public class LibraryFragment extends Fragment {
                         //Log.d("get key", "" + childDataSnapshot.getKey());   //displays the key for the node 2
 
                         tempKey = childDataSnapshot.getKey();
-                        mUserBooksDatabaseTest = FirebaseDatabase.getInstance().getReference().child("UserBooks").child(tempID).child(tempKey);
+                        mUserBooksUserDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks").child(tempID).child(tempKey);
 
-                        mUserBooksDatabaseTest.keepSynced(true);
-                        mUserBooksDatabaseTest.addListenerForSingleValueEvent(new ValueEventListener() {
+                        mUserBooksUserDatabase.keepSynced(true);
+                        mUserBooksUserDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 String BookName = dataSnapshot.child("bookName").getValue(String.class);
                                 String BookAuthor = dataSnapshot.child("bookAuthor").getValue(String.class);
                                 String Image = dataSnapshot.child("image").getValue(String.class);
+                                String Tradable = dataSnapshot.child("tradable").getValue(String.class);
 
-                                MyBookList.add(new MyBook(BookName, BookAuthor, Image));
+                                MyBookList.add(new MyBook(BookName, BookAuthor, Image, Tradable));
+
                                 myBookAdapter = new MyBookAdapter(Objects.requireNonNull(getContext()), MyBookList);
                                 listView.setAdapter(myBookAdapter);
                                 myBookAdapter.notifyDataSetChanged();
@@ -183,7 +181,6 @@ public class LibraryFragment extends Fragment {
                         });
 
                     }
-
                 }
 
                 @Override
@@ -191,12 +188,6 @@ public class LibraryFragment extends Fragment {
 
                 }
             });
-
-
-
         }
-
     }
-
-
 }

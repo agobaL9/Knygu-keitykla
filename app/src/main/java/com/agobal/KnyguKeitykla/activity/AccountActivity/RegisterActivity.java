@@ -27,8 +27,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -64,13 +68,6 @@ public class RegisterActivity extends Activity {
         // Check if user is already logged in or not
         auth = FirebaseAuth.getInstance();
 
-        if (auth.getCurrentUser() != null) {
-            // User is logged in
-            Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        }
-
         // Register Button Click event
         btnRegister.setOnClickListener(view -> {
 
@@ -79,17 +76,7 @@ public class RegisterActivity extends Activity {
             String password = inputPassword.getText().toString().trim();
             String password2 = inputPassword2.getText().toString().trim();
 
-            SweetAlertDialog pDialog = new SweetAlertDialog(RegisterActivity.this, SweetAlertDialog.PROGRESS_TYPE);
-            pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-            pDialog.setTitleText("Prašome palaukti");
-            pDialog.setCancelable(false);
-            pDialog.show();
-
             checkRegistrationData(userName, email, password, password2);
-
-            pDialog.dismissWithAnimation();
-
-
         });
 
         // Link to Login Screen
@@ -104,26 +91,44 @@ public class RegisterActivity extends Activity {
 
     void checkRegistrationData(String userName, String email, String password, String password2)
     {
+        if(TextUtils.isEmpty(userName)) {
+            inputUserName.setError("Šis laukas yra privalomas!");
+            return;
+        }
 
+        if(!userName.matches("[a-zA-Z0-9.? ]*")) { // PauliusII
+            inputUserName.setError("Netinka specialūs simboliai!");
+            return;
+        }
 
-        if (!isValidEmail(inputEmail.getText().toString()))
-            Toast.makeText(getApplicationContext(), "Įveskite galiojantį el. paštą!", Toast.LENGTH_LONG).show();
+        if(TextUtils.isEmpty(email)) {
+            inputEmail.setError("Šis laukas yra privalomas!");
+            return;
+        }
 
+        if (!isValidEmail(inputEmail.getText().toString())) {
+            inputEmail.setError("Įveskite teisingą el. pašto adresą!");
+            return;
+        }
 
-        else if (userName.isEmpty()  || email.isEmpty() || password.isEmpty() || password2.isEmpty())
-            Toast.makeText(getApplicationContext(),"Užpildykite visus laukus!", Toast.LENGTH_LONG).show();
+        if(TextUtils.isEmpty(password)) {
+            inputPassword.setError("Šis laukas yra privalomas!");
+            return;
+        }
 
+        if(TextUtils.isEmpty(password2)) {
+            inputPassword2.setError("Šis laukas yra privalomas!");
+            return;
+        }
 
-        else if(!userName.matches("[a-zA-Z.? ]*"))
-            Toast.makeText(getApplicationContext(),"Netinka specialūs simboliai!", Toast.LENGTH_LONG).show();
+        if  (!password.matches(password2)) {
+            inputPassword2.setError("Slaptažodžiai nesutampa!");
+            return;
+        }
 
-
-        else if  (!password.matches(password2))
-            Toast.makeText(getApplicationContext(),"Slaptažodžiai nesutampa!", Toast.LENGTH_LONG).show();
-
-
-        else if (password.length()<6)
-            Toast.makeText(getApplicationContext(),"Slaptažodis per trumpas!", Toast.LENGTH_LONG).show();
+        if (password.length()<6){
+            inputPassword2.setError("Slaptažodis per trumpas!");
+        }
 
         else
             registerUser(userName, email, password);
@@ -131,11 +136,18 @@ public class RegisterActivity extends Activity {
 
     private void registerUser(final String userName, final String email, final String password) {
         //Google firebase
+        SweetAlertDialog pDialog = new SweetAlertDialog(RegisterActivity.this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.setTitleText("Prašome palaukti");
+        pDialog.setCancelable(false);
+        pDialog.show();
+
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(RegisterActivity.this, task -> {
 
                     if (!task.isSuccessful()) {
                         Toast.makeText(RegisterActivity.this, "Registuojantis įvyko klaida!" ,Toast.LENGTH_SHORT).show();
+                        pDialog.dismissWithAnimation();
                     }
                     else
                     {
@@ -152,9 +164,35 @@ public class RegisterActivity extends Activity {
 
                         mDatabaseRef.updateChildren(Updates);
 
-                        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                        finish();
+                        //
+                        FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+                        String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
+                        DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
 
+                        pDialog.dismissWithAnimation();
+
+                        mUserDatabase.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                if (dataSnapshot.child("cityName").exists()) {
+                                    //isUserDataExist = true;
+                                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                                else
+                                {
+                                    startActivity(new Intent(RegisterActivity.this, UserDataActivity.class));
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
                     }
                 });
         //firebase

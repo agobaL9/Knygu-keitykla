@@ -19,9 +19,6 @@ import java.util.Objects;
 
 public class BookAdapter extends ArrayAdapter<Book> {
 
-
-
-
     // View lookup cache
     private static class ViewHolder {
         ImageView ivCover;
