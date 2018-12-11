@@ -15,14 +15,9 @@
         android:text="Kolkas knygų nėra, pabandykite vėliau!"
         android:textSize="20sp" />
 
-    <FrameLayout
+    <ListView
+        android:id="@+id/listAllBooks"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ListView
-            android:id="@+id/listAllBooks"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </FrameLayout>
+        android:layout_height="wrap_content" />
 
 </FrameLayout>

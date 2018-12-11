@@ -1,15 +1,17 @@
 package com.agobal.KnyguKeitykla.Entities;
 
 
-public class MyBook {
+import java.io.Serializable;
 
-    String BookName;
-    String BookAuthor;
-    String BookImage;
+public class MyBook implements Serializable {
+
+    private String BookName;
+    private String BookAuthor;
+    private String BookImage;
 
 
 
-    String BookTradable;
+    private String BookTradable;
 
     public MyBook (String BookName, String BookAuthor, String BookImage, String BookTradable)
     {

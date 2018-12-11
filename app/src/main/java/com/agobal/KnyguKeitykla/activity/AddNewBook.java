@@ -167,7 +167,7 @@ public class AddNewBook extends AppCompatActivity {
 
     private void onImagePicked(Object result)
     {
-        Toast.makeText(this, String.format("Result: %s", result), Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, String.format("Result: %s", result), Toast.LENGTH_LONG).show();
         if (result instanceof Bitmap)
         {
             ivPickedImage.setImageBitmap((Bitmap) result);

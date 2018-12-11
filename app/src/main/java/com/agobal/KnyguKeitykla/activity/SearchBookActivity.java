@@ -54,7 +54,6 @@ public class SearchBookActivity extends AppCompatActivity {
 
         FloatingActionButton fab = findViewById(R.id.fab);
 
-
         fab.setOnClickListener(view -> {
             Intent intent = new Intent(SearchBookActivity.this, AddNewBook.class);
             startActivity(intent);

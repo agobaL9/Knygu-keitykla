@@ -63,10 +63,16 @@ public class MyBookAdapter extends ArrayAdapter<MyBook> {
         TextView author = listItem.findViewById(R.id.tvAuthor);
         author.setText(currentBook.getBookAuthor());
 
-        Switch switchButton = listItem.findViewById(R.id.switchButton);
+        Switch switchButton = listItem.findViewById(R.id.MyswitchButton);
+
+        Log.d("Tradable", " "+ currentBook.getBookTradable());
+
 
         if(currentBook.getBookTradable().equals("true"))
             switchButton.setChecked(true);
+
+        else if (currentBook.getBookTradable().equals(""))
+            Log.d("Tradable", " "+ currentBook.getBookTradable());
         else
             switchButton.setChecked(false);
 

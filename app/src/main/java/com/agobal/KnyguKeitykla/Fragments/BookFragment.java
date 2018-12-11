@@ -93,22 +93,8 @@ public class BookFragment extends Fragment {
                             tempID = userID;
                         }
                     }
-
-                    if(isUserHaveBooks) //laikinai
-                    {
-                        fetchBooks();
-                    }
-
-                    else
-                        tvEmpty.setVisibility(View.VISIBLE);
-
-                    if (!current_uid.equals(tempID)) {
-                        tvEmpty.setVisibility(View.VISIBLE);
-                        pDialog.dismissWithAnimation();
-
-                    } else
-                        tvEmpty.setVisibility(View.GONE);
-
+                    tvEmpty.setVisibility(View.GONE);
+                    fetchBooks();
                 }
                 else
                     tvEmpty.setVisibility(View.VISIBLE);
@@ -179,6 +165,9 @@ public class BookFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.d("onCancelled"," Suveikė canceled2");
             }
-        }) ;
+        });
+
     }
+
+
 }

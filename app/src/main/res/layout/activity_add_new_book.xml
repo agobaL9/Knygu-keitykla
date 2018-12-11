@@ -119,7 +119,7 @@
             android:background="@android:color/transparent"
             android:hint="Trumpai apie knygą"
             android:paddingTop="20dp"
-            android:inputType="textCapWords"
+            android:inputType="textMultiLine"
             android:singleLine="false"
             android:textColorHint="#fff"  />
 

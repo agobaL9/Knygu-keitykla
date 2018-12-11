@@ -53,6 +53,9 @@ public class ProfileEdit extends AppCompatActivity {
     EditText E_ProfileInputUsername;
     EditText E_ProfileInputAbout;
 
+    DatabaseReference mUserCity;
+    FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+
     String cityName;
 
     @Override
@@ -62,6 +65,8 @@ public class ProfileEdit extends AppCompatActivity {
 
         setTitle("Profilio redagavimas");
 
+        String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
+        mUserCity = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid).child("cityName");
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -104,27 +109,44 @@ public class ProfileEdit extends AppCompatActivity {
 
     private void selectCity() {
 
-
-        FirebaseDatabase  database = FirebaseDatabase.getInstance();
-        DatabaseReference mDatabaseRef = database.getReference("City");
-
-        mDatabaseRef.addValueEventListener(new ValueEventListener() {
+        mUserCity.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // Is better to use a List, because you don't know the size
-                // of the iterator returned by dataSnapshot.getChildren() to
-                // initialize the array
-                final List<String> areas = new ArrayList<>();
 
-                for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
-                    String areaName = areaSnapshot.child("cityName").getValue(String.class);
-                    areas.add(areaName);
-                }
+                String userCity = dataSnapshot.getValue(String.class);
+                Log.d("city: ", " "+ userCity);
 
-                Spinner areaSpinner = findViewById(R.id.ProfileSpinCity);
-                ArrayAdapter<String> areasAdapter = new ArrayAdapter<>(ProfileEdit.this, android.R.layout.simple_spinner_item, areas);
-                areasAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                areaSpinner.setAdapter(areasAdapter);
+                FirebaseDatabase  database = FirebaseDatabase.getInstance();
+                DatabaseReference mDatabaseRef = database.getReference("City");
+
+                mDatabaseRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        // Is better to use a List, because you don't know the size
+                        // of the iterator returned by dataSnapshot.getChildren() to
+                        // initialize the array
+                        final List<String> areas = new ArrayList<>();
+
+                        for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
+                            String areaName = areaSnapshot.child("cityName").getValue(String.class);
+                            areas.add(areaName);
+                        }
+
+                        Spinner areaSpinner = findViewById(R.id.ProfileSpinCity);
+                        ArrayAdapter<String> areasAdapter = new ArrayAdapter<>(ProfileEdit.this, android.R.layout.simple_spinner_item, areas);
+                        areasAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        areaSpinner.setAdapter(areasAdapter);
+
+                        areaSpinner.setSelection(getIndex(areaSpinner, userCity));
+                        Log.d("2city: ", " "+ userCity);
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
 
             }
 
@@ -132,9 +154,18 @@ public class ProfileEdit extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
-
+        }) ;
     }
+
+    private int getIndex(Spinner spinner, String userCity){
+        for (int i=0;i<spinner.getCount();i++){
+            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(userCity)){
+                return i;
+            }
+        }
+        return 0;
+    }
+
 
     private void getUserData(String firstName, String lastName, String email, String userName, String about) {
 
@@ -163,15 +194,7 @@ public class ProfileEdit extends AppCompatActivity {
 
         new SweetAlertDialog(this)
                 .setTitleText("Duomenys atnaujinti! ")
-                .setConfirmClickListener(sweetAlertDialog -> {
-
-                    Intent intent = new Intent(ProfileEdit.this, MainActivity.class);
-                    startActivity(intent);
-
-
-                })
                 .show();
-
     }
 
     public void onBackPressed() {
