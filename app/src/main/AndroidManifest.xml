@@ -41,8 +41,9 @@
         <activity android:name=".activity.SearchBookActivity" />
         <activity android:name=".activity.BookDetailActivityAPI" />
         <activity android:name=".activity.AccountActivity.ProfileEdit" />
-        <activity android:name=".activity.AddNewBook"></activity>
-        <activity android:name=".BookDetails.MyBookDetail"></activity>
+        <activity android:name=".activity.AddNewBook" />
+        <activity android:name=".BookDetails.MyBookDetail" />
+        <activity android:name=".BookDetails.BookDetails"></activity>
     </application>
 
 </manifest>

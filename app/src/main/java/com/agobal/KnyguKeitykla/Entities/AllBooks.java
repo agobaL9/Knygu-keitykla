@@ -1,14 +1,17 @@
 package com.agobal.KnyguKeitykla.Entities;
 
-public class AllBooks {
 
-    String BookName;
-    String BookAuthor;
-    String BookImage;
+import java.io.Serializable;
+
+public class AllBooks implements Serializable {
+
+    private String BookName;
+    private String BookAuthor;
+    private String BookImage;
 
 
 
-    String BookTradable;
+    private String BookTradable;
 
     public AllBooks (String BookName, String BookAuthor, String BookImage, String BookTradable)
     {
@@ -54,5 +57,6 @@ public class AllBooks {
     public String toString(){
         return "name : " + BookName + "\nAge : " + BookAuthor + "\nColor : " + BookImage;
     }
+
 
 }

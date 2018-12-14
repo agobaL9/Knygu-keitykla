@@ -10,14 +10,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.agobal.KnyguKeitykla.Entities.Book;
+import com.agobal.KnyguKeitykla.Entities.BookAPI;
 import com.agobal.KnyguKeitykla.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class BookAdapter extends ArrayAdapter<Book> {
+public class BookAdapter extends ArrayAdapter<BookAPI> {
 
     // View lookup cache
     private static class ViewHolder {
@@ -26,17 +26,17 @@ public class BookAdapter extends ArrayAdapter<Book> {
         public TextView tvAuthor;
     }
 
-    public BookAdapter(Context context, ArrayList<Book> aBooks) {
-        super(context, 0, aBooks);
+    public BookAdapter(Context context, ArrayList<BookAPI> aBookAPIS) {
+        super(context, 0, aBookAPIS);
     }
 
-    // Translates a particular `Book` given a position
+    // Translates a particular `BookAPI` given a position
     // into a relevant row within an AdapterView
     @NonNull
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         // Get the data item for this position
-        final Book book = getItem(position);
+        final BookAPI bookAPI = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         ViewHolder viewHolder; // view lookup cache stored in tag
         if (convertView == null) {
@@ -51,9 +51,9 @@ public class BookAdapter extends ArrayAdapter<Book> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         // Populate the data into the template view using the data object
-        viewHolder.tvTitle.setText(book.getTitle());
-        viewHolder.tvAuthor.setText(book.getAuthor());
-        Picasso.get().load(Uri.parse(book.getCoverUrl())).error(R.drawable.ic_nocover).into(viewHolder.ivCover); //TODO: check this
+        viewHolder.tvTitle.setText(bookAPI.getTitle());
+        viewHolder.tvAuthor.setText(bookAPI.getAuthor());
+        Picasso.get().load(Uri.parse(bookAPI.getCoverUrl())).error(R.drawable.ic_nocover).into(viewHolder.ivCover); //TODO: check this
         // Return the completed view to render on screen
         return convertView;
     }

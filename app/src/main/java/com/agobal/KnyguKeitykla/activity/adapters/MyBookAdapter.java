@@ -67,7 +67,7 @@ public class MyBookAdapter extends ArrayAdapter<MyBook> {
 
         Log.d("Tradable", " "+ currentBook.getBookTradable());
 
-
+/*
         if(currentBook.getBookTradable().equals("true"))
             switchButton.setChecked(true);
 
@@ -87,7 +87,7 @@ public class MyBookAdapter extends ArrayAdapter<MyBook> {
                 Log.d("isChecked/?", "NO");
 
         });
-
+*/
     return listItem;
     }
 

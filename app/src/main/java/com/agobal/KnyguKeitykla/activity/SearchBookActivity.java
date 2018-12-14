@@ -10,7 +10,7 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import android.support.v7.widget.SearchView;
 
-import com.agobal.KnyguKeitykla.Entities.Book;
+import com.agobal.KnyguKeitykla.Entities.BookAPI;
 import com.agobal.KnyguKeitykla.R;
 import com.agobal.KnyguKeitykla.activity.adapters.BookAdapter;
 import com.agobal.KnyguKeitykla.helper.BookClient;
@@ -45,8 +45,8 @@ public class SearchBookActivity extends AppCompatActivity {
         }
 
         lvBooks = findViewById(R.id.listViewBooks);
-        ArrayList<Book> aBooks = new ArrayList<>();
-        bookAdapter = new BookAdapter(this, aBooks);
+        ArrayList<BookAPI> aBookAPIS = new ArrayList<>();
+        bookAdapter = new BookAdapter(this, aBookAPIS);
         lvBooks.setAdapter(bookAdapter);
         fetchBooks("Lord of");
 
@@ -89,12 +89,12 @@ public class SearchBookActivity extends AppCompatActivity {
                         // Get the docs json array
                         docs = response.getJSONArray("docs");
                         // Parse json array into array of model objects
-                        final ArrayList<Book> books = Book.fromJson(docs);
-                        // Remove all books from the adapter
+                        final ArrayList<BookAPI> bookAPIS = BookAPI.fromJson(docs);
+                        // Remove all bookAPIS from the adapter
                         bookAdapter.clear();
                         // Load model objects into the adapter
-                        for (Book book : books) {
-                            bookAdapter.add(book); // add book through the adapter
+                        for (BookAPI bookAPI : bookAPIS) {
+                            bookAdapter.add(bookAPI); // add bookAPI through the adapter
                         }
                         bookAdapter.notifyDataSetChanged();
                     }

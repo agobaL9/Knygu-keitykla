@@ -8,7 +8,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.agobal.KnyguKeitykla.Entities.Book;
+import com.agobal.KnyguKeitykla.Entities.BookAPI;
 import com.agobal.KnyguKeitykla.R;
 import com.agobal.KnyguKeitykla.helper.BookClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -32,7 +32,7 @@ public class BookDetailActivityAPI extends AppCompatActivity {
         @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_book_detail);
+        setContentView(R.layout.activity_book_detail_api);
 
             android.support.v7.app.ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {
@@ -45,22 +45,22 @@ public class BookDetailActivityAPI extends AppCompatActivity {
             tvAuthor = findViewById(R.id.tvAuthor);
             tvPublisher = findViewById(R.id.tvPublisher);
             tvPageCount = findViewById(R.id.tvPageCount);
-            // Use the book to populate the data into our views
-            Book book = (Book) getIntent().getSerializableExtra(SearchBookActivity.BOOK_DETAIL_KEY);
-            loadBook(book);
+            // Use the bookAPI to populate the data into our views
+            BookAPI bookAPI = (BookAPI) getIntent().getSerializableExtra(SearchBookActivity.BOOK_DETAIL_KEY);
+            loadBook(bookAPI);
 
     }
 
-    private void loadBook(Book book) {
+    private void loadBook(BookAPI bookAPI) {
         //change activity title
-        this.setTitle(book.getTitle());
+        this.setTitle(bookAPI.getTitle());
         // Populate data
-        Picasso.get().load(Uri.parse(book.getLargeCoverUrl())).error(R.drawable.ic_nocover).into(ivBookCover);
-        tvTitle.setText(book.getTitle());
-        tvAuthor.setText(book.getAuthor());
-        // fetch extra book data from books API
+        Picasso.get().load(Uri.parse(bookAPI.getLargeCoverUrl())).error(R.drawable.ic_nocover).into(ivBookCover);
+        tvTitle.setText(bookAPI.getTitle());
+        tvAuthor.setText(bookAPI.getAuthor());
+        // fetch extra bookAPI data from books API
         client = new BookClient();
-        client.getExtraBookDetails(book.getOpenLibraryId(),new JsonHttpResponseHandler() {
+        client.getExtraBookDetails(bookAPI.getOpenLibraryId(),new JsonHttpResponseHandler() {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {

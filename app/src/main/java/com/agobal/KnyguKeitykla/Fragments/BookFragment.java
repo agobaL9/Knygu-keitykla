@@ -2,6 +2,7 @@ package com.agobal.KnyguKeitykla.Fragments;
 
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,10 +15,13 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.agobal.KnyguKeitykla.BookDetails.BookDetails;
+import com.agobal.KnyguKeitykla.BookDetails.MyBookDetail;
 import com.agobal.KnyguKeitykla.Entities.AllBooks;
 import com.agobal.KnyguKeitykla.R;
 import com.agobal.KnyguKeitykla.activity.adapters.AllBooksAdapter;
 import com.agobal.KnyguKeitykla.activity.adapters.MyBookAdapter;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -30,6 +34,8 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+
+import static com.agobal.KnyguKeitykla.Fragments.LibraryFragment.MY_BOOK_DETAIL_KEY;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,6 +50,9 @@ public class BookFragment extends Fragment {
     private AllBooksAdapter allBooksAdapter;
     ArrayList<AllBooks> AllBookList = new ArrayList<>();
 
+    MyBookAdapter myBookAdapter;
+
+
     FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
     String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
 
@@ -52,6 +61,9 @@ public class BookFragment extends Fragment {
     TextView tvEmpty;
     Boolean isUserHaveBooks=false;
     String tempKey;
+
+    public static final String BOOK_DETAIL_KEY = "book";
+
 
     public BookFragment() {
         // Required empty public constructor
@@ -75,6 +87,8 @@ public class BookFragment extends Fragment {
         listView = v.findViewById(R.id.listAllBooks);
         tvEmpty = v.findViewById(R.id.tvEmpty);
         tvEmpty.setVisibility(View.GONE);
+
+        setupBookSelectedListener();
 
         mUserBookDatabase.keepSynced(true);
 
@@ -124,6 +138,9 @@ public class BookFragment extends Fragment {
 
                         userID = childDataSnapshot.getKey();
 
+                        if(!userID.equals(current_uid))
+                        {
+
                         mUserBooksUserDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks").child(userID);
                         mUserBooksUserDatabase.keepSynced(true);
                         mUserBooksUserDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -158,6 +175,7 @@ public class BookFragment extends Fragment {
                             }
                         });
 
+                        }//if
                     }
             }
 
@@ -167,6 +185,16 @@ public class BookFragment extends Fragment {
             }
         });
 
+    }
+
+    void setupBookSelectedListener() {
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            // Launch the detail view passing book as an extra
+            Intent intent = new Intent(getActivity(), BookDetails.class);
+            intent.putExtra(BOOK_DETAIL_KEY, allBooksAdapter.getItem(position)); // ? TODO: check
+            startActivity(intent);
+            Log.d("NEW_INTENT", "VEIKIA");
+        });
     }
 
 
