@@ -39,7 +39,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  */
 public class LibraryFragment extends Fragment {
 
-    public static final String MY_BOOK_DETAIL_KEY = "my_book";
+    public static String MY_BOOK_DETAIL_KEY = "my_book";
 
     String userID;
     TextView tvEmpty;
@@ -55,6 +55,7 @@ public class LibraryFragment extends Fragment {
 
     FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
     String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
+    String BookKeyToDetails;
 
     public LibraryFragment() {
         // Required empty public constructor
@@ -151,6 +152,7 @@ public class LibraryFragment extends Fragment {
             // Launch the detail view passing book as an extra
             Intent intent = new Intent(getActivity(), MyBookDetail.class);
             intent.putExtra(MY_BOOK_DETAIL_KEY, myBookAdapter.getItem(position)); // ? TODO: check
+            intent.putExtra("BOOK_KEY", BookKeyToDetails);
             startActivity(intent);
             Log.d("NEW_INTENT", "VEIKIA");
         });
@@ -177,6 +179,8 @@ public class LibraryFragment extends Fragment {
 
                             String path = childDataSnapshot.getRef().toString();
                             Log.d("path:",path+" ");
+
+                            BookKeyToDetails = childDataSnapshot.getKey();
 
                             String BookName = childDataSnapshot.child("bookName").getValue(String.class);
                             String BookAuthor = childDataSnapshot.child("bookAuthor").getValue(String.class);

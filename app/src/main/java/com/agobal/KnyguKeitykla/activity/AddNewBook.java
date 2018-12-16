@@ -1,6 +1,7 @@
 package com.agobal.KnyguKeitykla.activity;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -29,6 +30,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.agobal.KnyguKeitykla.R;
@@ -86,6 +88,7 @@ public class AddNewBook extends AppCompatActivity {
     Switch switchButton;
 
     ImageView ivPickedImage;
+    TextView title;
 
     int BookYear;
     String key;
@@ -96,7 +99,12 @@ public class AddNewBook extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setTitle("Pridėti naują knygą");
+        getSupportActionBar().setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.action_bar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        title = findViewById(getResources().getIdentifier("action_bar_title", "id", getPackageName()));
+        title.setText("Pridėti naują knygą");
 
         setContentView(R.layout.activity_add_new_book);
 

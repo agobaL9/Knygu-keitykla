@@ -7,11 +7,11 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/new_login_gradients"
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
     android:paddingTop="0dp"
-    android:paddingBottom="@dimen/activity_vertical_margin">
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:background="@color/colorPrimary">
 
 
     <View
@@ -53,7 +53,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="85dp"
-                    app:cardCornerRadius="10dp"
+                    app:cardCornerRadius="30dp"
                     app:contentPaddingBottom="15dp"
                     app:contentPaddingLeft="15dp"
                     app:contentPaddingRight="15dp"

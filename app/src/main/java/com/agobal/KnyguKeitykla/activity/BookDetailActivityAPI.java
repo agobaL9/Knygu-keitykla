@@ -28,16 +28,18 @@ public class BookDetailActivityAPI extends AppCompatActivity {
     private TextView tvAuthor;
     private TextView tvPublisher;
     private TextView tvPageCount;
+    TextView title;
 
         @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_detail_api);
 
-            android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.setDisplayHomeAsUpEnabled(true);
-            }
+            getSupportActionBar().setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
+            getSupportActionBar().setCustomView(R.layout.action_bar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+            title = findViewById(getResources().getIdentifier("action_bar_title", "id", getPackageName()));
 
             // Fetch views
             ivBookCover = findViewById(R.id.ivBookCover);
@@ -53,7 +55,7 @@ public class BookDetailActivityAPI extends AppCompatActivity {
 
     private void loadBook(BookAPI bookAPI) {
         //change activity title
-        this.setTitle(bookAPI.getTitle());
+        title.setText(bookAPI.getTitle());
         // Populate data
         Picasso.get().load(Uri.parse(bookAPI.getLargeCoverUrl())).error(R.drawable.ic_nocover).into(ivBookCover);
         tvTitle.setText(bookAPI.getTitle());

@@ -32,18 +32,18 @@
             android:hint="Vartotojo vardas"
             android:inputType="textCapWords"
             android:singleLine="true"
-            android:textColorHint="#fff" />
+            android:textColorHint="#05070a" />
 
         </android.support.design.widget.TextInputLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#f9d7db" />
+            android:background="#05070a" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="#fff">
+            android:textColorHint="#05070a">
 
         <EditText
             android:id="@+id/email"
@@ -55,19 +55,19 @@
             android:hint="@string/hint_email"
             android:inputType="textEmailAddress"
             android:singleLine="true"
-            android:textColorHint="#fff" />
+            android:textColorHint="#05070a" />
 
         </android.support.design.widget.TextInputLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#f9d7db" />
+            android:background="#05070a" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="#fff">
+            android:textColorHint="#05070a">
 
         <EditText
             android:id="@+id/password"
@@ -79,7 +79,7 @@
             android:hint="Slaptažodis"
             android:inputType="textPassword"
             android:singleLine="true"
-            android:textColorHint="#fff" />
+            android:textColorHint="#05070a" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -91,7 +91,7 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="#fff">
+            android:textColorHint="#05070a">
 
         <EditText
             android:id="@+id/password2"
@@ -103,14 +103,14 @@
             android:hint="Slaptažodis"
             android:inputType="textPassword"
             android:singleLine="true"
-            android:textColorHint="#fff" />
+            android:textColorHint="#05070a" />
 
         </android.support.design.widget.TextInputLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#f9d7db" />
+            android:background="#05070a" />
 
         <!-- Login Button -->
 
@@ -133,7 +133,7 @@
             android:background="@null"
             android:text="Jau turite paskyrą? Prisijunkite!"
             android:textAllCaps="false"
-            android:textColor="@color/white"
+            android:textColor="@color/cyan"
             android:textSize="15sp" />
 
 
