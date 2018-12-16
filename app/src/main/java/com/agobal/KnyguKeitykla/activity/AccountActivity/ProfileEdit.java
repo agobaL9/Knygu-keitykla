@@ -1,18 +1,25 @@
 package com.agobal.KnyguKeitykla.activity.AccountActivity;
 
+import android.app.ActionBar;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -63,15 +70,13 @@ public class ProfileEdit extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_edit);
 
-        setTitle("Profilio redagavimas");
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.action_bar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
         mUserCity = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid).child("cityName");
-
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
 
         E_ProfileInputName = findViewById(R.id.ProfileInputName);
         E_ProfileInputLastName = findViewById(R.id.ProfileInputLastName);
@@ -219,4 +224,18 @@ public class ProfileEdit extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+/*
+    public void setTitle(String title){
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        TextView textView = new TextView(this);
+        textView.setText(title);
+        textView.setTextSize(20);
+        textView.setTypeface(null, Typeface.NORMAL);
+        textView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        textView.setGravity(Gravity.CENTER);
+        textView.setTextColor(getResources().getColor(R.color.Black));
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(textView);
+    }*/
 }

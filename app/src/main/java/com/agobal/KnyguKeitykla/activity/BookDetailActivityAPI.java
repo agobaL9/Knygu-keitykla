@@ -46,7 +46,7 @@ public class BookDetailActivityAPI extends AppCompatActivity {
             tvPublisher = findViewById(R.id.tvPublisher);
             tvPageCount = findViewById(R.id.tvPageCount);
             // Use the bookAPI to populate the data into our views
-            BookAPI bookAPI = (BookAPI) getIntent().getSerializableExtra(SearchBookActivity.BOOK_DETAIL_KEY);
+            BookAPI bookAPI = (BookAPI) getIntent().getSerializableExtra(SearchBookAPI.BOOK_DETAIL_KEY);
             loadBook(bookAPI);
 
     }

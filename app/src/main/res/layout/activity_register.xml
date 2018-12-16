@@ -6,7 +6,7 @@
     android:paddingRight="18dp"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    android:background="@drawable/new_login_gradients">
+    android:background="@color/colorPrimary">
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -121,7 +121,7 @@
             android:layout_marginTop="20dip"
             android:background="@drawable/background_login"
             android:text="Registruotis"
-            android:textColor="#f16f7d" />
+            android:textColor="@color/cyan" />
 
         <!-- Link to Login Screen -->
 

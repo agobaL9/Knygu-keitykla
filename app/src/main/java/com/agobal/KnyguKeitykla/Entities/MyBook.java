@@ -7,16 +7,21 @@ public class MyBook implements Serializable {
 
     private String BookName;
     private String BookAuthor;
+    private String BookPublisher;
+    private Integer BookYear;
+    private String BookCondition;
+    private String BookCategory;
     private String BookImage;
-
-
-
     private String BookTradable;
 
-    public MyBook (String BookName, String BookAuthor, String BookImage, String BookTradable)
+    public MyBook (String BookName, String BookAuthor, String BookPublisher, Integer BookYear, String BookCondition, String BookCategory, String BookImage, String BookTradable)
     {
         this.BookName = BookName;
         this.BookAuthor = BookAuthor;
+        this.BookPublisher = BookPublisher;
+        this.BookYear = BookYear;
+        this.BookCondition = BookCondition;
+        this.BookCategory = BookCategory;
         this.BookImage = BookImage;
         this.BookTradable = BookTradable;
     }
@@ -37,9 +42,23 @@ public class MyBook implements Serializable {
         BookAuthor = bookAuthor;
     }
 
-    public String getBookImage() {
-        return BookImage;
-    }
+    public String getBookPublisher() { return BookPublisher; }
+
+    public void setBookPublisher(String bookPublisher) { BookPublisher = bookPublisher; }
+
+    public Integer getBookYear() { return BookYear; }
+
+    public void setBookYear(Integer bookYear) { BookYear = bookYear; }
+
+    public String getBookCondition() { return BookCondition; }
+
+    public void setBookCondition(String bookCondition) { BookCondition = bookCondition; }
+
+    public String getBookCategory() { return BookCategory; }
+
+    public void setBookCategory(String bookCategory) { BookCategory = bookCategory; }
+
+    public String getBookImage() { return BookImage; }
 
     public void setBookImage(String bookImage) {
         BookImage = bookImage;

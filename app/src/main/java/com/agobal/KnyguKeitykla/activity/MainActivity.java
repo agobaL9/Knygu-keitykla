@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.agobal.KnyguKeitykla.Fragments.LibraryFragment;
 import com.agobal.KnyguKeitykla.Fragments.MessagesFragment;
@@ -22,6 +23,8 @@ import com.agobal.KnyguKeitykla.helper.BottomNavigationBehavior;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import org.w3c.dom.Text;
+
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
@@ -31,13 +34,18 @@ public class MainActivity extends AppCompatActivity {
     FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
     String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
 
+    TextView title;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        toolbar = getSupportActionBar();
 
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.action_bar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        title = findViewById(getResources().getIdentifier("action_bar_title", "id", getPackageName()));
 
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -47,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         layoutParams.setBehavior(new BottomNavigationBehavior());
 
         // load the store fragment by default
-        toolbar.setTitle("Knygos");
+        title.setText("Knygos");
         loadFragment(new BookFragment());
 
     }
@@ -79,22 +87,22 @@ public class MainActivity extends AppCompatActivity {
             Fragment fragment;
             switch (item.getItemId()) {
                 case R.id.navigation_books:
-                    toolbar.setTitle("Knygos");
+                    title.setText("Knygos");
                     fragment = new BookFragment();
                     loadFragment(fragment);
                     return true;
                 case R.id.navigation_messages:
-                    toolbar.setTitle("Pranešimai");
+                    title.setText("Pranešimai");
                     fragment = new MessagesFragment();
                     loadFragment(fragment);
                     return true;
                 case R.id.navigation_library:
-                    toolbar.setTitle("Biblioteka");
+                    title.setText("Biblioteka");
                     fragment = new LibraryFragment();
                     loadFragment(fragment);
                     return true;
                 case R.id.navigation_profile:
-                    toolbar.setTitle("Profilis");
+                    title.setText("Profilis");
                     fragment = new ProfileFragment();
                     loadFragment(fragment);
                     return true;

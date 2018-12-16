@@ -130,6 +130,28 @@
         android:layout_height="1dp"
         android:background="#f9d7db" />
 
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="#fff">
+
+        <EditText
+            android:id="@+id/etPublisher"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:hint="Leidykla"
+            android:paddingTop="20dp"
+            android:inputType="textMultiLine"
+            android:singleLine="true"
+            android:textColorHint="#fff"  />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#f9d7db" />
 
 
     <TextView android:layout_width="fill_parent"
@@ -189,7 +211,7 @@
         android:id="@+id/btnYear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Pasirinkite metus"
+        android:text="Pasirinkti metus"
         android:background="@drawable/background_login"
         android:layout_marginTop="10dp"
         android:textColor="#f16f7d"/>

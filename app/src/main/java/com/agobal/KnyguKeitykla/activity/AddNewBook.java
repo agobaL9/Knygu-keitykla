@@ -75,6 +75,7 @@ public class AddNewBook extends AppCompatActivity {
     EditText etBookName;
     EditText etBookAuthor;
     EditText etBookAbout;
+    EditText etPublisher;
     Spinner spinCategory;
     RadioButton rbBookNew;
     RadioButton rbBookGood;
@@ -112,6 +113,7 @@ public class AddNewBook extends AppCompatActivity {
         etBookName = findViewById(R.id.etBookName);
         etBookAuthor = findViewById(R.id.etBookAuthor);
         etBookAbout = findViewById(R.id.etBookAbout);
+        etPublisher = findViewById(R.id.etPublisher);
         spinCategory = findViewById(R.id.spinCategory);
         radioGroup = findViewById(R.id.rbGroup);
         rbBookNew = findViewById(R.id.rbBookNew);
@@ -218,7 +220,15 @@ public class AddNewBook extends AppCompatActivity {
         String BookName = etBookName.getText().toString().trim();
         String BookAuthor = etBookAuthor.getText().toString().trim();
         String BookAbout = etBookAbout.getText().toString().trim();
-        String CategoryBook = spinCategory.getSelectedItem().toString();
+        String BookCategory = spinCategory.getSelectedItem().toString();
+        String BookPublisher = etPublisher.getText().toString().trim();
+
+        if(BookYear==0)
+        {
+            Toast.makeText(getApplicationContext(), "Pasirinkite knygos išleidimo metus!",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         if(!isPhotoSelected) {
             Toast.makeText(getApplicationContext(), "Pasirinkite nuotrauką!",
@@ -229,6 +239,10 @@ public class AddNewBook extends AppCompatActivity {
 
         if(TextUtils.isEmpty(BookName)) {
             etBookName.setError("Knygos pavadinimas negali būti tuščias!");
+            return;
+        }
+        if(TextUtils.isEmpty(BookPublisher)) {
+            etPublisher.setError("Knygos leidyklos laukas negali būti tuščias!");
             return;
         }
 
@@ -249,7 +263,8 @@ public class AddNewBook extends AppCompatActivity {
         mBookDatabase.child(key).child("bookName").setValue(BookName);
         mBookDatabase.child(key).child("bookAuthor").setValue(BookAuthor);
         mBookDatabase.child(key).child("bookAbout").setValue(BookAbout);
-        mBookDatabase.child(key).child("categoryBook").setValue(CategoryBook);
+        mBookDatabase.child(key).child("bookPublisher").setValue(BookPublisher);
+        mBookDatabase.child(key).child("bookCategory").setValue(BookCategory);
         mBookDatabase.child(key).child("bookCondition").setValue(bookCondition);
         mBookDatabase.child(key).child("bookYear").setValue(BookYear);
         mBookDatabase.child(key).child("image").setValue(download_url);
@@ -257,7 +272,8 @@ public class AddNewBook extends AppCompatActivity {
         mUserBookDatabase.child(current_uid).child(key).child("bookName").setValue(BookName);
         mUserBookDatabase.child(current_uid).child(key).child("bookAuthor").setValue(BookAuthor);
         mUserBookDatabase.child(current_uid).child(key).child("bookAbout").setValue(BookAbout);
-        mUserBookDatabase.child(current_uid).child(key).child("categoryBook").setValue(CategoryBook);
+        mUserBookDatabase.child(current_uid).child(key).child("bookPublisher").setValue(BookPublisher);
+        mUserBookDatabase.child(current_uid).child(key).child("bookCategory").setValue(BookCategory);
         mUserBookDatabase.child(current_uid).child(key).child("bookCondition").setValue(bookCondition);
         mUserBookDatabase.child(current_uid).child(key).child("bookYear").setValue(BookYear);
         mUserBookDatabase.child(current_uid).child(key).child("image").setValue(download_url);

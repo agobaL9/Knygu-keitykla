@@ -3,29 +3,17 @@ package com.agobal.KnyguKeitykla.BookDetails;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.agobal.KnyguKeitykla.Entities.AllBooks;
-import com.agobal.KnyguKeitykla.Entities.MyBook;
+import com.agobal.KnyguKeitykla.Entities.Books;
 import com.agobal.KnyguKeitykla.Fragments.BookFragment;
-import com.agobal.KnyguKeitykla.Fragments.LibraryFragment;
 import com.agobal.KnyguKeitykla.R;
-import com.agobal.KnyguKeitykla.helper.BookClient;
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import cz.msebera.android.httpclient.Header;
 
 public class BookDetails extends AppCompatActivity {
 
-    private BookClient client;
     private ImageView ivBookCover;
     private TextView tvTitle;
     private TextView tvAuthor;
@@ -35,7 +23,7 @@ public class BookDetails extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_book_detail);
+        setContentView(R.layout.activity_book_details);
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -49,12 +37,12 @@ public class BookDetails extends AppCompatActivity {
         tvPublisher = findViewById(R.id.tvPublisher);
         tvPageCount = findViewById(R.id.tvPageCount);
         // Use the book to populate the data into our views
-        AllBooks Book = (AllBooks) getIntent().getSerializableExtra(BookFragment.BOOK_DETAIL_KEY);
+        Books Book = (Books) getIntent().getSerializableExtra(BookFragment.BOOK_DETAIL_KEY);
         loadBook(Book);
 
     }
 
-    private void loadBook(AllBooks Book) {
+    private void loadBook(Books Book) {
         //change activity title
         this.setTitle(Book.getBookName());
         // Populate data

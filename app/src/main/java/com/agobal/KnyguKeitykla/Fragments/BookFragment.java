@@ -11,16 +11,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.agobal.KnyguKeitykla.BookDetails.BookDetails;
-import com.agobal.KnyguKeitykla.BookDetails.MyBookDetail;
-import com.agobal.KnyguKeitykla.Entities.AllBooks;
+import com.agobal.KnyguKeitykla.Entities.Books;
 import com.agobal.KnyguKeitykla.R;
-import com.agobal.KnyguKeitykla.activity.adapters.AllBooksAdapter;
-import com.agobal.KnyguKeitykla.activity.adapters.MyBookAdapter;
+import com.agobal.KnyguKeitykla.activity.adapters.BooksAdapter;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,34 +32,25 @@ import java.util.Objects;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-import static com.agobal.KnyguKeitykla.Fragments.LibraryFragment.MY_BOOK_DETAIL_KEY;
-
 /**
  * A simple {@link Fragment} subclass.
  */
 public class BookFragment extends Fragment {
 
+    public static final String BOOK_DETAIL_KEY = "book";
     DatabaseReference mUserDatabase;
     DatabaseReference mUserBookDatabase;
     DatabaseReference mUserBooksUserDatabase;
-
-    private ListView listView;
-    private AllBooksAdapter allBooksAdapter;
-    ArrayList<AllBooks> AllBookList = new ArrayList<>();
-
-    MyBookAdapter myBookAdapter;
-
-
+    ArrayList<Books> BookList = new ArrayList<>();
     FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
     String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
-
     String userID;
     String tempID;
     TextView tvEmpty;
-    Boolean isUserHaveBooks=false;
+    Boolean isUserHaveBooks = false;
     String tempKey;
-
-    public static final String BOOK_DETAIL_KEY = "book";
+    private ListView listViewBooks;
+    private BooksAdapter booksAdapter;
 
 
     public BookFragment() {
@@ -84,7 +72,7 @@ public class BookFragment extends Fragment {
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
         mUserBookDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks");
 
-        listView = v.findViewById(R.id.listAllBooks);
+        listViewBooks = v.findViewById(R.id.listAllBooks);
         tvEmpty = v.findViewById(R.id.tvEmpty);
         tvEmpty.setVisibility(View.GONE);
 
@@ -96,12 +84,12 @@ public class BookFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                if(dataSnapshot.hasChildren()) {
+                if (dataSnapshot.hasChildren()) {
                     for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
                         //Log.d("All userID",""+ childDataSnapshot.getKey()); //got all users ID
                         userID = childDataSnapshot.getKey();
 
-                        if (userID.equals(current_uid)) { // ar yra dabartinis vartotojas userbooks šakoje
+                        if (userID != null && userID.equals(current_uid)) { // ar yra dabartinis vartotojas userbooks šakoje
                             Log.d("ar yra šakoje?", "taip");
                             isUserHaveBooks = true;
                             tempID = userID;
@@ -109,8 +97,7 @@ public class BookFragment extends Fragment {
                     }
                     tvEmpty.setVisibility(View.GONE);
                     fetchBooks();
-                }
-                else
+                } else
                     tvEmpty.setVisibility(View.VISIBLE);
 
                 pDialog.dismissWithAnimation();
@@ -118,28 +105,27 @@ public class BookFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("onCancelled"," Suveikė canceled");
+                Log.d("onCancelled", " Suveikė canceled");
             }
-        }) ;
+        });
 
         return v;
     }
 
     private void fetchBooks() {
 
-        AllBookList = new ArrayList<>();
+        BookList = new ArrayList<>();
 
         mUserBookDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks");
         mUserBookDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                        Log.d("All userID",""+ childDataSnapshot.getKey()); //got all users ID
+                for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                    Log.d("All userID", "" + childDataSnapshot.getKey()); //got all users ID
 
-                        userID = childDataSnapshot.getKey();
+                    userID = childDataSnapshot.getKey();
 
-                        if(!userID.equals(current_uid))
-                        {
+                    if (userID != null && !userID.equals(current_uid)) {
 
                         mUserBooksUserDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks").child(userID);
                         mUserBooksUserDatabase.keepSynced(true);
@@ -152,7 +138,7 @@ public class BookFragment extends Fragment {
                                     Log.d("get key", "" + childDataSnapshot.getKey());   //displays the key for the node 2 TODO: Gaunu visus knygų ID !!
 
                                     String path = childDataSnapshot.getRef().toString();
-                                    Log.d("path:",path+" ");
+                                    Log.d("path:", path + " ");
 
                                     tempKey = childDataSnapshot.getKey();
 
@@ -161,11 +147,11 @@ public class BookFragment extends Fragment {
                                     String Image = childDataSnapshot.child("image").getValue(String.class);
                                     String Tradable = childDataSnapshot.child("tradable").getValue(String.class);
 
-                                    AllBookList.add(new AllBooks(BookName, BookAuthor, Image, Tradable));
+                                    BookList.add(new Books(BookName, BookAuthor, Image, Tradable));
 
-                                    allBooksAdapter = new AllBooksAdapter(Objects.requireNonNull(getContext()), AllBookList);
-                                    listView.setAdapter(allBooksAdapter);
-                                    allBooksAdapter.notifyDataSetChanged();
+                                    booksAdapter = new BooksAdapter(Objects.requireNonNull(getContext()), BookList);
+                                    listViewBooks.setAdapter(booksAdapter);
+                                    booksAdapter.notifyDataSetChanged();
                                 }
                             }
 
@@ -175,23 +161,23 @@ public class BookFragment extends Fragment {
                             }
                         });
 
-                        }//if
-                    }
+                    }//if
+                }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("onCancelled"," Suveikė canceled2");
+                Log.d("onCancelled", " Suveikė canceled2");
             }
         });
 
     }
 
     void setupBookSelectedListener() {
-        listView.setOnItemClickListener((parent, view, position, id) -> {
+        listViewBooks.setOnItemClickListener((parent, view, position, id) -> {
             // Launch the detail view passing book as an extra
             Intent intent = new Intent(getActivity(), BookDetails.class);
-            intent.putExtra(BOOK_DETAIL_KEY, allBooksAdapter.getItem(position)); // ? TODO: check
+            intent.putExtra(BOOK_DETAIL_KEY, booksAdapter.getItem(position)); // ? TODO: check
             startActivity(intent);
             Log.d("NEW_INTENT", "VEIKIA");
         });

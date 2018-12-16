@@ -17,7 +17,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class BookAdapter extends ArrayAdapter<BookAPI> {
+public class BookAdapterAPI extends ArrayAdapter<BookAPI> {
 
     // View lookup cache
     private static class ViewHolder {
@@ -26,7 +26,7 @@ public class BookAdapter extends ArrayAdapter<BookAPI> {
         public TextView tvAuthor;
     }
 
-    public BookAdapter(Context context, ArrayList<BookAPI> aBookAPIS) {
+    public BookAdapterAPI(Context context, ArrayList<BookAPI> aBookAPIS) {
         super(context, 0, aBookAPIS);
     }
 

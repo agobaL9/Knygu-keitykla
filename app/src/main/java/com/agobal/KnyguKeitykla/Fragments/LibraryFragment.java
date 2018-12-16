@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -20,9 +19,8 @@ import com.agobal.KnyguKeitykla.Entities.MyBook;
 import com.agobal.KnyguKeitykla.OnGetDataListener;
 import com.agobal.KnyguKeitykla.R;
 import com.agobal.KnyguKeitykla.BookDetails.MyBookDetail;
-import com.agobal.KnyguKeitykla.activity.SearchBookActivity;
+import com.agobal.KnyguKeitykla.activity.SearchBookAPI;
 import com.agobal.KnyguKeitykla.activity.adapters.MyBookAdapter;
-import com.google.firebase.FirebaseError;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -31,7 +29,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -93,14 +90,14 @@ public class LibraryFragment extends Fragment {
         IsUserHaveBooks();
 
 
-            //Log.d("tempID"," "+tempID);
+        //Log.d("tempID"," "+tempID);
         pDialog.dismissWithAnimation();
 
         FloatingActionButton fab = v.findViewById(R.id.fab);
 
         fab.setOnClickListener(view -> {
 
-            Intent intent = new Intent(getActivity(), SearchBookActivity.class);
+            Intent intent = new Intent(getActivity(), SearchBookAPI.class);
             startActivity(intent);
 
         });
@@ -168,37 +165,41 @@ public class LibraryFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                    mUserBooksUserDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks").child(current_uid);
-                    mUserBooksUserDatabase.keepSynced(true);
-                    mUserBooksUserDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @SuppressLint("SetTextI18n")
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            //String BookName = dataSnapshot.child("bookName").getValue(String.class);
-                            for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                                Log.d("get key", "" + childDataSnapshot.getKey());   //displays the key for the node 2 TODO: Gaunu visus knygų ID !!
+                mUserBooksUserDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks").child(current_uid);
+                mUserBooksUserDatabase.keepSynced(true);
+                mUserBooksUserDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        //String BookName = dataSnapshot.child("bookName").getValue(String.class);
+                        for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                            Log.d("get key", "" + childDataSnapshot.getKey());   //displays the key for the node 2 TODO: Gaunu visus knygų ID !!
 
-                                String path = childDataSnapshot.getRef().toString();
-                                Log.d("path:",path+" ");
+                            String path = childDataSnapshot.getRef().toString();
+                            Log.d("path:",path+" ");
 
-                                String BookName = childDataSnapshot.child("bookName").getValue(String.class);
-                                String BookAuthor = childDataSnapshot.child("bookAuthor").getValue(String.class);
-                                String Image = childDataSnapshot.child("image").getValue(String.class);
-                                String Tradable = childDataSnapshot.child("tradable").getValue(String.class);
+                            String BookName = childDataSnapshot.child("bookName").getValue(String.class);
+                            String BookAuthor = childDataSnapshot.child("bookAuthor").getValue(String.class);
+                            String BookPublisher = childDataSnapshot.child("bookPublisher").getValue(String.class);
+                            Integer BookYear = childDataSnapshot.child("bookYear").getValue(Integer.class);
+                            String BookCondition = childDataSnapshot.child("bookCondition").getValue(String.class);
+                            String BookCategory = childDataSnapshot.child("bookCategory").getValue(String.class);
+                            String Image = childDataSnapshot.child("image").getValue(String.class);
+                            String Tradable = childDataSnapshot.child("tradable").getValue(String.class);
 
-                                MyBookList.add(new MyBook(BookName, BookAuthor, Image, Tradable));
+                            MyBookList.add(new MyBook(BookName, BookAuthor, BookPublisher, BookYear, BookCondition, BookCategory, Image, Tradable));
 
-                                myBookAdapter = new MyBookAdapter(Objects.requireNonNull(getContext()), MyBookList);
-                                listView.setAdapter(myBookAdapter);
-                                myBookAdapter.notifyDataSetChanged();
-                            }
+                            myBookAdapter = new MyBookAdapter(Objects.requireNonNull(getContext()), MyBookList);
+                            listView.setAdapter(myBookAdapter);
+                            myBookAdapter.notifyDataSetChanged();
                         }
+                    }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                        }
-                    });
+                    }
+                });
 
             }
 

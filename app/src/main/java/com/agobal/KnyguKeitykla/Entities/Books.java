@@ -3,7 +3,7 @@ package com.agobal.KnyguKeitykla.Entities;
 
 import java.io.Serializable;
 
-public class AllBooks implements Serializable {
+public class Books implements Serializable {
 
     private String BookName;
     private String BookAuthor;
@@ -13,7 +13,7 @@ public class AllBooks implements Serializable {
 
     private String BookTradable;
 
-    public AllBooks (String BookName, String BookAuthor, String BookImage, String BookTradable)
+    public Books(String BookName, String BookAuthor, String BookImage, String BookTradable)
     {
         this.BookName = BookName;
         this.BookAuthor = BookAuthor;
