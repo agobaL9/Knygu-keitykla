@@ -10,7 +10,7 @@
     android:gravity="center"
     android:orientation="vertical"
     android:padding="10dp"
-    tools:context=".activity.AccountActivity.ProfileEdit">
+    tools:context=".AccountActivity.ProfileEdit">
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"

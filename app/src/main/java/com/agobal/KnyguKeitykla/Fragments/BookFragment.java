@@ -3,6 +3,7 @@ package com.agobal.KnyguKeitykla.Fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SearchRecentSuggestionsProvider;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,7 +18,7 @@ import android.widget.TextView;
 import com.agobal.KnyguKeitykla.BookDetails.BookDetails;
 import com.agobal.KnyguKeitykla.Entities.Books;
 import com.agobal.KnyguKeitykla.R;
-import com.agobal.KnyguKeitykla.activity.adapters.BooksAdapter;
+import com.agobal.KnyguKeitykla.adapters.BooksAdapter;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -51,6 +52,10 @@ public class BookFragment extends Fragment {
     String tempKey;
     private ListView listViewBooks;
     private BooksAdapter booksAdapter;
+
+    String BookKeyToDetails;
+    String UserKeyToDetails;
+
 
 
     public BookFragment() {
@@ -141,13 +146,23 @@ public class BookFragment extends Fragment {
                                     Log.d("path:", path + " ");
 
                                     tempKey = childDataSnapshot.getKey();
+                                    BookKeyToDetails = childDataSnapshot.getKey();
+
+                                    UserKeyToDetails=dataSnapshot.getKey();
 
                                     String BookName = childDataSnapshot.child("bookName").getValue(String.class);
                                     String BookAuthor = childDataSnapshot.child("bookAuthor").getValue(String.class);
+                                    String BookPublisher = childDataSnapshot.child("bookPublisher").getValue(String.class);
+                                    Integer BookYear = childDataSnapshot.child("bookYear").getValue(Integer.class);
+                                    String BookCondition = childDataSnapshot.child("bookCondition").getValue(String.class);
+                                    String BookCategory = childDataSnapshot.child("bookCategory").getValue(String.class);
                                     String Image = childDataSnapshot.child("image").getValue(String.class);
                                     String Tradable = childDataSnapshot.child("tradable").getValue(String.class);
 
-                                    BookList.add(new Books(BookName, BookAuthor, Image, Tradable));
+                                    String UserID = childDataSnapshot.child("userID").getValue(String.class);
+
+
+                                    BookList.add(new Books(BookName, BookAuthor, BookPublisher, BookYear, BookCondition, BookCategory, Image, Tradable, UserID));
 
                                     booksAdapter = new BooksAdapter(Objects.requireNonNull(getContext()), BookList);
                                     listViewBooks.setAdapter(booksAdapter);
@@ -178,6 +193,8 @@ public class BookFragment extends Fragment {
             // Launch the detail view passing book as an extra
             Intent intent = new Intent(getActivity(), BookDetails.class);
             intent.putExtra(BOOK_DETAIL_KEY, booksAdapter.getItem(position)); // ? TODO: check
+            intent.putExtra("BOOK_KEY", BookKeyToDetails);
+            intent.putExtra("USER_KEY", UserKeyToDetails);
             startActivity(intent);
             Log.d("NEW_INTENT", "VEIKIA");
         });

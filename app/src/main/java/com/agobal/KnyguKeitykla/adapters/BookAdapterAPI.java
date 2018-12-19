@@ -1,4 +1,4 @@
-package com.agobal.KnyguKeitykla.activity.adapters;
+package com.agobal.KnyguKeitykla.adapters;
 
 import android.content.Context;
 import android.net.Uri;

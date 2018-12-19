@@ -1,4 +1,4 @@
-package com.agobal.KnyguKeitykla.activity.AccountActivity;
+package com.agobal.KnyguKeitykla.AccountActivity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.agobal.KnyguKeitykla.Entities.Category;
 import com.agobal.KnyguKeitykla.R;
-import com.agobal.KnyguKeitykla.activity.MainActivity;
+import com.agobal.KnyguKeitykla.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

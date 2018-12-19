@@ -1,7 +1,6 @@
 package com.agobal.KnyguKeitykla.Fragments;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -13,20 +12,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.agobal.KnyguKeitykla.Entities.UserData;
 import com.agobal.KnyguKeitykla.R;
-import com.agobal.KnyguKeitykla.activity.AccountActivity.LoginActivity;
-import com.agobal.KnyguKeitykla.activity.AccountActivity.ProfileEdit;
-import com.agobal.KnyguKeitykla.activity.MainActivity;
-import com.agobal.KnyguKeitykla.helper.CustomProgressBar;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
+import com.agobal.KnyguKeitykla.AccountActivity.ProfileEdit;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -36,7 +27,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -46,11 +36,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -92,7 +78,7 @@ public class ProfileFragment extends Fragment {
         pDialog.show();
 
         final TextView T_firstAndLastName = v.findViewById(R.id.firstAndLastName);
-        final TextView T_Desc = v.findViewById(R.id.desc);
+        final TextView T_Desc = v.findViewById(R.id.email);
         final TextView T_About = v.findViewById(R.id.about);
         final TextView T_City= v.findViewById(R.id.city);
         final CircleImageView ProfilePic = v.findViewById(R.id.profilePic);

@@ -1,4 +1,4 @@
-package com.agobal.KnyguKeitykla.activity;
+package com.agobal.KnyguKeitykla.API;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -14,7 +14,9 @@ import android.widget.TextView;
 
 import com.agobal.KnyguKeitykla.Entities.BookAPI;
 import com.agobal.KnyguKeitykla.R;
-import com.agobal.KnyguKeitykla.activity.adapters.BookAdapterAPI;
+import com.agobal.KnyguKeitykla.Books.AddNewBook;
+import com.agobal.KnyguKeitykla.BookDetails.BookDetailActivityAPI;
+import com.agobal.KnyguKeitykla.adapters.BookAdapterAPI;
 import com.agobal.KnyguKeitykla.helper.BookClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 

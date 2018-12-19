@@ -7,7 +7,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorPrimary"
     android:orientation="vertical"
-    tools:context=".activity.SearchBookAPI">
+    tools:context=".API.SearchBookAPI">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -30,7 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="35dp"
-                app:cardCornerRadius="30dp"
+                app:cardCornerRadius="20dp"
                 app:contentPaddingBottom="15dp"
                 app:contentPaddingLeft="15dp"
                 app:contentPaddingRight="15dp"
@@ -56,7 +56,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:orientation="vertical">
@@ -65,7 +65,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    app:cardCornerRadius="30dp"
+                    app:cardCornerRadius="20dp"
                     app:contentPaddingBottom="15dp"
                     app:contentPaddingLeft="15dp"
                     app:contentPaddingRight="15dp"
@@ -73,7 +73,7 @@
                     app:cardBackgroundColor="@color/white">
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
@@ -83,17 +83,21 @@
                             android:layout_height="wrap_content"
                             android:text="Knygos pavadinimas"
                             android:textSize="24sp"
+                            android:textAlignment="center"
+                            android:gravity="center_horizontal"
+                            android:layout_gravity="center"
                             android:paddingLeft="10dp"
-                            android:paddingRight="10dp"
-                            android:layout_gravity="center"/>
+                            android:paddingRight="10dp"/>
 
                         <TextView
                             android:id="@+id/tvAuthor"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Autorius"
+                            android:textAlignment="center"
+                            android:gravity="center_horizontal"
                             android:textSize="18sp"
-                            android:layout_marginTop="8dp"
+                            android:layout_marginTop="10dp"
                             android:paddingLeft="10dp"
                             android:paddingRight="10dp"
                             android:layout_gravity="center"/>
@@ -111,6 +115,8 @@
                             android:text="Leidykla:"
                             android:layout_marginTop="6dp"
                             android:textSize="16sp"
+                            android:textAlignment="center"
+                            android:gravity="center_horizontal"
                             android:layout_gravity="center"/>
 
                         <TextView
@@ -150,6 +156,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingTop="15dp"
                 android:orientation="horizontal">
 
                 <android.support.design.widget.FloatingActionButton

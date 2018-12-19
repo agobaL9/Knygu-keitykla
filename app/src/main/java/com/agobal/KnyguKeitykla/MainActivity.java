@@ -1,4 +1,4 @@
-package com.agobal.KnyguKeitykla.activity;
+package com.agobal.KnyguKeitykla;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,13 +17,10 @@ import com.agobal.KnyguKeitykla.Fragments.LibraryFragment;
 import com.agobal.KnyguKeitykla.Fragments.MessagesFragment;
 import com.agobal.KnyguKeitykla.Fragments.ProfileFragment;
 import com.agobal.KnyguKeitykla.Fragments.BookFragment;
-import com.agobal.KnyguKeitykla.R;
-import com.agobal.KnyguKeitykla.activity.AccountActivity.LoginActivity;
+import com.agobal.KnyguKeitykla.AccountActivity.LoginActivity;
 import com.agobal.KnyguKeitykla.helper.BottomNavigationBehavior;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import org.w3c.dom.Text;
 
 import java.util.Objects;
 
@@ -42,8 +39,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setCustomView(R.layout.action_bar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setCustomView(R.layout.action_bar_main);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         title = findViewById(getResources().getIdentifier("action_bar_title", "id", getPackageName()));
 

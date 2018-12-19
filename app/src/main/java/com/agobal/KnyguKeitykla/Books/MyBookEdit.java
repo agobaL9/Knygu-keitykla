@@ -1,26 +1,17 @@
-package com.agobal.KnyguKeitykla.activity;
+package com.agobal.KnyguKeitykla.Books;
 
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,7 +27,6 @@ import android.widget.Toast;
 import com.agobal.KnyguKeitykla.R;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -46,25 +36,19 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.mlsdev.rximagepicker.RxImagePicker;
 import com.mlsdev.rximagepicker.Sources;
 
-import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
-import com.bumptech.glide.annotation.GlideModule;
-import com.bumptech.glide.module.AppGlideModule;
-
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.reactivex.Observable;
 
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
-public class AddNewBook extends AppCompatActivity {
+public class MyBookEdit extends AppCompatActivity {
 
     private StorageReference mImageStorage;
     private DatabaseReference mBookDatabase;
@@ -98,20 +82,14 @@ public class AddNewBook extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_my_book_edit);
 
         getSupportActionBar().setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.action_bar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         title = findViewById(getResources().getIdentifier("action_bar_title", "id", getPackageName()));
-        title.setText("Pridėti naują knygą");
-
-        setContentView(R.layout.activity_add_new_book);
-
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        title.setText("Knygos redagavimas");
 
         mImageStorage = FirebaseStorage.getInstance().getReference();
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
@@ -147,30 +125,34 @@ public class AddNewBook extends AppCompatActivity {
 
     }
 
+    void saveBook()
+    {
+
+    }
 
     @SuppressLint("CheckResult")
     private void pickImageFromSource(Sources source) {
         RxImagePicker.with(getFragmentManager()).requestImage(source).flatMap(uri -> {
 
-                    //TODO: reikia gauti key
-                    key = mBookDatabase.push().getKey();
+            //TODO: reikia gauti key
+            key = mBookDatabase.push().getKey();
 
-                    final StorageReference filepath = mImageStorage.child("book_images").child(key + ".jpg");
+            final StorageReference filepath = mImageStorage.child("book_images").child(key + ".jpg");
 
-                    Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    bmp.compress(Bitmap.CompressFormat.JPEG, 50, baos);
-                    byte[] data = baos.toByteArray();
+            Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+            byte[] data = baos.toByteArray();
 
-                    filepath.putBytes(data)
-                            .addOnSuccessListener(taskSnapshot -> filepath.getDownloadUrl()
+            filepath.putBytes(data)
+                    .addOnSuccessListener(taskSnapshot -> filepath.getDownloadUrl()
                             .addOnSuccessListener(uri1 ->
                                     download_url = uri1.toString()));
 
-                            return Observable.just(uri);
+            return Observable.just(uri);
 
-                })
-                .subscribe(this::onImagePicked, throwable -> Toast.makeText(AddNewBook.this, String.format("Error: %s", throwable), Toast.LENGTH_LONG).show());
+        })
+                .subscribe(this::onImagePicked, throwable -> Toast.makeText(MyBookEdit.this, String.format("Error: %s", throwable), Toast.LENGTH_LONG).show());
 
         isPhotoSelected=true;
     }
@@ -209,7 +191,7 @@ public class AddNewBook extends AppCompatActivity {
                     categories.add(areaName);
                 }
                 Spinner categorySpinner = findViewById(R.id.spinCategory);
-                ArrayAdapter<String> areasAdapter = new ArrayAdapter<>(AddNewBook.this, android.R.layout.simple_spinner_item, categories);
+                ArrayAdapter<String> areasAdapter = new ArrayAdapter<>(MyBookEdit.this, android.R.layout.simple_spinner_item, categories);
                 areasAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 categorySpinner.setAdapter(areasAdapter);
             }
@@ -219,87 +201,6 @@ public class AddNewBook extends AppCompatActivity {
 
             }
         });
-
-    }
-
-    private void saveBook() {
-
-
-        String BookName = etBookName.getText().toString().trim();
-        String BookAuthor = etBookAuthor.getText().toString().trim();
-        String BookAbout = etBookAbout.getText().toString().trim();
-        String BookCategory = spinCategory.getSelectedItem().toString();
-        String BookPublisher = etPublisher.getText().toString().trim();
-
-        if(BookYear==0)
-        {
-            Toast.makeText(getApplicationContext(), "Pasirinkite knygos išleidimo metus!",
-                    Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if(!isPhotoSelected) {
-            Toast.makeText(getApplicationContext(), "Pasirinkite nuotrauką!",
-                    Toast.LENGTH_LONG).show();
-            return;
-        }
-
-
-        if(TextUtils.isEmpty(BookName)) {
-            etBookName.setError("Knygos pavadinimas negali būti tuščias!");
-            return;
-        }
-        if(TextUtils.isEmpty(BookPublisher)) {
-            etPublisher.setError("Knygos leidyklos laukas negali būti tuščias!");
-            return;
-        }
-
-        if(TextUtils.isEmpty(BookAuthor)) {
-            etBookAuthor.setError("Knygos autorius negali būti tuščias!");
-            return;
-        }
-
-        if (radioGroup.getCheckedRadioButtonId() == -1)
-        {
-            Toast.makeText(getApplicationContext(), "Turite pasirinkti knygos būklę!",
-                    Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        String bookCondition = ((RadioButton)findViewById(radioGroup.getCheckedRadioButtonId())).getText().toString();
-
-        mBookDatabase.child(key).child("bookName").setValue(BookName);
-        mBookDatabase.child(key).child("bookAuthor").setValue(BookAuthor);
-        mBookDatabase.child(key).child("bookAbout").setValue(BookAbout);
-        mBookDatabase.child(key).child("bookPublisher").setValue(BookPublisher);
-        mBookDatabase.child(key).child("bookCategory").setValue(BookCategory);
-        mBookDatabase.child(key).child("bookCondition").setValue(bookCondition);
-        mBookDatabase.child(key).child("bookYear").setValue(BookYear);
-        mBookDatabase.child(key).child("image").setValue(download_url);
-
-        mUserBookDatabase.child(current_uid).child(key).child("bookName").setValue(BookName);
-        mUserBookDatabase.child(current_uid).child(key).child("bookAuthor").setValue(BookAuthor);
-        mUserBookDatabase.child(current_uid).child(key).child("bookAbout").setValue(BookAbout);
-        mUserBookDatabase.child(current_uid).child(key).child("bookPublisher").setValue(BookPublisher);
-        mUserBookDatabase.child(current_uid).child(key).child("bookCategory").setValue(BookCategory);
-        mUserBookDatabase.child(current_uid).child(key).child("bookCondition").setValue(bookCondition);
-        mUserBookDatabase.child(current_uid).child(key).child("bookYear").setValue(BookYear);
-        mUserBookDatabase.child(current_uid).child(key).child("image").setValue(download_url);
-
-        if (switchButton.isChecked()) {
-            mUserBookDatabase.child(current_uid).child(key).child("tradable").setValue("true");
-        }
-        else {
-            mUserBookDatabase.child(current_uid).child(key).child("tradable").setValue("false");
-        }
-
-        new SweetAlertDialog(this)
-                .setTitleText("Knygą pridėta! ")
-                .setConfirmClickListener(sweetAlertDialog -> {
-                    Intent intent = new Intent(AddNewBook.this, MainActivity.class);
-                    startActivity(intent);
-                })
-                .show();
 
     }
 
@@ -358,5 +259,4 @@ public class AddNewBook extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 }

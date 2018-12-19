@@ -6,35 +6,25 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.agobal.KnyguKeitykla.Books.MyBookEdit;
 import com.agobal.KnyguKeitykla.Entities.MyBook;
 import com.agobal.KnyguKeitykla.Fragments.LibraryFragment;
 import com.agobal.KnyguKeitykla.R;
-import com.agobal.KnyguKeitykla.activity.AddNewBook;
-import com.agobal.KnyguKeitykla.activity.MainActivity;
-import com.agobal.KnyguKeitykla.activity.SearchBookAPI;
-import com.agobal.KnyguKeitykla.helper.BookClient;
+import com.agobal.KnyguKeitykla.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.Objects;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import cz.msebera.android.httpclient.Header;
 
 public class MyBookDetail extends AppCompatActivity {
 
@@ -79,8 +69,8 @@ public class MyBookDetail extends AppCompatActivity {
         FloatingActionButton fabDelete = findViewById(R.id.fb_delete);
 
         fabEdit.setOnClickListener(view -> {
-            //Intent intent = new Intent(MyBookDetail.this, test.class);
-            //startActivity(intent);
+            Intent intent = new Intent(MyBookDetail.this, MyBookEdit.class);
+            startActivity(intent);
         });
 
         fabDelete.setOnClickListener(view -> {

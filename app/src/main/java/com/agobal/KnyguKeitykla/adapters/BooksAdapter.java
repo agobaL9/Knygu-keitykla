@@ -1,4 +1,4 @@
-package com.agobal.KnyguKeitykla.activity.adapters;
+package com.agobal.KnyguKeitykla.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
