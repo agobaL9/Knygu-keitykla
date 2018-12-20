@@ -43,7 +43,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        android:hint="Last Name"
+        android:hint="Pavardė"
         android:paddingTop="12dp"
         android:inputType="textCapWords"
         android:singleLine="true"

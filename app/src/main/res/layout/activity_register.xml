@@ -52,7 +52,7 @@
             android:layout_marginBottom="5dp"
             android:paddingTop="12dp"
             android:background="@android:color/transparent"
-            android:hint="@string/hint_email"
+            android:hint="El. pašto adresas"
             android:inputType="textEmailAddress"
             android:singleLine="true"
             android:textColorHint="#05070a" />
@@ -100,7 +100,7 @@
             android:layout_marginBottom="5dp"
             android:paddingTop="12dp"
             android:background="@android:color/transparent"
-            android:hint="Slaptažodis"
+            android:hint="Pakartokite slaptažodį"
             android:inputType="textPassword"
             android:singleLine="true"
             android:textColorHint="#05070a" />
