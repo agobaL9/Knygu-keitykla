@@ -44,10 +44,16 @@ public class BookDetails extends AppCompatActivity {
     private TextView tvBookYear;
     private TextView tvBookCondition;
     private TextView tvBookCategory;
+    private TextView tvBookAbout;
     TextView title;
 
     private StorageReference mImageStorage;
     private DatabaseReference mUserDatabase;
+    private DatabaseReference mUserFavBooks;
+    private DatabaseReference mUserFavBookKey;
+    private DatabaseReference mBookDatabase;
+    private DatabaseReference mUserBookDatabase;
+    private DatabaseReference mDatabase;
 
     String userName;
     String email;
@@ -57,6 +63,8 @@ public class BookDetails extends AppCompatActivity {
     String about;
     String BookKey;
     String UserID;
+
+    String FavBookKey;
 
     Boolean isBookSaved = false;
 
@@ -89,32 +97,7 @@ public class BookDetails extends AppCompatActivity {
         String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
 
-
-        fab_message.setOnClickListener(view -> {
-            //Intent intent = new Intent(MyBookDetail.this, test.class);
-            //startActivity(intent);
-        });
-
-        fab_star.setOnClickListener(view -> {
-
-            ActionButton.State state = fab_star.getState();
-
-            if(!isBookSaved) {
-                fab_star.setState(ActionButton.State.PRESSED);
-                isBookSaved=true;
-                Toast.makeText(getApplicationContext(), "Knyga išsaugota!", Toast.LENGTH_LONG).show();
-
-            }
-            else {
-                fab_star.setState(ActionButton.State.NORMAL);
-                isBookSaved=false;
-            }
-            //Intent intent = new Intent(MyBookDetail.this, test.class);
-            //startActivity(intent);
-        });
-
-
-        // Fetch views
+         // Fetch views
         ivBookCover = findViewById(R.id.ivBookCover);
         tvTitle = findViewById(R.id.tvTitle);
         tvAuthor = findViewById(R.id.tvAuthor);
@@ -122,6 +105,7 @@ public class BookDetails extends AppCompatActivity {
         tvBookYear= findViewById(R.id.tvBookYear);
         tvBookCondition= findViewById(R.id.tvBookCondition);
         tvBookCategory= findViewById(R.id.tvBookCategory);
+        tvBookAbout= findViewById(R.id.tvBookAbout);
 
         // Use the book to populate the data into our views
         Books Book = (Books) getIntent().getSerializableExtra(BookFragment.BOOK_DETAIL_KEY);
@@ -133,17 +117,72 @@ public class BookDetails extends AppCompatActivity {
         loadBook(Book);
         loadUserInfo();
 
+        fab_message.setOnClickListener(view -> {
+            //Intent intent = new Intent(MyBookDetail.this, test.class);
+            //startActivity(intent);
+        });
+
+        fab_star.setOnClickListener(view -> {
+
+            if(!isBookSaved) {
+                fab_star.setState(ActionButton.State.PRESSED);
+                isBookSaved=true;
+                saveUserFavBook(Book);
+                Toast.makeText(getApplicationContext(), "Knyga išsaugota!", Toast.LENGTH_LONG).show();
+
+            }
+            else {
+                fab_star.setState(ActionButton.State.NORMAL);
+                isBookSaved=false;
+                deleteBookFromFav();
+            }
+        });
+
+    }
+
+    private void deleteBookFromFav() {
+        mUserFavBookKey.setValue(null);
+        Toast.makeText(getApplicationContext(), "Knyga panaikinta!", Toast.LENGTH_LONG).show();
+
+    }
+
+    private void saveUserFavBook(Books Book) {
+
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mUserFavBookKey = mDatabase.child("UserFavBooks").child(current_uid);
+        FavBookKey = mUserFavBooks.push().getKey();
+        mUserFavBooks = mDatabase.child("UserFavBooks").child(current_uid).child(FavBookKey);
+/*
+        String BookName = tvTitle.getText().toString();
+        String BookAuthor = tvAuthor.getText().toString();
+        String BookPublisher = tvPublisher.getText().toString();
+        String BookAbout = tvBookAbout.getText().toString();
+        String BookYear = tvBookYear.toString();
+        String BookCondition = tvBookCondition.toString();
+        String BookCategory = tvBookCategory.toString();
+*/
+
+        mUserFavBooks.child("bookName").setValue(Book.getBookName());
+        mUserFavBooks.child("bookAuthor").setValue(Book.getBookAuthor());
+        mUserFavBooks.child("bookAbout").setValue(Book.getBookAbout());
+        mUserFavBooks.child("bookPublisher").setValue(Book.getBookPublisher());
+        mUserFavBooks.child("bookCategory").setValue(Book.getBookCategory());
+        mUserFavBooks.child("bookCondition").setValue(Book.getBookCondition());
+        mUserFavBooks.child("bookYear").setValue(Book.getBookYear());
+        mUserFavBooks.child("image").setValue(Book.getBookImage());
+
     }
 
     private void loadBook(Books Book) {
         //change activity title
-        Log.d("title: ", " "+ Book.getBookName());
         title.setText(Book.getBookName());
         // Populate data
         Picasso.get().load(Uri.parse(Book.getBookImage())).error(R.drawable.ic_nocover).rotate(90).resize(400,600).centerCrop().into(ivBookCover);
         tvTitle.setText(Book.getBookName());
         tvAuthor.setText(Book.getBookAuthor());
         tvPublisher.setText("Leidykla: "+ Book.getBookPublisher());
+        tvBookAbout.setText("Knygos aprašymas: "+ Book.getBookAbout());
         tvBookYear.setText("Išleidimo metai: " + Book.getBookYear());
         tvBookCondition.setText("Būklė: " + Book.getBookCondition());
         tvBookCategory.setText("Kategorija: " + Book.getBookCategory());
