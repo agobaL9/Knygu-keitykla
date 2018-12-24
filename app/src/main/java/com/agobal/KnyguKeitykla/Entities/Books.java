@@ -11,13 +11,14 @@ public class Books implements Serializable {
     private Integer BookYear;
     private String BookCondition;
     private String BookCategory;
+    private String BookAbout;
     private String BookImage;
     private String BookTradable;
-    private String BookAbout;
 
     private String UserID;
+    private String BookID;
 
-    public Books (String BookName, String BookAuthor, String BookPublisher, Integer BookYear, String BookCondition, String BookCategory, String BookImage, String BookTradable, String UserID, String BookAbout)
+    public Books (String BookName, String BookAuthor, String BookPublisher, Integer BookYear, String BookCondition, String BookCategory, String BookAbout, String BookImage, String BookTradable, String UserID, String BookID)
     {
         this.BookName = BookName;
         this.BookAuthor = BookAuthor;
@@ -25,10 +26,11 @@ public class Books implements Serializable {
         this.BookYear = BookYear;
         this.BookCondition = BookCondition;
         this.BookCategory = BookCategory;
+        this.BookAbout = BookAbout;
         this.BookImage = BookImage;
         this.BookTradable = BookTradable;
         this.UserID = UserID;
-        this.BookAbout = BookAbout;
+        this.BookID = BookID;
     }
 
     public String getBookName() {
@@ -63,6 +65,10 @@ public class Books implements Serializable {
 
     public void setBookCategory(String bookCategory) { BookCategory = bookCategory; }
 
+    public String getBookAbout() { return BookAbout; }
+
+    public void setBookAbout(String bookAbout) { BookAbout = bookAbout; }
+
     public String getBookImage() { return BookImage; }
 
     public void setBookImage(String bookImage) {
@@ -82,9 +88,9 @@ public class Books implements Serializable {
 
     public void setUserID(String userID) { UserID = userID; }
 
-    public String getBookAbout() { return BookAbout; }
+    public String getBookID() { return BookID; }
 
-    public void setBookAbout(String bookAbout) { BookAbout = bookAbout; }
+    public void setBookID(String bookID) { BookID = bookID; }
 
     public String toString(){
         return "name : " + BookName + "\nAge : " + BookAuthor + "\nColor : " + BookImage;

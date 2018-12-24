@@ -134,7 +134,6 @@ public class MyBookEdit extends AppCompatActivity {
     private void pickImageFromSource(Sources source) {
         RxImagePicker.with(getFragmentManager()).requestImage(source).flatMap(uri -> {
 
-            //TODO: reikia gauti key
             key = mBookDatabase.push().getKey();
 
             final StorageReference filepath = mImageStorage.child("book_images").child(key + ".jpg");

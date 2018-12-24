@@ -136,7 +136,6 @@ public class AddNewBook extends AppCompatActivity {
     private void pickImageFromSource(Sources source) {
         RxImagePicker.with(getFragmentManager()).requestImage(source).flatMap(uri -> {
 
-                    //TODO: reikia gauti key
                     key = mBookDatabase.push().getKey();
 
                     final StorageReference filepath = mImageStorage.child("book_images").child(key + ".jpg");
@@ -271,6 +270,7 @@ public class AddNewBook extends AppCompatActivity {
         mUserBookDatabase.child(current_uid).child(key).child("image").setValue(download_url);
 
         mUserBookDatabase.child(current_uid).child(key).child("userID").setValue(current_uid);
+        mUserBookDatabase.child(current_uid).child(key).child("bookKey").setValue(key);
 
         if (switchButton.isChecked()) {
             mUserBookDatabase.child(current_uid).child(key).child("tradable").setValue("true");

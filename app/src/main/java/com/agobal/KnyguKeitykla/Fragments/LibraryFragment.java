@@ -151,7 +151,7 @@ public class LibraryFragment extends Fragment {
         listView.setOnItemClickListener((parent, view, position, id) -> {
             // Launch the detail view passing book as an extra
             Intent intent = new Intent(getActivity(), MyBookDetail.class);
-            intent.putExtra(MY_BOOK_DETAIL_KEY, myBookAdapter.getItem(position)); // ? TODO: check
+            intent.putExtra(MY_BOOK_DETAIL_KEY, myBookAdapter.getItem(position));
             intent.putExtra("BOOK_KEY", BookKeyToDetails);
             startActivity(intent);
             Log.d("NEW_INTENT", "VEIKIA");
@@ -175,7 +175,7 @@ public class LibraryFragment extends Fragment {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         //String BookName = dataSnapshot.child("bookName").getValue(String.class);
                         for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                            Log.d("get key", "" + childDataSnapshot.getKey());   //displays the key for the node 2 TODO: Gaunu visus knygų ID !!
+                            Log.d("get key", "" + childDataSnapshot.getKey());//Gaunu visus knygų ID
 
                             String path = childDataSnapshot.getRef().toString();
                             Log.d("path:",path+" ");

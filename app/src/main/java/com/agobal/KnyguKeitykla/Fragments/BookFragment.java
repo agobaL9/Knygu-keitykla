@@ -140,7 +140,7 @@ public class BookFragment extends Fragment {
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 //String BookName = dataSnapshot.child("bookName").getValue(String.class);
                                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                                    Log.d("get key", "" + childDataSnapshot.getKey());   //displays the key for the node 2 TODO: Gaunu visus knygų ID !!
+                                    Log.d("get key", "" + childDataSnapshot.getKey());   //Gaunu visus knygų ID
 
                                     String path = childDataSnapshot.getRef().toString();
                                     Log.d("path:", path + " ");
@@ -156,13 +156,15 @@ public class BookFragment extends Fragment {
                                     Integer BookYear = childDataSnapshot.child("bookYear").getValue(Integer.class);
                                     String BookCondition = childDataSnapshot.child("bookCondition").getValue(String.class);
                                     String BookCategory = childDataSnapshot.child("bookCategory").getValue(String.class);
+                                    String BookAbout = childDataSnapshot.child("bookAbout").getValue(String.class);
                                     String Image = childDataSnapshot.child("image").getValue(String.class);
                                     String Tradable = childDataSnapshot.child("tradable").getValue(String.class);
 
                                     String UserID = childDataSnapshot.child("userID").getValue(String.class);
+                                    String BookID = childDataSnapshot.child("bookKey").getValue(String.class);
 
 
-                                    BookList.add(new Books(BookName, BookAuthor, BookPublisher, BookYear, BookCondition, BookCategory, Image, Tradable, UserID));
+                                    BookList.add(new Books(BookName, BookAuthor, BookPublisher, BookYear, BookCondition, BookCategory, BookAbout, Image, Tradable, UserID, BookID));
 
                                     booksAdapter = new BooksAdapter(Objects.requireNonNull(getContext()), BookList);
                                     listViewBooks.setAdapter(booksAdapter);
@@ -192,7 +194,7 @@ public class BookFragment extends Fragment {
         listViewBooks.setOnItemClickListener((parent, view, position, id) -> {
             // Launch the detail view passing book as an extra
             Intent intent = new Intent(getActivity(), BookDetails.class);
-            intent.putExtra(BOOK_DETAIL_KEY, booksAdapter.getItem(position)); // ? TODO: check
+            intent.putExtra(BOOK_DETAIL_KEY, booksAdapter.getItem(position));
             intent.putExtra("BOOK_KEY", BookKeyToDetails);
             intent.putExtra("USER_KEY", UserKeyToDetails);
             startActivity(intent);

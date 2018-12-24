@@ -47,13 +47,18 @@ public class BookDetails extends AppCompatActivity {
     private TextView tvBookAbout;
     TextView title;
 
+    ActionButton fab_message;
+    ActionButton fab_star;
+
     private StorageReference mImageStorage;
     private DatabaseReference mUserDatabase;
     private DatabaseReference mUserFavBooks;
     private DatabaseReference mUserFavBookKey;
     private DatabaseReference mBookDatabase;
     private DatabaseReference mUserBookDatabase;
+    private DatabaseReference mUserFavBookButton;
     private DatabaseReference mDatabase;
+    private DatabaseReference mUserFavBookDelete;
 
     String userName;
     String email;
@@ -64,9 +69,9 @@ public class BookDetails extends AppCompatActivity {
     String BookKey;
     String UserID;
 
-    String FavBookKey;
+    //String FavBookKey;
 
-    Boolean isBookSaved = false;
+    Boolean isBookSaved;
 
     FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
     String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
@@ -80,10 +85,12 @@ public class BookDetails extends AppCompatActivity {
         getSupportActionBar().setCustomView(R.layout.action_bar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
         title = findViewById(getResources().getIdentifier("action_bar_title", "id", getPackageName()));
 
-        ActionButton fab_message = findViewById(R.id.fb_message);
-        ActionButton fab_star = findViewById(R.id.fb_star);
+        fab_message = findViewById(R.id.fb_message);
+        fab_star = findViewById(R.id.fb_star);
         fab_message.setImageResource(R.drawable.ic_message_white_24dp);
         fab_star.setImageResource(R.drawable.ic_star_white_24dp);
         // To set button color for normal state:
@@ -96,6 +103,8 @@ public class BookDetails extends AppCompatActivity {
         FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
+        mUserFavBookDelete = FirebaseDatabase.getInstance().getReference();
+
 
          // Fetch views
         ivBookCover = findViewById(R.id.ivBookCover);
@@ -109,13 +118,15 @@ public class BookDetails extends AppCompatActivity {
 
         // Use the book to populate the data into our views
         Books Book = (Books) getIntent().getSerializableExtra(BookFragment.BOOK_DETAIL_KEY);
-        BookKey = getIntent().getStringExtra("BOOK_KEY");
+        //BookKey = getIntent().getStringExtra("BOOK_KEY");
 
         Log.d("BookKey", " "+ BookKey);
         Log.d("UserKey", " "+ UserID);
 
         loadBook(Book);
         loadUserInfo();
+
+        loadFabButton();
 
         fab_message.setOnClickListener(view -> {
             //Intent intent = new Intent(MyBookDetail.this, test.class);
@@ -140,28 +151,74 @@ public class BookDetails extends AppCompatActivity {
 
     }
 
+    private void loadFabButton() {
+
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.hasChild("UserFavBooks"))
+                {
+                    mUserFavBookButton = mDatabase.child("UserFavBooks");
+                    mUserFavBookButton.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.hasChild(current_uid))
+                            {
+                                mUserFavBookButton = mDatabase.child("UserFavBooks").child(current_uid);
+                                mUserFavBookButton.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        if(dataSnapshot.hasChild(BookKey))
+                                        {
+                                            isBookSaved = true;
+                                            fab_star.setState(ActionButton.State.PRESSED);
+                                        }
+                                        else
+                                        {
+                                            fab_star.setState(ActionButton.State.NORMAL);
+                                            isBookSaved = false;
+                                        }
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+                isBookSaved=false;
+                fab_star.setState(ActionButton.State.NORMAL);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     private void deleteBookFromFav() {
-        mUserFavBookKey.setValue(null);
+        Log.d("UserFabBooks", " "+ mUserFavBookKey);
+        mUserFavBookDelete.child("UserFavBooks").child(current_uid).child(BookKey).setValue(null);
+        Log.d("UserFabBooks1", " "+ mUserFavBookKey);
         Toast.makeText(getApplicationContext(), "Knyga panaikinta!", Toast.LENGTH_LONG).show();
 
     }
 
     private void saveUserFavBook(Books Book) {
 
-
-        mDatabase = FirebaseDatabase.getInstance().getReference();
         mUserFavBookKey = mDatabase.child("UserFavBooks").child(current_uid);
-        FavBookKey = mUserFavBooks.push().getKey();
-        mUserFavBooks = mDatabase.child("UserFavBooks").child(current_uid).child(FavBookKey);
-/*
-        String BookName = tvTitle.getText().toString();
-        String BookAuthor = tvAuthor.getText().toString();
-        String BookPublisher = tvPublisher.getText().toString();
-        String BookAbout = tvBookAbout.getText().toString();
-        String BookYear = tvBookYear.toString();
-        String BookCondition = tvBookCondition.toString();
-        String BookCategory = tvBookCategory.toString();
-*/
+        //FavBookKey = mUserFavBookKey.push().getKey(); // TODO: reikia kad butu knygos id o ne random
+        mUserFavBooks = mDatabase.child("UserFavBooks").child(current_uid).child(BookKey);
 
         mUserFavBooks.child("bookName").setValue(Book.getBookName());
         mUserFavBooks.child("bookAuthor").setValue(Book.getBookAuthor());
@@ -171,6 +228,7 @@ public class BookDetails extends AppCompatActivity {
         mUserFavBooks.child("bookCondition").setValue(Book.getBookCondition());
         mUserFavBooks.child("bookYear").setValue(Book.getBookYear());
         mUserFavBooks.child("image").setValue(Book.getBookImage());
+        mUserFavBooks.child("BookID").setValue(Book.getBookID());
 
     }
 
@@ -188,6 +246,7 @@ public class BookDetails extends AppCompatActivity {
         tvBookCategory.setText("Kategorija: " + Book.getBookCategory());
 
         UserID =Book.getUserID();
+        BookKey = Book.getBookID();
 
     }
 
@@ -201,6 +260,8 @@ public class BookDetails extends AppCompatActivity {
 
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         DatabaseReference mUserInfoInDetais = mDatabase.child("Users").child(UserID);
+
+        Log.d("UserID", " "+ mUserInfoInDetais);
 
         mUserInfoInDetais.keepSynced(true);
 
@@ -217,9 +278,11 @@ public class BookDetails extends AppCompatActivity {
                 String thumb_image = dataSnapshot.child("thumb_image").getValue(String.class);
                 final String image = dataSnapshot.child("image").getValue(String.class);
 
+                Log.d("user info", userName +" " + email + " " +firstName+" "+ lastName+ " "+cityName);
+                Log.d( "Image"," "+ image);
+
                 Picasso.get().load(image);
 
-                assert image != null;
                 if(!image.equals("default")){
                     Picasso.get().load(image).networkPolicy(NetworkPolicy.OFFLINE)
                             .placeholder(R.drawable.unknown_profile_pic).into(ProfilePic, new Callback() {
@@ -237,7 +300,6 @@ public class BookDetails extends AppCompatActivity {
 
                 }
 
-                Log.d("user info: ", userName +" " + email + " " +firstName+" "+ lastName+ " "+cityName);
 
                 UserData userData = new UserData();
 

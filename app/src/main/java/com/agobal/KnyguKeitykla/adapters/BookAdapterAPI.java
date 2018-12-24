@@ -53,7 +53,7 @@ public class BookAdapterAPI extends ArrayAdapter<BookAPI> {
         // Populate the data into the template view using the data object
         viewHolder.tvTitle.setText(bookAPI.getTitle());
         viewHolder.tvAuthor.setText(bookAPI.getAuthor());
-        Picasso.get().load(Uri.parse(bookAPI.getCoverUrl())).error(R.drawable.ic_nocover).into(viewHolder.ivCover); //TODO: check this
+        Picasso.get().load(Uri.parse(bookAPI.getCoverUrl())).error(R.drawable.ic_nocover).into(viewHolder.ivCover);
         // Return the completed view to render on screen
         return convertView;
     }
