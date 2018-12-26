@@ -13,11 +13,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.agobal.KnyguKeitykla.Entities.Books;
 import com.agobal.KnyguKeitykla.Entities.UserData;
 import com.agobal.KnyguKeitykla.R;
 import com.agobal.KnyguKeitykla.AccountActivity.ProfileEdit;
+import com.agobal.KnyguKeitykla.adapters.BooksAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -36,6 +39,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Objects;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -51,7 +55,16 @@ public class ProfileFragment extends Fragment {
 
     private StorageReference mImageStorage;
     private DatabaseReference mUserDatabase;
+    private DatabaseReference mUserFavBooks;
+    private DatabaseReference mUserFavBooksUser;
     private static final int GALLERY_PICK = 1;
+
+    ArrayList<Books> BookList = new ArrayList<>();
+    FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+    String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
+    String tempID;
+    private ListView listAllFavBooks;
+    private BooksAdapter booksAdapter;
 
     String userName;
     String email;
@@ -59,6 +72,13 @@ public class ProfileFragment extends Fragment {
     String lastName;
     String cityName;
     String about;
+
+    String userID;
+    String bookID;
+
+    Boolean isUserHaveFavBooks = false;
+
+    TextView tvEmpty;
 
 
     public ProfileFragment() {
@@ -84,25 +104,25 @@ public class ProfileFragment extends Fragment {
         final CircleImageView ProfilePic = v.findViewById(R.id.profilePic);
         ImageButton BtnProfileEdit = v.findViewById(R.id.profileEditBtn);
 
+        listAllFavBooks = v.findViewById(R.id.listAllFavBooks);
+
+        tvEmpty = v.findViewById(R.id.tvEmpty);
+        tvEmpty.setVisibility(View.GONE);
+
         mImageStorage = FirebaseStorage.getInstance().getReference();
         FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
+        mUserFavBooks = FirebaseDatabase.getInstance().getReference().child("UserFavBooks").child(current_uid);
 
         ProfilePic.setOnClickListener(view -> {
             //Profile photo button
             showFileChooser();
         });
 
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        final FirebaseUser user = auth.getCurrentUser();
-        final String userID = Objects.requireNonNull(user).getUid();
+        mUserDatabase.keepSynced(true);
 
-        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference usersRef = rootRef.child("Users").child(userID);
-        usersRef.keepSynced(true);
-
-        usersRef.addValueEventListener(new ValueEventListener() {
+        mUserDatabase.addValueEventListener(new ValueEventListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -160,6 +180,37 @@ public class ProfileFragment extends Fragment {
             }
         }) ;
 
+        mUserFavBooks.keepSynced(true);
+
+        mUserFavBooks.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot.hasChildren()) {
+                    for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                        //Log.d("All userID",""+ childDataSnapshot.getKey()); //got all users ID
+                        userID = childDataSnapshot.getKey();
+
+                        if (userID != null && userID.equals(current_uid)) { // ar yra dabartinis vartotojas userbooks šakoje
+                            Log.d("ar yra šakoje?", "taip");
+                            isUserHaveFavBooks = true;
+                            //tempID = userID;
+                        }
+                    }
+                    tvEmpty.setVisibility(View.GONE);
+                    fetchFavBooks();
+                } else
+                    tvEmpty.setVisibility(View.VISIBLE);
+
+                pDialog.dismissWithAnimation();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("onCancelled", " Suveikė canceled");
+            }
+        });
+
         BtnProfileEdit.setOnClickListener(view -> {
             //Profile edit button
             Intent intent = new Intent(getActivity(), ProfileEdit.class);
@@ -173,6 +224,68 @@ public class ProfileFragment extends Fragment {
         });
 
         return v;
+    }
+
+    private void fetchFavBooks() {
+        Log.d("favbooks", " yes");
+        BookList = new ArrayList<>();
+        mUserFavBooks = FirebaseDatabase.getInstance().getReference().child("UserFavBooks");
+        mUserFavBooks.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                mUserFavBooksUser = FirebaseDatabase.getInstance().getReference().child("UserFavBooks").child(current_uid);
+                mUserFavBooksUser.keepSynced(true);
+                mUserFavBooksUser.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        //String BookName = dataSnapshot.child("bookName").getValue(String.class);
+                        for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                            Log.d("get key", "" + childDataSnapshot.getKey());//Gaunu visus knygų ID
+
+                            String path = childDataSnapshot.getRef().toString();
+                            Log.d("path:",path+" ");
+
+                            //tempKey = childDataSnapshot.getKey();
+                            //BookKeyToDetails = childDataSnapshot.getKey();
+
+                            //UserKeyToDetails=dataSnapshot.getKey();
+
+                            String BookName = childDataSnapshot.child("bookName").getValue(String.class);
+                            String BookAuthor = childDataSnapshot.child("bookAuthor").getValue(String.class);
+                            String BookPublisher = childDataSnapshot.child("bookPublisher").getValue(String.class);
+                            Integer BookYear = childDataSnapshot.child("bookYear").getValue(Integer.class);
+                            String BookCondition = childDataSnapshot.child("bookCondition").getValue(String.class);
+                            String BookCategory = childDataSnapshot.child("bookCategory").getValue(String.class);
+                            String BookAbout = childDataSnapshot.child("bookAbout").getValue(String.class);
+                            String Image = childDataSnapshot.child("image").getValue(String.class);
+                            String Tradable = childDataSnapshot.child("tradable").getValue(String.class);
+
+                            String UserID = childDataSnapshot.child("userID").getValue(String.class);
+                            String BookID = childDataSnapshot.child("bookKey").getValue(String.class);
+
+                            BookList.add(new Books(BookName, BookAuthor, BookPublisher, BookYear, BookCondition, BookCategory, BookAbout, Image, Tradable, UserID, BookID));
+
+                            booksAdapter = new BooksAdapter(Objects.requireNonNull(getContext()), BookList);
+                            listAllFavBooks.setAdapter(booksAdapter);
+                            booksAdapter.notifyDataSetChanged();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("onCancelled"," Suveikė canceled2");
+            }
+        });
     }
 
     @Override
