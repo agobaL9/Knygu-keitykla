@@ -23,9 +23,7 @@ public class BookAPI implements Serializable {
         return title;
     }
 
-    public String getAuthor() {
-        return author;
-    }
+    public String getAuthor() { return author; }
 
     // Get medium sized book cover from covers API
     public String getCoverUrl() {

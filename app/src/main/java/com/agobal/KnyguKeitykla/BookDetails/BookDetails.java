@@ -228,7 +228,7 @@ public class BookDetails extends AppCompatActivity {
         mUserFavBooks.child("bookCondition").setValue(Book.getBookCondition());
         mUserFavBooks.child("bookYear").setValue(Book.getBookYear());
         mUserFavBooks.child("image").setValue(Book.getBookImage());
-        mUserFavBooks.child("BookKey").setValue(Book.getBookID());
+        mUserFavBooks.child("bookKey").setValue(Book.getBookID());
         mUserFavBooks.child("userID").setValue(Book.getUserID());
 
     }

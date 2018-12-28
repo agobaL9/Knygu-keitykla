@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.agobal.KnyguKeitykla.BookDetails.BookDetails;
 import com.agobal.KnyguKeitykla.Entities.Books;
 import com.agobal.KnyguKeitykla.Entities.UserData;
 import com.agobal.KnyguKeitykla.R;
@@ -47,6 +49,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import id.zelory.compressor.Compressor;
 
 import static android.app.Activity.RESULT_OK;
+import static com.agobal.KnyguKeitykla.Fragments.BookFragment.BOOK_DETAIL_KEY;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -73,6 +76,9 @@ public class ProfileFragment extends Fragment {
     String cityName;
     String about;
 
+    String BookKeyToDetails;
+    String UserKeyToDetails;
+
     String userID;
     String bookID;
 
@@ -97,6 +103,9 @@ public class ProfileFragment extends Fragment {
         pDialog.setCancelable(false);
         pDialog.show();
 
+        ViewCompat.setNestedScrollingEnabled(v, true);
+
+
         final TextView T_firstAndLastName = v.findViewById(R.id.firstAndLastName);
         final TextView T_Desc = v.findViewById(R.id.email);
         final TextView T_About = v.findViewById(R.id.about);
@@ -114,6 +123,8 @@ public class ProfileFragment extends Fragment {
         String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
         mUserFavBooks = FirebaseDatabase.getInstance().getReference().child("UserFavBooks").child(current_uid);
+
+        setupBookSelectedListener();
 
         ProfilePic.setOnClickListener(view -> {
             //Profile photo button
@@ -248,9 +259,9 @@ public class ProfileFragment extends Fragment {
                             Log.d("path:",path+" ");
 
                             //tempKey = childDataSnapshot.getKey();
-                            //BookKeyToDetails = childDataSnapshot.getKey();
+                            BookKeyToDetails = childDataSnapshot.getKey();
 
-                            //UserKeyToDetails=dataSnapshot.getKey();
+                            UserKeyToDetails = dataSnapshot.getKey();
 
                             String BookName = childDataSnapshot.child("bookName").getValue(String.class);
                             String BookAuthor = childDataSnapshot.child("bookAuthor").getValue(String.class);
@@ -373,6 +384,18 @@ public class ProfileFragment extends Fragment {
         galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
 
         startActivityForResult(Intent.createChooser(galleryIntent, "Pasirinkite nuotrauką"), GALLERY_PICK);
+    }
+
+    void setupBookSelectedListener() {
+        listAllFavBooks.setOnItemClickListener((parent, view, position, id) -> {
+            // Launch the detail view passing book as an extra
+            Intent intent = new Intent(getActivity(), BookDetails.class);
+            intent.putExtra(BOOK_DETAIL_KEY, booksAdapter.getItem(position));
+            intent.putExtra("BOOK_KEY", BookKeyToDetails);
+            intent.putExtra("USER_KEY", UserKeyToDetails);
+            startActivity(intent);
+            Log.d("NEW_INTENT", "VEIKIA");
+        });
     }
 
 }

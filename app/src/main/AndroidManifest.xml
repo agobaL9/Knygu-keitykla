@@ -44,7 +44,8 @@
         <activity android:name=".Books.AddNewBook" />
         <activity android:name=".BookDetails.MyBookDetail" />
         <activity android:name=".BookDetails.BookDetails" />
-        <activity android:name=".Books.MyBookEdit"></activity>
+        <activity android:name=".Books.MyBookEdit" />
+        <activity android:name=".BookEditAPI"></activity>
     </application>
 
 </manifest>

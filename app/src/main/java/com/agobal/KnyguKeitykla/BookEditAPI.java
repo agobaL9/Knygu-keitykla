@@ -1,13 +1,16 @@
-package com.agobal.KnyguKeitykla.Books;
+package com.agobal.KnyguKeitykla;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -24,7 +27,12 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.agobal.KnyguKeitykla.API.SearchBookAPI;
+import com.agobal.KnyguKeitykla.BookDetails.BookDetailActivityAPI;
+import com.agobal.KnyguKeitykla.Books.AddNewBook;
+import com.agobal.KnyguKeitykla.Entities.BookAPI;
 import com.agobal.KnyguKeitykla.R;
+import com.agobal.KnyguKeitykla.helper.BookClient;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,19 +44,27 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.mlsdev.rximagepicker.RxImagePicker;
 import com.mlsdev.rximagepicker.Sources;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+import cz.msebera.android.httpclient.Header;
 import io.reactivex.Observable;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
-public class MyBookEdit extends AppCompatActivity {
+public class BookEditAPI extends AppCompatActivity {
 
     private StorageReference mImageStorage;
     private DatabaseReference mBookDatabase;
@@ -71,18 +87,19 @@ public class MyBookEdit extends AppCompatActivity {
     RadioGroup radioGroup;
     Switch switchButton;
 
-    ImageView ivPickedImage;
+    ImageView ivBookCover;
     TextView title;
 
     int BookYear;
     String key;
     String download_url;
+    String ImageURL;
     Boolean isPhotoSelected= false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_book_edit);
+        setContentView(R.layout.activity_book_edit_api);
 
         getSupportActionBar().setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.action_bar);
@@ -110,7 +127,7 @@ public class MyBookEdit extends AppCompatActivity {
         btnSave = findViewById(R.id.btnSave);
         btnYear = findViewById(R.id.btnYear);
 
-        ivPickedImage = findViewById(R.id.ivPicedImage);
+        ivBookCover = findViewById(R.id.ivBookCover);
 
         FloatingActionButton fabCamera = findViewById(R.id.fab_pick_camera);
         FloatingActionButton fabGallery = findViewById(R.id.fab_pick_gallery);
@@ -118,16 +135,46 @@ public class MyBookEdit extends AppCompatActivity {
         fabCamera.setOnClickListener(view -> pickImageFromSource(Sources.CAMERA));
         fabGallery.setOnClickListener(view -> pickImageFromSource(Sources.GALLERY));
 
+
+        loadBookfromAPI();
         btnYear.setOnClickListener(view -> selectYear());
         btnSave.setOnClickListener(view -> saveBook());
-
         selectCategory();
 
     }
 
-    void saveBook()
-    {
+    private void loadBookfromAPI() {
 
+        String BookName= getIntent().getStringExtra("bookName");
+        String BookAuthor= getIntent().getStringExtra("bookAuthor");
+        String BookPublisher= getIntent().getStringExtra("bookPublisher");
+        String BookPublishYear= getIntent().getStringExtra("bookPublishYear");
+        ImageURL= getIntent().getStringExtra("bookCover");
+
+        Log.d("metai ", " "+BookPublishYear);
+
+        BookPublishYear = BookPublishYear.replaceAll("\\D+","");
+
+        if(!BookPublishYear.equals(""))
+        {
+            BookYear = Integer.parseInt(BookPublishYear);
+            btnYear.setText("Pasirinkti metai: "+ BookYear);
+
+        }
+        else
+        {
+            BookYear=0;
+            btnYear.setText("PASIRINKTI METUS");
+
+        }
+
+        //String BookPageCount = getIntent().getStringExtra("bookPageCount");
+
+        etBookName.setText(BookName);
+        etBookAuthor.setText(BookAuthor);
+        etPublisher.setText(BookPublisher);
+
+        Picasso.get().load(ImageURL).error(R.drawable.ic_nocover).into(ivBookCover);
 
     }
 
@@ -152,7 +199,7 @@ public class MyBookEdit extends AppCompatActivity {
             return Observable.just(uri);
 
         })
-                .subscribe(this::onImagePicked, throwable -> Toast.makeText(MyBookEdit.this, String.format("Error: %s", throwable), Toast.LENGTH_LONG).show());
+                .subscribe(this::onImagePicked, throwable -> Toast.makeText(BookEditAPI.this, String.format("Error: %s", throwable), Toast.LENGTH_LONG).show());
 
         isPhotoSelected=true;
     }
@@ -162,7 +209,7 @@ public class MyBookEdit extends AppCompatActivity {
         //Toast.makeText(this, String.format("Result: %s", result), Toast.LENGTH_LONG).show();
         if (result instanceof Bitmap)
         {
-            ivPickedImage.setImageBitmap((Bitmap) result);
+            ivBookCover.setImageBitmap((Bitmap) result);
         }
         else
         {
@@ -170,9 +217,98 @@ public class MyBookEdit extends AppCompatActivity {
                     .load(result) // works for File or Uri
                     .transition(withCrossFade())
                     .apply(new RequestOptions().centerCrop())
-                    .into(ivPickedImage);
+                    .into(ivBookCover);
         }
     }
+
+    void saveBook()
+    {
+
+        String BookName = etBookName.getText().toString().trim();
+        String BookAuthor = etBookAuthor.getText().toString().trim();
+        String BookAbout = etBookAbout.getText().toString().trim();
+        String BookCategory = spinCategory.getSelectedItem().toString();
+        String BookPublisher = etPublisher.getText().toString().trim();
+
+
+
+        if(BookYear==0)
+        {
+            Toast.makeText(getApplicationContext(), "Pasirinkite knygos išleidimo metus!",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(!isPhotoSelected) {
+//TODO: foto sukimasis
+            download_url = ImageURL;
+            key = mBookDatabase.push().getKey();
+            //Toast.makeText(getApplicationContext(), "Pasirinkite nuotrauką!", Toast.LENGTH_LONG).show();
+            //return;
+        }
+
+
+        if(TextUtils.isEmpty(BookName)) {
+            etBookName.setError("Knygos pavadinimas negali būti tuščias!");
+            return;
+        }
+        if(TextUtils.isEmpty(BookPublisher)) {
+            etPublisher.setError("Knygos leidyklos laukas negali būti tuščias!");
+            return;
+        }
+
+        if(TextUtils.isEmpty(BookAuthor)) {
+            etBookAuthor.setError("Knygos autorius negali būti tuščias!");
+            return;
+        }
+
+        if (radioGroup.getCheckedRadioButtonId() == -1)
+        {
+            Toast.makeText(getApplicationContext(), "Turite pasirinkti knygos būklę!",
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        String bookCondition = ((RadioButton)findViewById(radioGroup.getCheckedRadioButtonId())).getText().toString();
+
+        mBookDatabase.child(key).child("bookName").setValue(BookName);
+        mBookDatabase.child(key).child("bookAuthor").setValue(BookAuthor);
+        mBookDatabase.child(key).child("bookAbout").setValue(BookAbout);
+        mBookDatabase.child(key).child("bookPublisher").setValue(BookPublisher);
+        mBookDatabase.child(key).child("bookCategory").setValue(BookCategory);
+        mBookDatabase.child(key).child("bookCondition").setValue(bookCondition);
+        mBookDatabase.child(key).child("bookYear").setValue(BookYear);
+        mBookDatabase.child(key).child("image").setValue(download_url);
+
+        mUserBookDatabase.child(current_uid).child(key).child("bookName").setValue(BookName);
+        mUserBookDatabase.child(current_uid).child(key).child("bookAuthor").setValue(BookAuthor);
+        mUserBookDatabase.child(current_uid).child(key).child("bookAbout").setValue(BookAbout);
+        mUserBookDatabase.child(current_uid).child(key).child("bookPublisher").setValue(BookPublisher);
+        mUserBookDatabase.child(current_uid).child(key).child("bookCategory").setValue(BookCategory);
+        mUserBookDatabase.child(current_uid).child(key).child("bookCondition").setValue(bookCondition);
+        mUserBookDatabase.child(current_uid).child(key).child("bookYear").setValue(BookYear);
+        mUserBookDatabase.child(current_uid).child(key).child("image").setValue(download_url);
+
+        mUserBookDatabase.child(current_uid).child(key).child("userID").setValue(current_uid);
+        mUserBookDatabase.child(current_uid).child(key).child("bookKey").setValue(key);
+
+        if (switchButton.isChecked()) {
+            mUserBookDatabase.child(current_uid).child(key).child("tradable").setValue("true");
+        }
+        else {
+            mUserBookDatabase.child(current_uid).child(key).child("tradable").setValue("false");
+        }
+
+        new SweetAlertDialog(this)
+                .setTitleText("Knygą pridėta! ")
+                .setConfirmClickListener(sweetAlertDialog -> {
+                    Intent intent = new Intent(BookEditAPI.this, MainActivity.class);
+                    startActivity(intent);
+                })
+                .show();
+
+    }
+
 
     private void selectCategory() {
 
@@ -191,7 +327,7 @@ public class MyBookEdit extends AppCompatActivity {
                     categories.add(areaName);
                 }
                 Spinner categorySpinner = findViewById(R.id.spinCategory);
-                ArrayAdapter<String> areasAdapter = new ArrayAdapter<>(MyBookEdit.this, android.R.layout.simple_spinner_item, categories);
+                ArrayAdapter<String> areasAdapter = new ArrayAdapter<>(BookEditAPI.this, android.R.layout.simple_spinner_item, categories);
                 areasAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 categorySpinner.setAdapter(areasAdapter);
             }
