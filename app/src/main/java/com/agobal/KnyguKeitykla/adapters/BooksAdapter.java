@@ -23,6 +23,8 @@ public class BooksAdapter extends ArrayAdapter<Books> {
 
         private Context mContext;
         private List<Books> allBookList;
+        String imageURL;
+        //ImageView ivBookCover;
 
         public BooksAdapter(@NonNull Context context, @SuppressLint("SupportAnnotationUsage") @LayoutRes ArrayList<Books> list) {
 
@@ -43,11 +45,27 @@ public class BooksAdapter extends ArrayAdapter<Books> {
 
             ImageView image = listItem.findViewById(R.id.ivBookCover);
 
-            Picasso.get().load(currentBook.getBookImage())
-                    .rotate(90)
-                    .resize(200,200)
-                    .centerCrop()
-                    .into(image);
+            imageURL= currentBook.getBookImage();
+            if(imageURL.startsWith("https://firebasestorage"))
+            {
+                Picasso.get().load(currentBook.getBookImage())
+                        .rotate(90)
+                        .resize(200,200)
+                        .centerCrop()
+                        .error(R.drawable.ic_nocover)
+                        .into(image);
+            }
+            else
+            {
+                Picasso.get().load(currentBook.getBookImage())
+                        //.rotate(90)
+                        .resize(200,200)
+                        .error(R.drawable.ic_nocover)
+                        .centerCrop()
+                        .into(image);
+            }
+
+            //Picasso.get().load(currentBook.getBookImage()).rotate(90).resize(200,200).centerCrop().into(image);
 
             TextView name = listItem.findViewById(R.id.tvTitle);
             name.setText(currentBook.getBookName());

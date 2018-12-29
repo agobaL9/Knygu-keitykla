@@ -16,6 +16,7 @@ import com.agobal.KnyguKeitykla.Entities.MyBook;
 import com.agobal.KnyguKeitykla.Fragments.LibraryFragment;
 import com.agobal.KnyguKeitykla.R;
 import com.agobal.KnyguKeitykla.MainActivity;
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -38,9 +39,11 @@ public class MyBookDetail extends AppCompatActivity {
     private TextView tvBookYear;
     private TextView tvBookCondition;
     private TextView tvBookCategory;
+    TextView title;
+
     String BookDeleteKey;
 
-    TextView title;
+    String imageURL;
 
     FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
     String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
@@ -97,7 +100,26 @@ public class MyBookDetail extends AppCompatActivity {
         //change activity title
         title.setText(myBook.getBookName());
         // Populate data
-        Picasso.get().load(Uri.parse(myBook.getBookImage())).error(R.drawable.ic_nocover).rotate(90).resize(400,600).centerCrop().into(ivBookCover);
+        imageURL= myBook.getBookImage();
+        if(imageURL.startsWith("https://firebasestorage"))
+        {
+            Picasso.get().load(myBook.getBookImage())
+                    .rotate(90)
+                    .resize(400,600)
+                    .centerCrop()
+                    .error(R.drawable.ic_nocover)
+                    .into(ivBookCover);
+        }
+        else
+        {
+            Picasso.get().load(myBook.getBookImage())
+                    //.rotate(90)
+                    .resize(400,600)
+                    .error(R.drawable.ic_nocover)
+                    .centerCrop()
+                    .into(ivBookCover);
+        }
+        //Picasso.get().load(Uri.parse(myBook.getBookImage())).error(R.drawable.ic_nocover).rotate(90).resize(400,600).centerCrop().into(ivBookCover);
         tvTitle.setText(myBook.getBookName());
         tvAuthor.setText(myBook.getBookAuthor());
         tvPublisher.setText("Leidykla: "+ myBook.getBookPublisher());

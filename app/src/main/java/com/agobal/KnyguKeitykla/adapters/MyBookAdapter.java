@@ -44,11 +44,27 @@ public class MyBookAdapter extends ArrayAdapter<MyBook> {
         MyBook currentBook = myBookList.get(position);
 
         ImageView image = listItem.findViewById(R.id.ivBookCover);
-        Picasso.get().load(currentBook.getBookImage())
-                .rotate(90)
-                .resize(200,200)
-                .centerCrop()
-                .into(image);
+        Log.d("imageUrl", currentBook.getBookImage());
+        String imageURL = currentBook.getBookImage();
+
+        if(imageURL.startsWith("https://firebasestorage"))
+        {
+            Picasso.get().load(currentBook.getBookImage())
+                    .rotate(90)
+                    .error(R.drawable.ic_nocover)
+                    .resize(200,200)
+                    .centerCrop()
+                    .into(image);
+        }
+        else
+        {
+            Picasso.get().load(currentBook.getBookImage())
+                    //.rotate(90)
+                    .resize(200,200)
+                    .error(R.drawable.ic_nocover)
+                    .centerCrop()
+                    .into(image);
+        }
 
         TextView name = listItem.findViewById(R.id.tvTitle);
         name.setText(currentBook.getBookName());

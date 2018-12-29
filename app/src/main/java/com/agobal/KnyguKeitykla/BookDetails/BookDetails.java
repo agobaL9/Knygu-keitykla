@@ -68,6 +68,7 @@ public class BookDetails extends AppCompatActivity {
     String about;
     String BookKey;
     String UserID;
+    String imageURL;
 
     //String FavBookKey;
 
@@ -236,8 +237,31 @@ public class BookDetails extends AppCompatActivity {
     private void loadBook(Books Book) {
         //change activity title
         title.setText(Book.getBookName());
+
+        imageURL= Book.getBookImage();
+        Log.d("bookDetailImageURL", " "+imageURL);
+        if(imageURL.startsWith("https://firebasestorage"))
+        {
+            Picasso.get().load(Book.getBookImage())
+                    .rotate(90)
+                    .resize(400,600)
+                    .centerCrop()
+                    .error(R.drawable.ic_nocover)
+                    .into(ivBookCover);
+        }
+        else
+        {
+            Picasso.get().load(Book.getBookImage())
+                    //.rotate(90)
+                    .resize(400,600)
+                    .error(R.drawable.ic_nocover)
+                    .centerCrop()
+                    .into(ivBookCover);
+            Log.d(" else if", "yes");
+        }
+
         // Populate data
-        Picasso.get().load(Uri.parse(Book.getBookImage())).error(R.drawable.ic_nocover).rotate(90).resize(400,600).centerCrop().into(ivBookCover);
+        //Picasso.get().load(Uri.parse(Book.getBookImage())).error(R.drawable.ic_nocover).rotate(90).resize(400,600).centerCrop().into(ivBookCover);
         tvTitle.setText(Book.getBookName());
         tvAuthor.setText(Book.getBookAuthor());
         tvPublisher.setText("Leidykla: "+ Book.getBookPublisher());
