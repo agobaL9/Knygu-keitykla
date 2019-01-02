@@ -1,6 +1,7 @@
 package com.agobal.KnyguKeitykla.BookDetails;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.agobal.KnyguKeitykla.Chat.Chat_activity;
 import com.agobal.KnyguKeitykla.Entities.Books;
 import com.agobal.KnyguKeitykla.Entities.UserData;
 import com.agobal.KnyguKeitykla.Fragments.BookFragment;
@@ -130,8 +132,10 @@ public class BookDetails extends AppCompatActivity {
         loadFabButton();
 
         fab_message.setOnClickListener(view -> {
-            //Intent intent = new Intent(MyBookDetail.this, test.class);
-            //startActivity(intent);
+            Intent intent = new Intent(BookDetails.this, Chat_activity.class);
+            intent.putExtra("user_id", UserID);
+            intent.putExtra("user_name", userName);
+            startActivity(intent);
         });
 
         fab_star.setOnClickListener(view -> {
