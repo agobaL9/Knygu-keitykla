@@ -37,13 +37,4 @@
         android:text="Author"
         android:textSize="12dp" />
 
-    <Switch
-        android:id="@+id/MyswitchButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="25dp"
-        android:layout_marginStart="340dp"
-        android:gravity="end"
-        android:text="" />
 </RelativeLayout>

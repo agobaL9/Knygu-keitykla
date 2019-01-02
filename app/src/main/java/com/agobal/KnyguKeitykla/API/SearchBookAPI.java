@@ -6,8 +6,10 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 import android.support.v7.widget.SearchView;
 import android.widget.TextView;
@@ -35,12 +37,14 @@ public class SearchBookAPI extends AppCompatActivity {
     public static final String BOOK_DETAIL_KEY = "book";
     private BookAdapterAPI bookAdapterAPI;
     private ListView lvBooks;
+    TextView empty_list_view;
     TextView title;
+    String emptyString = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search_book);
+        setContentView(R.layout.activity_search_book_api);
 
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.action_bar);
@@ -55,10 +59,13 @@ public class SearchBookAPI extends AppCompatActivity {
         }
 
         lvBooks = findViewById(R.id.listViewBooks);
+        empty_list_view =findViewById(R.id.empty_list_view);
         ArrayList<BookAPI> aBookAPIS = new ArrayList<>();
         bookAdapterAPI = new BookAdapterAPI(this, aBookAPIS);
+        lvBooks.setEmptyView(empty_list_view);
         lvBooks.setAdapter(bookAdapterAPI);
-        fetchBooks("Lord of");
+        fetchBooks(emptyString);
+        empty_list_view.setVisibility(View.VISIBLE);
 
         setupBookSelectedListener();
 
@@ -94,8 +101,10 @@ public class SearchBookAPI extends AppCompatActivity {
                 try {
                     pDialog.dismissWithAnimation();
 
+                    Log.d("response API", response + " ");
                     JSONArray docs = null;
                     if(response != null) {
+                        empty_list_view.setVisibility(View.GONE);
                         // Get the docs json array
                         docs = response.getJSONArray("docs");
                         // Parse json array into array of model objects
@@ -108,6 +117,7 @@ public class SearchBookAPI extends AppCompatActivity {
                         }
                         bookAdapterAPI.notifyDataSetChanged();
                     }
+
                 } catch (JSONException e) {
                     // Invalid JSON format, show appropriate error.
                     e.printStackTrace();

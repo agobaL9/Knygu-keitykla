@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="60dp"
     tools:context=".Fragments.MessagesFragment">
 
     <TextView
@@ -11,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
+        android:layout_margin="20dp"
         android:text="Kol kas žinučių nėra, pradėkite pokalbį!"
         android:textSize="20sp" />
 

@@ -44,7 +44,7 @@ public class MyBookAdapter extends ArrayAdapter<MyBook> {
         MyBook currentBook = myBookList.get(position);
 
         ImageView image = listItem.findViewById(R.id.ivBookCover);
-        Log.d("imageUrl", currentBook.getBookImage());
+        Log.d("imageUrl", " " + currentBook.getBookImage());
         String imageURL = currentBook.getBookImage();
 
         if(imageURL.startsWith("https://firebasestorage"))
@@ -71,8 +71,6 @@ public class MyBookAdapter extends ArrayAdapter<MyBook> {
 
         TextView author = listItem.findViewById(R.id.tvAuthor);
         author.setText(currentBook.getBookAuthor());
-
-        Switch switchButton = listItem.findViewById(R.id.MyswitchButton);
 
         Log.d("Tradable", " "+ currentBook.getBookTradable());
 

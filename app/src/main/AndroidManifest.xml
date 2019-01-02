@@ -19,7 +19,7 @@
             android:name=".AccountActivity.LoginActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
-            android:screenOrientation="nosensor"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,16 +36,36 @@
         <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity" />
         <activity
             android:name=".MainActivity"
-            android:label="@string/title_activity_main2" />
-        <activity android:name=".AccountActivity.ResetPasswordActivity" />
-        <activity android:name=".API.SearchBookAPI" />
-        <activity android:name=".BookDetails.BookDetailActivityAPI" />
-        <activity android:name=".AccountActivity.ProfileEdit" />
-        <activity android:name=".Books.AddNewBook" />
-        <activity android:name=".BookDetails.MyBookDetail" />
-        <activity android:name=".BookDetails.BookDetails" />
-        <activity android:name=".Books.MyBookEdit" />
-        <activity android:name=".BookEditAPI"></activity>
+            android:label="@string/title_activity_main2"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AccountActivity.ResetPasswordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".API.SearchBookAPI"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".BookDetails.BookDetailActivityAPI"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AccountActivity.ProfileEdit"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Books.AddNewBook"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".BookDetails.MyBookDetail"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".BookDetails.BookDetails"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Books.MyBookEdit"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".BookEditAPI"
+            android:screenOrientation="portrait" />
+        <activity android:name=".Chat.Chat_activity"/>
     </application>
 
 </manifest>

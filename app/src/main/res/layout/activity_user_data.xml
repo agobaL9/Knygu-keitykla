@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/cyan_grad"
+    android:background="@color/colorPrimary"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="10dp"
@@ -13,7 +13,7 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColorHint="#fff">
+        android:textColorHint="@color/Black">
 
     <EditText
         android:id="@+id/inputName"
@@ -24,7 +24,7 @@
         android:hint="Vardas"
         android:inputType="textCapWords"
         android:singleLine="true"
-        android:textColorHint="#05070a"  />
+        android:textColorHint="@color/Black"  />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -36,7 +36,7 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColorHint="#05070a">
+        android:textColorHint="@color/Black">
 
     <EditText
         android:id="@+id/inputLastName"
@@ -47,7 +47,7 @@
         android:paddingTop="12dp"
         android:inputType="textCapWords"
         android:singleLine="true"
-        android:textColorHint="#05070a"  />
+        android:textColorHint="@color/Black"  />
 
     </android.support.design.widget.TextInputLayout>
 

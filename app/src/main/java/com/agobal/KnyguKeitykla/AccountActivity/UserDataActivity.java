@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
@@ -23,6 +24,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 //import com.agobal.KnyguKeitykla.helper.SessionManager;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +37,7 @@ public class UserDataActivity extends Activity{
     EditText inputName;
     EditText inputLastName;
     Button btnNext;
+    Boolean isDataCorrect = false;
 
     private Spinner spinnerCity;
     private ArrayList<Category> citiesList;
@@ -56,18 +60,22 @@ public class UserDataActivity extends Activity{
 
         btnNext.setOnClickListener(view -> {
 
-            String FirstName = inputName.getText().toString().trim();
-            String LastName = inputLastName.getText().toString().trim();
-            String CityName = spinnerCity.getSelectedItem().toString();
+                    String FirstName = inputName.getText().toString();
+                    String LastName = inputLastName.getText().toString();
+                    String CityName = spinnerCity.getSelectedItem().toString();
 
-            checkUserData(FirstName, LastName);
-            storeUserData(FirstName, LastName, CityName);
+                    checkUserData(FirstName, LastName);
+                    if(isDataCorrect)
+                    {
+                        storeUserData(FirstName, LastName, CityName);
+                        // Launch main activity
+                        Intent intent = new Intent(UserDataActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }
 
-            // Launch main activity
-            Intent intent = new Intent(UserDataActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-        });
+        );
 
         selectCity();
     }
@@ -101,23 +109,30 @@ public class UserDataActivity extends Activity{
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-            });
+        });
     }
 
     private void checkUserData(String FirstName, String LastName) {
 
-        if (FirstName.isEmpty()  || LastName.isEmpty())
-        {
-            Toast.makeText(getApplicationContext(),
-                    "Užpildykite visus laukus!", Toast.LENGTH_LONG)
-                    .show();
+        if(TextUtils.isEmpty(FirstName)) {
+            inputName.setError("Užpildykite visus laukus!");
+            return;
         }
 
-        else if(!FirstName.matches("[a-zA-Z.? ]*") || !LastName.matches("[a-zA-Z.? ]*"))
+        if(TextUtils.isEmpty(LastName)) {
+            inputLastName.setError("Užpildykite visus laukus!");
+            return;
+        }
+
+
+        if(!FirstName.matches("[a-zA-Z.? ]*") || !LastName.matches("[a-zA-Z.? ]*"))
         {
             Toast.makeText(getApplicationContext(),
                     "Netinka specialūs simboliai!", Toast.LENGTH_LONG).show();
+            isDataCorrect =false;
         }
+        else
+            isDataCorrect=true;
 
     }
 

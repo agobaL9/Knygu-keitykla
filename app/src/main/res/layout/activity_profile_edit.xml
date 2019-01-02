@@ -115,8 +115,8 @@
             android:layout_height="wrap_content"
             android:paddingTop="12dp"
             android:background="@android:color/transparent"
-            android:hint="Trumpai apie mane"
-            android:inputType="textCapWords"
+            android:hint="Dominanti literatūra"
+            android:inputType="text"
             android:singleLine="true"
             android:textColorHint="@color/Black"  />
 
