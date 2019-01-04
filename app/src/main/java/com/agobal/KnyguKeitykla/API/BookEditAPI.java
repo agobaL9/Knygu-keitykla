@@ -1,9 +1,8 @@
-package com.agobal.KnyguKeitykla;
+package com.agobal.KnyguKeitykla.API;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -27,12 +26,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.agobal.KnyguKeitykla.API.SearchBookAPI;
-import com.agobal.KnyguKeitykla.BookDetails.BookDetailActivityAPI;
-import com.agobal.KnyguKeitykla.Books.AddNewBook;
-import com.agobal.KnyguKeitykla.Entities.BookAPI;
+import com.agobal.KnyguKeitykla.MainActivity;
 import com.agobal.KnyguKeitykla.R;
-import com.agobal.KnyguKeitykla.helper.BookClient;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -44,14 +39,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.mlsdev.rximagepicker.RxImagePicker;
 import com.mlsdev.rximagepicker.Sources;
 import com.squareup.picasso.Picasso;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -59,7 +49,6 @@ import java.util.List;
 import java.util.Objects;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import cz.msebera.android.httpclient.Header;
 import io.reactivex.Observable;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
@@ -135,7 +124,6 @@ public class BookEditAPI extends AppCompatActivity {
         fabCamera.setOnClickListener(view -> pickImageFromSource(Sources.CAMERA));
         fabGallery.setOnClickListener(view -> pickImageFromSource(Sources.GALLERY));
 
-
         loadBookfromAPI();
         btnYear.setOnClickListener(view -> selectYear());
         btnSave.setOnClickListener(view -> saveBook());
@@ -191,10 +179,10 @@ public class BookEditAPI extends AppCompatActivity {
             bmp.compress(Bitmap.CompressFormat.JPEG, 50, baos);
             byte[] data = baos.toByteArray();
 
-            filepath.putBytes(data)
-                    .addOnSuccessListener(taskSnapshot -> filepath.getDownloadUrl()
-                            .addOnSuccessListener(uri1 ->
+            filepath.putBytes(data).addOnSuccessListener(taskSnapshot -> filepath.getDownloadUrl().addOnSuccessListener(uri1 ->
                                     download_url = uri1.toString()));
+            Log.d("pickImgFromSrcDwnldUrl", download_url + " ");
+
 
             return Observable.just(uri);
 
@@ -202,6 +190,7 @@ public class BookEditAPI extends AppCompatActivity {
                 .subscribe(this::onImagePicked, throwable -> Toast.makeText(BookEditAPI.this, String.format("Error: %s", throwable), Toast.LENGTH_LONG).show());
 
         isPhotoSelected=true;
+
     }
 
     private void onImagePicked(Object result)
@@ -210,14 +199,29 @@ public class BookEditAPI extends AppCompatActivity {
         if (result instanceof Bitmap)
         {
             ivBookCover.setImageBitmap((Bitmap) result);
+            Log.d("instance", "taip");
         }
         else
         {
+            Log.d("instace1", "taip");
+            Picasso.get().load(result.toString())
+                    .rotate(90)
+                    .fit()
+                    .centerCrop()
+                    .error(R.drawable.ic_nocover)
+                    .into(ivBookCover);
+
+            download_url = result.toString();
+            Log.d("onImagePicker_dwnld_url", download_url + " ");
+
+            /*
+
             Glide.with(this)
                     .load(result) // works for File or Uri
                     .transition(withCrossFade())
+
                     .apply(new RequestOptions().centerCrop())
-                    .into(ivBookCover);
+                    .into(ivPickedImage);*/
         }
     }
 
@@ -230,6 +234,9 @@ public class BookEditAPI extends AppCompatActivity {
         String BookCategory = spinCategory.getSelectedItem().toString();
         String BookPublisher = etPublisher.getText().toString().trim();
 
+        Log.d("DOWNLOAD_URL", download_url + " ");
+        Log.d("IMAGE_URL", ImageURL + " ");
+
 
 
         if(BookYear==0)
@@ -240,12 +247,17 @@ public class BookEditAPI extends AppCompatActivity {
         }
 
         if(!isPhotoSelected) {
-//TODO: foto sukimasis
             download_url = ImageURL;
             key = mBookDatabase.push().getKey();
             //Toast.makeText(getApplicationContext(), "Pasirinkite nuotrauką!", Toast.LENGTH_LONG).show();
             //return;
         }
+
+        else
+        {
+            key = mBookDatabase.push().getKey();
+        }
+
 
 
         if(TextUtils.isEmpty(BookName)) {
@@ -278,6 +290,12 @@ public class BookEditAPI extends AppCompatActivity {
         mBookDatabase.child(key).child("bookCategory").setValue(BookCategory);
         mBookDatabase.child(key).child("bookCondition").setValue(bookCondition);
         mBookDatabase.child(key).child("bookYear").setValue(BookYear);
+
+
+        if(download_url == null)
+            download_url = ImageURL;
+
+
         mBookDatabase.child(key).child("image").setValue(download_url);
 
         mUserBookDatabase.child(current_uid).child(key).child("bookName").setValue(BookName);

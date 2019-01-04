@@ -41,6 +41,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.mlsdev.rximagepicker.RxImagePicker;
 import com.mlsdev.rximagepicker.Sources;
+import com.squareup.picasso.Picasso;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
@@ -164,14 +165,27 @@ public class AddNewBook extends AppCompatActivity {
         if (result instanceof Bitmap)
         {
             ivPickedImage.setImageBitmap((Bitmap) result);
+            Log.d("instance", "taip");
         }
         else
         {
+            Log.d("instace1", "taip");
+            Picasso.get().load(result.toString())
+                    .rotate(90)
+                    //.fit()
+                    .resize(ivPickedImage.getMeasuredWidth(),ivPickedImage.getMeasuredHeight())
+                    .centerCrop()
+                    .error(R.drawable.ic_nocover)
+                    .into(ivPickedImage);
+
+            /*
+
             Glide.with(this)
                     .load(result) // works for File or Uri
                     .transition(withCrossFade())
+
                     .apply(new RequestOptions().centerCrop())
-                    .into(ivPickedImage);
+                    .into(ivPickedImage);*/
         }
     }
 

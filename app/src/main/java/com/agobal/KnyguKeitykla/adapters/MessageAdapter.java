@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.*;
 import android.widget.*;
 
@@ -68,10 +69,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     @Override
     public void onBindViewHolder(final MessageViewHolder viewHolder, int i) {
 
-        Messages c = mMessageList.get(i);
+        Messages msg = mMessageList.get(i);
 
-        String from_user = c.getFrom();
-        String message_type = c.getType();
+        String from_user = msg.getFrom();
+        String message_type = msg.getType();
 
 
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(from_user);
@@ -98,15 +99,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
         if(message_type.equals("text")) {
 
-            viewHolder.messageText.setText(c.getMessage());
+            viewHolder.messageText.setText(msg.getMessage());
             viewHolder.messageImage.setVisibility(View.INVISIBLE);
 
 
-        } else {
+        } else if (message_type.equals("image")){
 
             viewHolder.messageText.setVisibility(View.INVISIBLE);
-            Picasso.get().load(c.getMessage())
-                    .placeholder(R.drawable.unknown_profile_pic).into(viewHolder.messageImage);
+            Log.d("c.getmessage ", msg.getMessage() + " ");
+            Picasso.get().load(msg.getMessage()).error(R.drawable.error_circle).into(viewHolder.messageImage); //TODO: gauti image i msg.getmesage
 
         }
 

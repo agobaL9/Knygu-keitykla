@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.agobal.KnyguKeitykla.Entities.GetTimeAgo;
@@ -70,6 +71,8 @@ public class Chat_activity extends AppCompatActivity {
     private ImageButton mChatSendBtn;
     private EditText mChatMessageView;
 
+    private ImageView mImageMessage;
+
     private RecyclerView mMessagesList;
     private SwipeRefreshLayout mRefresfLayout;
 
@@ -91,8 +94,6 @@ public class Chat_activity extends AppCompatActivity {
     private int itemPos = 0;
     private String mLastKey = "";
     private String mPrevKey = "";
-
-
 
 
     @Override
@@ -134,6 +135,7 @@ public class Chat_activity extends AppCompatActivity {
         mChatAddBtn = findViewById(R.id.chat_add_btn);
         mChatSendBtn = findViewById(R.id.chat_send_btn);
         mChatMessageView = findViewById(R.id.chat_message_view);
+        mImageMessage = findViewById(R.id.message_image_layout);
 
 
         mAdapter = new MessageAdapter(messagesList);
@@ -154,8 +156,8 @@ public class Chat_activity extends AppCompatActivity {
 
         mImageStorage = FirebaseStorage.getInstance().getReference();
 
-        mRootRef.child("Chat").child(mCurrentUserId).child(mChatUser).child("seen").setValue(true);// galima klaida ??
-        mRootRef.keepSynced(true); // testuojam turetu neloadint img kiekviena karta
+        mRootRef.child("Chat").child(mCurrentUserId).child(mChatUser).child("seen").setValue(true);
+        mRootRef.keepSynced(true);
         loadMessages();
 
         mTitleView.setText(userName);
@@ -167,7 +169,7 @@ public class Chat_activity extends AppCompatActivity {
                 String image = dataSnapshot.child("image").getValue().toString();
 
                 if(online.equals("true")) {
-                    mLastSeenView.setText("Prisijungęs");
+                    mLastSeenView.setText("prisijungęs");
                 } else {
                     GetTimeAgo getTimeAgo = new GetTimeAgo();
 
@@ -263,8 +265,7 @@ public class Chat_activity extends AppCompatActivity {
             final String current_user_ref = "messages/" + mCurrentUserId + "/" + mChatUser;
             final String chat_user_ref = "messages/" + mChatUser + "/" + mCurrentUserId;
 
-            DatabaseReference user_message_push = mRootRef.child("messages")
-                    .child(mCurrentUserId).child(mChatUser).push();
+            DatabaseReference user_message_push = mRootRef.child("messages").child(mCurrentUserId).child(mChatUser).push();
 
             final String push_id = user_message_push.getKey();
 
@@ -280,6 +281,7 @@ public class Chat_activity extends AppCompatActivity {
                         //String download_url = task.getResult().getDownloadUrl().toString();
                         //task.getResult().toString();
                         String download_url = filepath.getDownloadUrl().toString();
+                        Log.d("image", download_url + " ");
 
 
                         Map messageMap = new HashMap();
@@ -455,6 +457,11 @@ public class Chat_activity extends AppCompatActivity {
 
             mChatMessageView.setText("");
 
+            mRootRef.child("Chat").child(mCurrentUserId).child(mChatUser).child("seen").setValue(true);
+            mRootRef.child("Chat").child(mCurrentUserId).child(mChatUser).child("timestamp").setValue(ServerValue.TIMESTAMP);
+
+            mRootRef.child("Chat").child(mChatUser).child(mCurrentUserId).child("seen").setValue(false);
+            mRootRef.child("Chat").child(mChatUser).child(mCurrentUserId).child("timestamp").setValue(ServerValue.TIMESTAMP);
 
             mRootRef.updateChildren(messageUserMap, new DatabaseReference.CompletionListener() {
                 @Override

@@ -7,16 +7,13 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.agobal.KnyguKeitykla.API.SearchBookAPI;
-import com.agobal.KnyguKeitykla.BookEditAPI;
-import com.agobal.KnyguKeitykla.Books.AddNewBook;
+import com.agobal.KnyguKeitykla.API.BookEditAPI;
 import com.agobal.KnyguKeitykla.Entities.BookAPI;
-import com.agobal.KnyguKeitykla.MainActivity;
 import com.agobal.KnyguKeitykla.R;
 import com.agobal.KnyguKeitykla.helper.BookClient;
 import com.google.firebase.auth.FirebaseAuth;

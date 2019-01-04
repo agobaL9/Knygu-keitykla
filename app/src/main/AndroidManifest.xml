@@ -70,7 +70,7 @@
             android:name=".Books.MyBookEdit"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".BookEditAPI"
+            android:name=".API.BookEditAPI"
             android:screenOrientation="portrait" />
         <activity android:name=".Chat.Chat_activity"
             android:theme="@style/AppTheme.NoActionBar" />

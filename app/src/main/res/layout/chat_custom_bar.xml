@@ -21,6 +21,9 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="2dp"
         android:text="Vartotojo vardas"
         android:textColor="@color/Black"
         android:textSize="18sp" />

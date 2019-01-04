@@ -1,10 +1,6 @@
 package com.agobal.KnyguKeitykla.Entities;
 
 
-/**
- * Created by Vaidas on 2017-12-13.
- */
-
 public class Messages {
 
     private String message, type , from;

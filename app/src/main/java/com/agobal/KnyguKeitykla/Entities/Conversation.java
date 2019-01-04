@@ -1,10 +1,5 @@
 package com.agobal.KnyguKeitykla.Entities;
 
-
-/**
- * Created by Vaidas on 2017-12-14.
- */
-
 public class Conversation {
 
     public boolean seen;

@@ -222,7 +222,6 @@ public class BookDetails extends AppCompatActivity {
     private void saveUserFavBook(Books Book) {
 
         mUserFavBookKey = mDatabase.child("UserFavBooks").child(current_uid);
-        //FavBookKey = mUserFavBookKey.push().getKey(); // TODO: reikia kad butu knygos id o ne random
         mUserFavBooks = mDatabase.child("UserFavBooks").child(current_uid).child(BookKey);
 
         mUserFavBooks.child("bookName").setValue(Book.getBookName());

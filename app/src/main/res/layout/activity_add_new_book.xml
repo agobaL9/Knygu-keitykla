@@ -20,15 +20,15 @@
 
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="200dp"
+        android:layout_height="300dp">
 
         <ImageView
             android:id="@+id/ivPicedImage"
             android:src="@drawable/unknow_book"
-            android:layout_width="200dp"
-            android:layout_height="300dp"
-            android:layout_gravity="end" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical" />
 
 
 
