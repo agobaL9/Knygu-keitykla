@@ -58,6 +58,7 @@ public class Messages {
     public void setSeen(boolean seen) {
         this.seen = seen;
     }
+
     public Messages(){
 
     }

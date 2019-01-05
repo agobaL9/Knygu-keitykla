@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        Log.d("ar online?", currentUser + "");
+        //Log.d("ar online?", currentUser + "");
 
         if(currentUser == null)
         {
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        Log.d("ar online2?", currentUser + "");
+        //Log.d("ar online2?", currentUser + "");
 
         if(currentUser != null)
         {
@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                     loadFragment(fragment);
                     return true;
                 case R.id.navigation_library:
-                    title.setText("Biblioteka");
+                    title.setText("Mano knygos");
                     fragment = new LibraryFragment();
                     loadFragment(fragment);
                     return true;

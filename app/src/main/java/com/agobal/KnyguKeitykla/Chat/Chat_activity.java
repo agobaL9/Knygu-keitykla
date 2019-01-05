@@ -28,6 +28,7 @@ import com.agobal.KnyguKeitykla.Entities.GetTimeAgo;
 import com.agobal.KnyguKeitykla.Entities.Messages;
 import com.agobal.KnyguKeitykla.R;
 import com.agobal.KnyguKeitykla.adapters.MessageAdapter;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -66,6 +67,8 @@ public class Chat_activity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private String mCurrentUserId;
+    //String download_url;
+
 
     private ImageButton mChatAddBtn;
     private ImageButton mChatSendBtn;
@@ -272,16 +275,34 @@ public class Chat_activity extends AppCompatActivity {
 
             StorageReference filepath = mImageStorage.child("message_images").child( push_id + ".jpg");
 
-            filepath.putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
 
-                    if(task.isSuccessful()){
+            UploadTask uploadTask = filepath.putFile(imageUri);
+
+            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+
+                    // Continue with the task to get the download URL
+                    return filepath.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        Uri downloadUri = task.getResult();
+                        String download_url = downloadUri.toString();
+                        Log.d("dwnURL", download_url + " ");
+
+                        Log.d("taskIsSucces", "yes ");
 
                         //String download_url = task.getResult().getDownloadUrl().toString();
                         //task.getResult().toString();
-                        String download_url = filepath.getDownloadUrl().toString();
-                        Log.d("image", download_url + " ");
+                        //download_url = filepath.getDownloadUrl().toString();
+                        //Log.d("CHATdownloadURL", download_url + " ");
+
 
 
                         Map messageMap = new HashMap();
@@ -310,12 +331,24 @@ public class Chat_activity extends AppCompatActivity {
                             }
                         });
 
-
+                    } else {
+                        // Handle failures
+                        // ...
                     }
-
                 }
             });
 
+
+/*
+            filepath.putFile(imageUri).addOnCompleteListener(task -> {
+
+                if(task.isSuccessful())
+                {
+
+                }
+
+            });
+*/
         }
 
     }
@@ -334,10 +367,14 @@ public class Chat_activity extends AppCompatActivity {
                 if(!mPrevKey.equals(messageKey)){
 
                     messagesList.add(itemPos++, message);
+                    mAdapter.notifyDataSetChanged();
+
 
                 } else {
 
                     mPrevKey = mLastKey;
+                    mAdapter.notifyDataSetChanged();
+
 
                 }
 
@@ -345,6 +382,8 @@ public class Chat_activity extends AppCompatActivity {
                 if(itemPos == 1) {
 
                     mLastKey = messageKey;
+                    mAdapter.notifyDataSetChanged();
+
 
                 }
 
@@ -404,10 +443,12 @@ public class Chat_activity extends AppCompatActivity {
 
                 messagesList.add(message);
                 mAdapter.notifyDataSetChanged();
+                //mMessagesList.notify();
                 // scroll to bottom
                 mMessagesList.scrollToPosition(messagesList.size()-1);
 
                 mRefresfLayout.setRefreshing(false);
+
             }
 
             @Override
@@ -463,6 +504,11 @@ public class Chat_activity extends AppCompatActivity {
             mRootRef.child("Chat").child(mChatUser).child(mCurrentUserId).child("seen").setValue(false);
             mRootRef.child("Chat").child(mChatUser).child(mCurrentUserId).child("timestamp").setValue(ServerValue.TIMESTAMP);
 
+            mAdapter.notifyDataSetChanged();
+
+            mMessagesList.setAdapter(mAdapter);
+
+
             mRootRef.updateChildren(messageUserMap, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -472,6 +518,8 @@ public class Chat_activity extends AppCompatActivity {
                 }
             });
         }
+
+
         //
 
         //   getWindow().requestFeature(Window.FEATURE_ACTION_BAR); // Removes app bar

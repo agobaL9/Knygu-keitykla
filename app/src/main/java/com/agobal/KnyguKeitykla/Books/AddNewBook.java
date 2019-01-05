@@ -146,9 +146,8 @@ public class AddNewBook extends AppCompatActivity {
                     bmp.compress(Bitmap.CompressFormat.JPEG, 50, baos);
                     byte[] data = baos.toByteArray();
 
-                    filepath.putBytes(data)
-                            .addOnSuccessListener(taskSnapshot -> filepath.getDownloadUrl()
-                            .addOnSuccessListener(uri1 ->
+                    filepath.putBytes(data).addOnSuccessListener(taskSnapshot ->
+                            filepath.getDownloadUrl().addOnSuccessListener(uri1 ->
                                     download_url = uri1.toString()));
 
                             return Observable.just(uri);

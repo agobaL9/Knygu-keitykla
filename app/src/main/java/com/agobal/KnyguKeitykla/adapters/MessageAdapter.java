@@ -11,6 +11,7 @@ import android.widget.*;
 
 import com.agobal.KnyguKeitykla.Entities.Messages;
 import com.agobal.KnyguKeitykla.R;
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,6 +31,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     private List<Messages> mMessageList;
     private DatabaseReference mUserDatabase;
+    private String imageURL;
 
     public MessageAdapter(List<Messages> mMessageList) {
 
@@ -99,15 +101,24 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
         if(message_type.equals("text")) {
 
+            Log.d("c.getmessageTEXT ", msg.getMessage() + " ");
             viewHolder.messageText.setText(msg.getMessage());
             viewHolder.messageImage.setVisibility(View.INVISIBLE);
 
 
-        } else if (message_type.equals("image")){
+        } else {
 
+            imageURL = msg.getMessage();
             viewHolder.messageText.setVisibility(View.INVISIBLE);
-            Log.d("c.getmessage ", msg.getMessage() + " ");
-            Picasso.get().load(msg.getMessage()).error(R.drawable.error_circle).into(viewHolder.messageImage); //TODO: gauti image i msg.getmesage
+
+            Log.d("c.getmessageIMAGE ", imageURL + " ");
+            Picasso.get().load(imageURL)
+                    .error(R.drawable.error_circle)
+                    .resize(800,1200)
+                    .rotate(90)
+                    //.centerCrop()
+                    .placeholder(R.drawable.ic_image_black_24dp)
+                    .into(viewHolder.messageImage); //TODO: gauti image i msg.getmesage
 
         }
 

@@ -42,6 +42,7 @@ public class MessagesFragment extends Fragment {
     FirebaseRecyclerAdapter<Conversation, ConvViewHolder> firebaseConvAdapter;
 
     FirebaseAuth mAuth;
+    TextView tvEmpty;
 
     String mCurrent_user_id;
 
@@ -58,6 +59,8 @@ public class MessagesFragment extends Fragment {
 
         mMainView = inflater.inflate(R.layout.fragment_messages, container, false);
 
+        tvEmpty = mMainView.findViewById(R.id.tvEmpty);
+        tvEmpty.setVisibility(View.GONE);
         mConvList = mMainView.findViewById(R.id.conv_list);
         mAuth = FirebaseAuth.getInstance();
 
@@ -67,9 +70,29 @@ public class MessagesFragment extends Fragment {
 
         mConvDatabase = FirebaseDatabase.getInstance().getReference().child("Chat").child(mCurrent_user_id);
 
+        mConvDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.hasChildren())
+                {
+                    tvEmpty.setVisibility(View.GONE);
+                }
+                else
+                    tvEmpty.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         mConvDatabase.keepSynced(true);
         mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
         mMessageDatabase = FirebaseDatabase.getInstance().getReference().child("messages").child(mCurrent_user_id);
+
+
+
         mUsersDatabase.keepSynced(true);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());

@@ -14,7 +14,7 @@
     <item
         android:id="@+id/navigation_library"
         android:icon="@drawable/ic_local_library_black_24dp"
-        android:title="Biblioteka" />
+        android:title="Mano knygos" />
 
     <item
         android:id="@+id/navigation_profile"

@@ -68,6 +68,8 @@ public class BookFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_books, container, false);
 
+
+
         SweetAlertDialog pDialog = new SweetAlertDialog(Objects.requireNonNull(getContext()), SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         pDialog.setTitleText("Prašome palaukti");

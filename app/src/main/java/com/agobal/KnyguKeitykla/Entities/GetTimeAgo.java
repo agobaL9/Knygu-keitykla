@@ -12,7 +12,6 @@ public class GetTimeAgo extends Application{
 
     public static String getTimeAgo(long time, Context ctx) {
         if (time < 1000000000000L) {
-            // if timestamp given in seconds, convert to millis
             time *= 1000;
         }
 
@@ -23,7 +22,7 @@ public class GetTimeAgo extends Application{
 
         final long diff = now - time;
         if (diff < MINUTE_MILLIS) {
-            return "prisijungęs";
+            return "prieš kelias sekundes";
         } else if (diff < 2 * MINUTE_MILLIS) {
             return "prieš minutę";
         } else if (diff < 50 * MINUTE_MILLIS) {
@@ -34,9 +33,14 @@ public class GetTimeAgo extends Application{
           else if(diff < 2 * HOUR_MILLIS){
               return "prieš "+ diff / HOUR_MILLIS + "valandą";
             }
-         else if (diff < 24 * HOUR_MILLIS && diff >2 * HOUR_MILLIS) {
+         else if (diff < 9 * HOUR_MILLIS && diff >2 * HOUR_MILLIS) {
             return "prieš "+diff / HOUR_MILLIS + " valandas";
-        } else if (diff < 48 * HOUR_MILLIS) {
+        }
+        else if (diff < 21 * HOUR_MILLIS && diff >9 * HOUR_MILLIS) {
+            return "prieš "+diff / HOUR_MILLIS + " valandų";
+        }
+
+        else if (diff < 48 * HOUR_MILLIS) {
             return "vakar";
         } else {
             return diff / DAY_MILLIS + " days ago";
