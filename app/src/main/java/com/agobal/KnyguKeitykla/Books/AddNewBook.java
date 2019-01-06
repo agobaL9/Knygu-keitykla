@@ -283,13 +283,6 @@ public class AddNewBook extends AppCompatActivity {
         mUserBookDatabase.child(current_uid).child(key).child("userID").setValue(current_uid);
         mUserBookDatabase.child(current_uid).child(key).child("bookKey").setValue(key);
 
-        if (switchButton.isChecked()) {
-            mUserBookDatabase.child(current_uid).child(key).child("tradable").setValue("true");
-        }
-        else {
-            mUserBookDatabase.child(current_uid).child(key).child("tradable").setValue("false");
-        }
-
         new SweetAlertDialog(this)
                 .setTitleText("Knygą pridėta! ")
                 .setConfirmClickListener(sweetAlertDialog -> {
