@@ -74,7 +74,6 @@ public class BookEditAPI extends AppCompatActivity {
     Button btnYear;
     Button btnSave;
     RadioGroup radioGroup;
-    Switch switchButton;
 
     ImageView ivBookCover;
     TextView title;
@@ -111,8 +110,6 @@ public class BookEditAPI extends AppCompatActivity {
         rbBookNew = findViewById(R.id.rbBookNew);
         rbBookGood = findViewById(R.id.rbBookGood);
         rbBookFair = findViewById(R.id.rbBookFair);
-        switchButton = findViewById(R.id.switchButton);
-        switchButton.setChecked(true);
         btnSave = findViewById(R.id.btnSave);
         btnYear = findViewById(R.id.btnYear);
 
@@ -309,13 +306,6 @@ public class BookEditAPI extends AppCompatActivity {
 
         mUserBookDatabase.child(current_uid).child(key).child("userID").setValue(current_uid);
         mUserBookDatabase.child(current_uid).child(key).child("bookKey").setValue(key);
-
-        if (switchButton.isChecked()) {
-            mUserBookDatabase.child(current_uid).child(key).child("tradable").setValue("true");
-        }
-        else {
-            mUserBookDatabase.child(current_uid).child(key).child("tradable").setValue("false");
-        }
 
         new SweetAlertDialog(this)
                 .setTitleText("Knygą pridėta! ")

@@ -2,21 +2,32 @@ package com.agobal.KnyguKeitykla.Fragments;
 
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SearchRecentSuggestionsProvider;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.agobal.KnyguKeitykla.BookDetails.BookDetails;
 import com.agobal.KnyguKeitykla.Entities.Books;
+import com.agobal.KnyguKeitykla.Entities.Category;
+import com.agobal.KnyguKeitykla.MainActivity;
 import com.agobal.KnyguKeitykla.R;
 import com.agobal.KnyguKeitykla.adapters.BooksAdapter;
 
@@ -26,9 +37,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.yarolegovich.lovelydialog.LovelyChoiceDialog;
+import com.yarolegovich.lovelydialog.LovelyTextInputDialog;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -55,6 +70,7 @@ public class BookFragment extends Fragment {
 
     String BookKeyToDetails;
     String UserKeyToDetails;
+    String queryText;
 
 
 
@@ -68,6 +84,7 @@ public class BookFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_books, container, false);
 
+        setHasOptionsMenu(true);
 
 
         SweetAlertDialog pDialog = new SweetAlertDialog(Objects.requireNonNull(getContext()), SweetAlertDialog.PROGRESS_TYPE);
@@ -192,6 +209,115 @@ public class BookFragment extends Fragment {
 
     }
 
+    private void fetchBooksWithFilter(String queryText) {
+
+        BookList = new ArrayList<>();
+
+        mUserBookDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks");
+        mUserBookDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                    Log.d("All userID", "" + childDataSnapshot.getKey()); //got all users ID
+
+                    userID = childDataSnapshot.getKey();
+
+                    if (userID != null && !userID.equals(current_uid)) {
+
+
+                        mUserBooksUserDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks").child(userID);
+
+                        Query query = mUserBooksUserDatabase.orderByChild("bookName").startAt(queryText);
+
+
+                        mUserBooksUserDatabase.keepSynced(true);
+                        query.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @SuppressLint("SetTextI18n")
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                //String BookName = dataSnapshot.child("bookName").getValue(String.class);
+                                for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                                    Log.d("get key", "" + childDataSnapshot.getKey());   //Gaunu visus knygų ID
+
+                                    String path = childDataSnapshot.getRef().toString();
+                                    Log.d("path:", path + " ");
+
+                                    tempKey = childDataSnapshot.getKey();
+                                    BookKeyToDetails = childDataSnapshot.getKey();
+
+                                    UserKeyToDetails=dataSnapshot.getKey();
+
+                                    String BookName = childDataSnapshot.child("bookName").getValue(String.class);
+                                    String BookAuthor = childDataSnapshot.child("bookAuthor").getValue(String.class);
+                                    String BookPublisher = childDataSnapshot.child("bookPublisher").getValue(String.class);
+                                    Integer BookYear = childDataSnapshot.child("bookYear").getValue(Integer.class);
+                                    String BookCondition = childDataSnapshot.child("bookCondition").getValue(String.class);
+                                    String BookCategory = childDataSnapshot.child("bookCategory").getValue(String.class);
+                                    String BookAbout = childDataSnapshot.child("bookAbout").getValue(String.class);
+                                    String Image = childDataSnapshot.child("image").getValue(String.class);
+                                    String Tradable = childDataSnapshot.child("tradable").getValue(String.class);
+
+                                    String UserID = childDataSnapshot.child("userID").getValue(String.class);
+                                    String BookID = childDataSnapshot.child("bookKey").getValue(String.class);
+
+
+                                    BookList.add(new Books(BookName, BookAuthor, BookPublisher, BookYear, BookCondition, BookCategory, BookAbout, Image, Tradable, UserID, BookID));
+
+                                    booksAdapter = new BooksAdapter(Objects.requireNonNull(getContext()), BookList);
+                                    listViewBooks.setAdapter(booksAdapter);
+                                    booksAdapter.notifyDataSetChanged();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+                    }//if
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("onCancelled", " Suveikė canceled2");
+            }
+        });
+
+
+    }
+
+    private void showFilter() {
+
+                new LovelyTextInputDialog(getContext())
+                        .setTopColorRes(R.color.colorPrimary)
+                        .setTitle("Paieška")
+                        .setMessage("Įrašykite knygos pavadinimą")
+                        .setInputFilter("Paieška nepavyko, patikrinkite įvedimo lauką", new LovelyTextInputDialog.TextFilter() {
+                            @Override
+                            public boolean check(String text) {
+                                return text.matches("\\w+");
+                            }
+                        })
+                        .setConfirmButton(android.R.string.ok, new LovelyTextInputDialog.OnTextInputConfirmListener() {
+                            @Override
+                            public void onTextInputConfirmed(String text) {
+                                queryText = text;
+                                Log.d("querrytext", queryText + " ");
+                                fetchBooksWithFilter(queryText);
+
+                            }
+                        })
+                        .setNegativeButton("Išvalyti filtrą", (View.OnClickListener) text -> {
+                            fetchBooks();
+                        })
+                        .setNegativeButtonColor(R.color.Red)
+                        .show();
+
+    }
+
+
     void setupBookSelectedListener() {
         listViewBooks.setOnItemClickListener((parent, view, position, id) -> {
             // Launch the detail view passing book as an extra
@@ -204,5 +330,23 @@ public class BookFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.filter_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.book_setting:
+                Log.d("press", "yes");
+                showFilter();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
 }

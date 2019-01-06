@@ -26,7 +26,7 @@ public class GetTimeAgo extends Application{
         } else if (diff < 2 * MINUTE_MILLIS) {
             return "prieš minutę";
         } else if (diff < 50 * MINUTE_MILLIS) {
-            return "prieš" + diff / MINUTE_MILLIS + " minutes";
+            return "prieš " + diff / MINUTE_MILLIS + " minutes";
         } else if (diff < 90 * MINUTE_MILLIS) {
             return "prieš valandą";
         }

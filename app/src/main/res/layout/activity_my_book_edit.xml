@@ -115,14 +115,14 @@
             android:textColorHint="#05070a">
 
             <EditText
-                android:id="@+id/etBookAbout"
+                android:id="@+id/etPublisher"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:hint="Trumpai apie knygą"
+                android:hint="Leidykla"
                 android:paddingTop="20dp"
                 android:inputType="textMultiLine"
-                android:singleLine="false"
+                android:singleLine="true"
                 android:textColorHint="#05070a"  />
 
         </android.support.design.widget.TextInputLayout>
@@ -136,17 +136,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColorHint="#05070a">
-
             <EditText
-                android:id="@+id/etPublisher"
+                android:id="@+id/etBookAbout"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:hint="Leidykla"
+                android:hint="Trumpai apie knygą"
                 android:paddingTop="20dp"
                 android:inputType="textMultiLine"
-                android:singleLine="true"
+                android:singleLine="false"
                 android:textColorHint="#05070a"  />
+
 
         </android.support.design.widget.TextInputLayout>
 
@@ -200,14 +200,6 @@
                 android:layout_height="match_parent"
                 android:text="Patenkinama" />
         </RadioGroup>
-
-        <Switch
-            android:id="@+id/switchButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Ar šią knygą norite keisti?" />
-
 
         <Button
             android:id="@+id/btnYear"

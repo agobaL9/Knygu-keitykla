@@ -69,7 +69,6 @@ public class Chat_activity extends AppCompatActivity {
     private String mCurrentUserId;
     //String download_url;
 
-
     private ImageButton mChatAddBtn;
     private ImageButton mChatSendBtn;
     private EditText mChatMessageView;
@@ -91,8 +90,6 @@ public class Chat_activity extends AppCompatActivity {
     //storage firebase
     private StorageReference mImageStorage;
 
-
-
     // testing solution
     private int itemPos = 0;
     private String mLastKey = "";
@@ -104,8 +101,6 @@ public class Chat_activity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_activity);
-
-        //
 
         mChatToolbar = findViewById(R.id.chat_app_bar);
 
@@ -144,15 +139,12 @@ public class Chat_activity extends AppCompatActivity {
         mAdapter = new MessageAdapter(messagesList);
 
         mMessagesList = findViewById(R.id.messages_list);
-
         mRefresfLayout= findViewById(R.id.message_swipe_layout);
 
         mLinearLayout = new LinearLayoutManager(this);
 
         mMessagesList.setHasFixedSize(true);
         mMessagesList.setLayoutManager(mLinearLayout);
-
-
         mMessagesList.setAdapter(mAdapter);
 
         // image storage
@@ -338,17 +330,6 @@ public class Chat_activity extends AppCompatActivity {
                 }
             });
 
-
-/*
-            filepath.putFile(imageUri).addOnCompleteListener(task -> {
-
-                if(task.isSuccessful())
-                {
-
-                }
-
-            });
-*/
         }
 
     }
@@ -363,31 +344,20 @@ public class Chat_activity extends AppCompatActivity {
                 Messages message = dataSnapshot.getValue(Messages.class);
                 String messageKey = dataSnapshot.getKey();
 
-
                 if(!mPrevKey.equals(messageKey)){
-
                     messagesList.add(itemPos++, message);
                     mAdapter.notifyDataSetChanged();
-
 
                 } else {
 
                     mPrevKey = mLastKey;
                     mAdapter.notifyDataSetChanged();
-
-
                 }
-
-
                 if(itemPos == 1) {
 
                     mLastKey = messageKey;
                     mAdapter.notifyDataSetChanged();
-
-
                 }
-
-
 
                 mAdapter.notifyDataSetChanged();
 
@@ -518,26 +488,6 @@ public class Chat_activity extends AppCompatActivity {
                 }
             });
         }
-
-
-        //
-
-        //   getWindow().requestFeature(Window.FEATURE_ACTION_BAR); // Removes app bar
-   /*  //   getSupportActionBar().hide(); //  Removes app  bar also
-        //new app bar
-     //   mChatToolbar = (Toolbar) findViewById(R.id.chat_app_bar);
-      // setSupportActionBar(mChatToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
-
-
-
-
-        mChatUser = getIntent().getStringExtra("user_id");
-
-        getSupportActionBar().setTitle(mChatUser); */
-
 
     }
 

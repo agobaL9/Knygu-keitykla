@@ -38,9 +38,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.mlsdev.rximagepicker.RxImagePicker;
 import com.mlsdev.rximagepicker.Sources;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -69,15 +71,22 @@ public class MyBookEdit extends AppCompatActivity {
     Button btnYear;
     Button btnSave;
     RadioGroup radioGroup;
-    Switch switchButton;
 
     ImageView ivPickedImage;
     TextView title;
+
+    String BookName;
+    String BookAuthor;
+    String BookPublisher;
+    String BookPublishYear;
+    String BookCondition;
+    String BookCategory;
 
     int BookYear;
     String key;
     String download_url;
     Boolean isPhotoSelected= false;
+    String ImageURL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,8 +114,6 @@ public class MyBookEdit extends AppCompatActivity {
         rbBookNew = findViewById(R.id.rbBookNew);
         rbBookGood = findViewById(R.id.rbBookGood);
         rbBookFair = findViewById(R.id.rbBookFair);
-        switchButton = findViewById(R.id.switchButton);
-        switchButton.setChecked(true);
         btnSave = findViewById(R.id.btnSave);
         btnYear = findViewById(R.id.btnYear);
 
@@ -122,6 +129,96 @@ public class MyBookEdit extends AppCompatActivity {
         btnSave.setOnClickListener(view -> saveBook());
 
         selectCategory();
+
+        loadBook();
+
+        Log.d("name ", BookName+ " ");
+        Log.d("author ", BookAuthor+ " ");
+        Log.d("bookPublisher ", BookPublisher+ " ");
+        Log.d("bookPublishYear ", BookPublishYear+ " ");
+        Log.d("bookCondition ", BookCondition+ " ");
+        Log.d("bookCategory ", BookCategory+ " ");
+        Log.d("bookCover ", ImageURL+ " ");
+
+
+
+
+    }
+
+    private void loadBook()
+    {
+        BookName= getIntent().getStringExtra("bookName");
+        BookAuthor= getIntent().getStringExtra("bookAuthor");
+        BookPublisher= getIntent().getStringExtra("bookPublisher");
+        BookPublishYear= getIntent().getStringExtra("bookPublishYear");
+        BookCondition= getIntent().getStringExtra("bookCondition");
+        BookCategory = getIntent().getStringExtra("bookCategory");
+        ImageURL= getIntent().getStringExtra("bookCover");
+
+
+        BookPublishYear = BookPublishYear.replaceAll("\\D+","");
+
+        if(!BookPublishYear.equals(""))
+        {
+            BookYear = Integer.parseInt(BookPublishYear);
+            btnYear.setText("Pasirinkti metai: "+ BookYear);
+
+        }
+        else
+        {
+            BookYear=0;
+            btnYear.setText("PASIRINKTI METUS");
+
+        }
+
+        etBookName.setText(BookName);
+        etBookAuthor.setText(BookAuthor);
+        etPublisher.setText(BookPublisher);
+
+        //TODO condition if condition = gera check radio
+
+        switch (BookCondition) {
+            case "Būklė: Gera":
+                Log.d("gera", "yes");
+                radioGroup.check(R.id.rbBookGood);
+                break;
+            case "Būklė: Nauja":
+                radioGroup.check(R.id.rbBookNew);
+                break;
+            case "Būklė: Patenkinama":
+                radioGroup.check(R.id.rbBookFair);
+                break;
+        }
+
+
+
+        //if(BookCategory.equals("Mokslinė literatūra"))
+        //{
+
+        //}
+
+
+        if(ImageURL.startsWith("https://firebasestorage"))
+        {
+            Picasso.get().load(ImageURL)
+                    .rotate(90)
+                    .resize(400,600)
+                    .centerCrop()
+                    .error(R.drawable.ic_nocover)
+                    .into(ivPickedImage);
+        }
+        else
+        {
+            Picasso.get().load(ImageURL)
+                    //.rotate(90)
+                    .resize(400,600)
+                    .error(R.drawable.ic_nocover)
+                    .centerCrop()
+                    .into(ivPickedImage);
+            Log.d(" else if", "yes");
+        }
+
+
 
     }
 

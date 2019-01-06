@@ -7,6 +7,10 @@
     android:layout_marginBottom="60dp"
     tools:context=".Fragments.LibraryFragment">
 
+    <include
+        android:id="@+id/book_app_bar"
+        layout="@layout/book_app_bar" />
+
     <TextView
         android:id="@+id/tvEmpty"
         android:layout_width="match_parent"

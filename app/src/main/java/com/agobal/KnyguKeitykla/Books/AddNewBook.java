@@ -112,8 +112,6 @@ public class AddNewBook extends AppCompatActivity {
         rbBookNew = findViewById(R.id.rbBookNew);
         rbBookGood = findViewById(R.id.rbBookGood);
         rbBookFair = findViewById(R.id.rbBookFair);
-        switchButton = findViewById(R.id.switchButton);
-        switchButton.setChecked(true);
         btnSave = findViewById(R.id.btnSave);
         btnYear = findViewById(R.id.btnYear);
 

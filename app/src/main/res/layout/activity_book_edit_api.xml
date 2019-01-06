@@ -221,14 +221,6 @@
                 android:text="Patenkinama" />
         </RadioGroup>
 
-        <Switch
-            android:id="@+id/switchButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Ar šią knygą norite keisti?" />
-
-
         <Button
             android:id="@+id/btnYear"
             android:layout_width="match_parent"

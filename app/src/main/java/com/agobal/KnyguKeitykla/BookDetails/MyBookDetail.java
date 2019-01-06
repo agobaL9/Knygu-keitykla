@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.agobal.KnyguKeitykla.API.BookEditAPI;
 import com.agobal.KnyguKeitykla.Books.MyBookEdit;
 import com.agobal.KnyguKeitykla.Entities.MyBook;
 import com.agobal.KnyguKeitykla.Fragments.LibraryFragment;
@@ -41,6 +42,12 @@ public class MyBookDetail extends AppCompatActivity {
     private TextView tvBookCategory;
     TextView title;
 
+    String BookName;
+    String BookAuthor;
+    String BookPublisher;
+    String BookPublishYear;
+    String BookCondition;
+    String BookCategory;
     String BookDeleteKey;
 
     String imageURL;
@@ -72,7 +79,15 @@ public class MyBookDetail extends AppCompatActivity {
         FloatingActionButton fabDelete = findViewById(R.id.fb_delete);
 
         fabEdit.setOnClickListener(view -> {
-            Intent intent = new Intent(MyBookDetail.this, MyBookEdit.class);
+            Intent intent = new Intent(MyBookDetail.this,MyBookEdit.class);
+            intent.putExtra("bookName", BookName);
+            intent.putExtra("bookAuthor", BookAuthor);
+            intent.putExtra("bookPublisher", BookPublisher);
+            intent.putExtra("bookPublishYear", BookPublishYear);
+            intent.putExtra("bookCondition", BookCondition);
+            intent.putExtra("bookCategory", BookCategory);
+            intent.putExtra("bookCover", imageURL);
+            //intent.putExtra("bookPageCount", BookPageCount);
             startActivity(intent);
         });
 
@@ -122,10 +137,17 @@ public class MyBookDetail extends AppCompatActivity {
         //Picasso.get().load(Uri.parse(myBook.getBookImage())).error(R.drawable.ic_nocover).rotate(90).resize(400,600).centerCrop().into(ivBookCover);
         tvTitle.setText(myBook.getBookName());
         tvAuthor.setText(myBook.getBookAuthor());
-        tvPublisher.setText("Leidykla: "+ myBook.getBookPublisher());
+        tvPublisher.setText(myBook.getBookPublisher());
         tvBookYear.setText("Išleidimo metai: " + myBook.getBookYear());
         tvBookCondition.setText("Būklė: " + myBook.getBookCondition());
         tvBookCategory.setText("Kategorija: " + myBook.getBookCategory());
+
+        BookName = tvTitle.getText().toString().trim();
+        BookAuthor = tvAuthor.getText().toString().trim();
+        BookPublisher = tvPublisher.getText().toString().trim();
+        BookPublishYear = tvBookYear.getText().toString().trim();
+        BookCondition = tvBookCondition.getText().toString().trim();
+        BookCategory = tvBookCategory.getText().toString().trim();
 
     }
 
