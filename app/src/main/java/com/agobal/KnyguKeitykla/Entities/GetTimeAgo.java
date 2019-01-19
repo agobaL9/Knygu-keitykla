@@ -22,7 +22,7 @@ public class GetTimeAgo extends Application{
 
         final long diff = now - time;
         if (diff < MINUTE_MILLIS) {
-            return "prieš kelias sekundes";
+            return "prisijungęs";
         } else if (diff < 2 * MINUTE_MILLIS) {
             return "prieš minutę";
         } else if (diff < 50 * MINUTE_MILLIS) {

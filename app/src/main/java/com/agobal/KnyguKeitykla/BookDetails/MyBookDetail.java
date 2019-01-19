@@ -48,7 +48,7 @@ public class MyBookDetail extends AppCompatActivity {
     String BookPublishYear;
     String BookCondition;
     String BookCategory;
-    String BookDeleteKey;
+    String BookKey;
 
     String imageURL;
 
@@ -87,6 +87,7 @@ public class MyBookDetail extends AppCompatActivity {
             intent.putExtra("bookCondition", BookCondition);
             intent.putExtra("bookCategory", BookCategory);
             intent.putExtra("bookCover", imageURL);
+            intent.putExtra("bookKey", BookKey);
             //intent.putExtra("bookPageCount", BookPageCount);
             startActivity(intent);
         });
@@ -106,7 +107,7 @@ public class MyBookDetail extends AppCompatActivity {
 
         // Use the book to populate the data into our views
         MyBook myBook = (MyBook) getIntent().getSerializableExtra(LibraryFragment.MY_BOOK_DETAIL_KEY);
-        BookDeleteKey = getIntent().getStringExtra("BOOK_KEY");
+        BookKey = getIntent().getStringExtra("BOOK_KEY");
         loadBook(myBook);
 
     }
@@ -154,8 +155,8 @@ public class MyBookDetail extends AppCompatActivity {
     private void deleteMyBook() {
 
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
-        mUserBookDelete = FirebaseDatabase.getInstance().getReference().child("UserBooks").child(current_uid).child(BookDeleteKey);
-        Log.d("TAG"," "+ BookDeleteKey);
+        mUserBookDelete = FirebaseDatabase.getInstance().getReference().child("UserBooks").child(current_uid).child(BookKey);
+        Log.d("TAG"," "+ BookKey);
         mUserBookDelete.setValue(null);
         new SweetAlertDialog(this)
                 .setTitleText("Knyga panaikinta!")

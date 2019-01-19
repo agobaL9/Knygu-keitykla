@@ -1,6 +1,7 @@
 package com.agobal.KnyguKeitykla.Books;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -8,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -24,6 +26,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.agobal.KnyguKeitykla.MainActivity;
 import com.agobal.KnyguKeitykla.R;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -46,6 +49,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.reactivex.Observable;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
@@ -81,12 +85,14 @@ public class MyBookEdit extends AppCompatActivity {
     String BookPublishYear;
     String BookCondition;
     String BookCategory;
+    String BookKey;
 
     int BookYear;
     String key;
     String download_url;
     Boolean isPhotoSelected= false;
     String ImageURL;
+    Boolean fantastic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,7 +123,7 @@ public class MyBookEdit extends AppCompatActivity {
         btnSave = findViewById(R.id.btnSave);
         btnYear = findViewById(R.id.btnYear);
 
-        ivPickedImage = findViewById(R.id.ivPicedImage);
+        ivPickedImage = findViewById(R.id.ivPickedImage);
 
         FloatingActionButton fabCamera = findViewById(R.id.fab_pick_camera);
         FloatingActionButton fabGallery = findViewById(R.id.fab_pick_gallery);
@@ -139,10 +145,7 @@ public class MyBookEdit extends AppCompatActivity {
         Log.d("bookCondition ", BookCondition+ " ");
         Log.d("bookCategory ", BookCategory+ " ");
         Log.d("bookCover ", ImageURL+ " ");
-
-
-
-
+        Log.d("bookKey ", BookKey+ " ");
     }
 
     private void loadBook()
@@ -154,6 +157,7 @@ public class MyBookEdit extends AppCompatActivity {
         BookCondition= getIntent().getStringExtra("bookCondition");
         BookCategory = getIntent().getStringExtra("bookCategory");
         ImageURL= getIntent().getStringExtra("bookCover");
+        BookKey= getIntent().getStringExtra("bookKey");
 
 
         BookPublishYear = BookPublishYear.replaceAll("\\D+","");
@@ -190,14 +194,6 @@ public class MyBookEdit extends AppCompatActivity {
                 break;
         }
 
-
-
-        //if(BookCategory.equals("Mokslinė literatūra"))
-        //{
-
-        //}
-
-
         if(ImageURL.startsWith("https://firebasestorage"))
         {
             Picasso.get().load(ImageURL)
@@ -224,6 +220,81 @@ public class MyBookEdit extends AppCompatActivity {
 
     void saveBook()
     {
+        String BookName = etBookName.getText().toString().trim();
+        String BookAuthor = etBookAuthor.getText().toString().trim();
+        String BookAbout = etBookAbout.getText().toString().trim();
+        String BookCategory = spinCategory.getSelectedItem().toString();
+        String BookPublisher = etPublisher.getText().toString().trim();
+
+        if(BookYear==0)
+        {
+            Toast.makeText(getApplicationContext(), "Pasirinkite knygos išleidimo metus!",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(!isPhotoSelected) {
+            Toast.makeText(getApplicationContext(), "Pasirinkite nuotrauką!",
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
+
+        if(TextUtils.isEmpty(BookName)) {
+            etBookName.setError("Knygos pavadinimas negali būti tuščias!");
+            return;
+        }
+        if(TextUtils.isEmpty(BookPublisher)) {
+            etPublisher.setError("Knygos leidyklos laukas negali būti tuščias!");
+            return;
+        }
+
+        if(TextUtils.isEmpty(BookAuthor)) {
+            etBookAuthor.setError("Knygos autorius negali būti tuščias!");
+            return;
+        }
+
+        if (radioGroup.getCheckedRadioButtonId() == -1)
+        {
+            Toast.makeText(getApplicationContext(), "Turite pasirinkti knygos būklę!",
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        String bookCondition = ((RadioButton)findViewById(radioGroup.getCheckedRadioButtonId())).getText().toString();
+
+        mBookDatabase.child(BookKey).child("bookName").setValue(BookName);
+        mBookDatabase.child(BookKey).child("bookAuthor").setValue(BookAuthor);
+        mBookDatabase.child(BookKey).child("bookAbout").setValue(BookAbout);
+        mBookDatabase.child(BookKey).child("bookPublisher").setValue(BookPublisher);
+        mBookDatabase.child(BookKey).child("bookCategory").setValue(BookCategory);
+        mBookDatabase.child(BookKey).child("bookCondition").setValue(bookCondition);
+        mBookDatabase.child(BookKey).child("bookYear").setValue(BookYear);
+        mBookDatabase.child(BookKey).child("image").setValue(ImageURL);
+
+        mUserBookDatabase.child(current_uid).child(BookKey).child("bookName").setValue(BookName);
+        mUserBookDatabase.child(current_uid).child(BookKey).child("bookAuthor").setValue(BookAuthor);
+        mUserBookDatabase.child(current_uid).child(BookKey).child("bookAbout").setValue(BookAbout);
+        mUserBookDatabase.child(current_uid).child(BookKey).child("bookPublisher").setValue(BookPublisher);
+        mUserBookDatabase.child(current_uid).child(BookKey).child("bookCategory").setValue(BookCategory);
+        mUserBookDatabase.child(current_uid).child(BookKey).child("bookCondition").setValue(bookCondition);
+        mUserBookDatabase.child(current_uid).child(BookKey).child("bookYear").setValue(BookYear);
+
+        if(isPhotoSelected)
+            mUserBookDatabase.child(current_uid).child(BookKey).child("image").setValue(download_url);
+        else
+            mUserBookDatabase.child(current_uid).child(BookKey).child("image").setValue(ImageURL);
+
+        mUserBookDatabase.child(current_uid).child(BookKey).child("userID").setValue(current_uid);
+        mUserBookDatabase.child(current_uid).child(BookKey).child("bookKey").setValue(key);
+
+        new SweetAlertDialog(this)
+                .setTitleText("Knygą redagavimas sėkmingas! ")
+                .setConfirmClickListener(sweetAlertDialog -> {
+                    Intent intent = new Intent(MyBookEdit.this, MainActivity.class);
+                    startActivity(intent);
+                })
+                .show();
 
 
     }
@@ -287,10 +358,46 @@ public class MyBookEdit extends AppCompatActivity {
                     String areaName = areaSnapshot.child("categoryName").getValue(String.class);
                     categories.add(areaName);
                 }
-                Spinner categorySpinner = findViewById(R.id.spinCategory);
+                //spinCategory = findViewById(R.id.spinCategory);
                 ArrayAdapter<String> areasAdapter = new ArrayAdapter<>(MyBookEdit.this, android.R.layout.simple_spinner_item, categories);
                 areasAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                categorySpinner.setAdapter(areasAdapter);
+                spinCategory.setAdapter(areasAdapter);
+
+                switch (BookCategory) {
+                    case "Kategorija: Mokslinė literatūra":
+                        spinCategory.setSelection(0);
+                        break;
+                    case "Kategorija: Fantastinė literatūra":
+                        spinCategory.setSelection(1);
+                        break;
+                    case "Kategorija: Istorinė literatūra":
+                        spinCategory.setSelection(2);
+                        break;
+                    case "Kategorija: Biografinė literatūra":
+                        spinCategory.setSelection(3);
+                        break;
+                    case "Kategorija: Grožinė literatūra":
+                        spinCategory.setSelection(4);
+                        break;
+                    case "Kategorija: Asmens tobulėjimas":
+                        spinCategory.setSelection(5);
+                        break;
+                    case "Kategorija: Psichologija":
+                        spinCategory.setSelection(6);
+                        break;
+                    case "Kategorija: Karjera ir finansai":
+                        spinCategory.setSelection(7);
+                        break;
+                    case "Kategorija: Detektyvai":
+                        spinCategory.setSelection(8);
+                        break;
+                    case "Kategorija: Klasika":
+                        spinCategory.setSelection(9);
+                        break;
+                    default:
+                        spinCategory.setSelection(0);
+                        break;
+                }
             }
 
             @Override

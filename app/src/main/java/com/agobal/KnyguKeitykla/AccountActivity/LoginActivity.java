@@ -110,7 +110,7 @@ public class LoginActivity extends Activity {
                         String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
                         DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
 
-                        mUserDatabase.addValueEventListener(new ValueEventListener() {
+                        mUserDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 

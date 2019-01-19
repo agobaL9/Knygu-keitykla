@@ -32,6 +32,7 @@ import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -51,6 +52,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -89,6 +91,8 @@ public class Chat_activity extends AppCompatActivity {
 
     //storage firebase
     private StorageReference mImageStorage;
+    private DatabaseReference mUserRef;
+
 
     // testing solution
     private int itemPos = 0;
@@ -115,6 +119,13 @@ public class Chat_activity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         mCurrentUserId = mAuth.getCurrentUser().getUid();
+
+
+        FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
+        mAuth = FirebaseAuth.getInstance();
+        mUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
+
 
         mChatUser = getIntent().getStringExtra("user_id");
         String userName = getIntent().getStringExtra("user_name");
@@ -333,6 +344,8 @@ public class Chat_activity extends AppCompatActivity {
         }
 
     }
+
+
     private void loadMoreMessages(){
         DatabaseReference messageRef = mRootRef.child("messages").child(mCurrentUserId).child(mChatUser);
         Query messageQuery = messageRef.orderByKey().endAt(mLastKey).limitToLast(10);

@@ -20,11 +20,14 @@ import com.agobal.KnyguKeitykla.Fragments.ProfileFragment;
 import com.agobal.KnyguKeitykla.Fragments.BookFragment;
 import com.agobal.KnyguKeitykla.AccountActivity.LoginActivity;
 import com.agobal.KnyguKeitykla.helper.BottomNavigationBehavior;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Objects;
 
@@ -77,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
         if(currentUser == null)
         {
             logoutUser();
-            //sendToStart();
 
         }
         else
@@ -90,15 +92,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
 
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        //Log.d("ar online2?", currentUser + "");
-
-        if(currentUser != null)
-        {
-            mUserRef.child("online").setValue(ServerValue.TIMESTAMP);
-        }
+        mUserRef.child("online").setValue(ServerValue.TIMESTAMP);
 
     }
+
+
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -144,9 +142,23 @@ public class MainActivity extends AppCompatActivity {
     private void logoutUser() {
 
         mUserRef.child("online").setValue(ServerValue.TIMESTAMP);
-        mAuth.signOut();
-        startActivity(new Intent(MainActivity.this, LoginActivity.class));
-        finish();
+        FirebaseAuth.getInstance().signOut();
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        //Log.d("ar online?", currentUser + "");
+
+        if(currentUser == null)
+        {
+            Log.d("Atsijungimas:", " Atsijunge");
+
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
+            //sendToStart();
+
+        }
+        else
+            Log.d("Atsijungimas:", " Neatsijunge");
+
     }
 
     @Override

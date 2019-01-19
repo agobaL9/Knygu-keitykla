@@ -2,6 +2,7 @@ package com.agobal.KnyguKeitykla.Fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -30,6 +31,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import java.util.Objects;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MessagesFragment extends Fragment {
@@ -114,6 +119,13 @@ public class MessagesFragment extends Fragment {
     }
 
     private void onActivityStarted() {
+
+        SweetAlertDialog pDialog = new SweetAlertDialog(Objects.requireNonNull(getContext()), SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.setTitleText("Prašome palaukti");
+        pDialog.setCancelable(false);
+        pDialog.show();
+
         Query conversationQuery = mConvDatabase.orderByKey();
 
         FirebaseRecyclerOptions<Conversation> personsOptions = new FirebaseRecyclerOptions.Builder<Conversation>().setQuery(conversationQuery, Conversation.class).build();
@@ -143,6 +155,7 @@ public class MessagesFragment extends Fragment {
 
                         String data = dataSnapshot.child("message").getValue().toString();
                         convViewHolder.setMessage(data, conv.isSeen());
+
 
                     }
 
@@ -185,20 +198,18 @@ public class MessagesFragment extends Fragment {
                         convViewHolder.setName(userName);
                         convViewHolder.setUserImage(userThumb, getContext());
 
-                        convViewHolder.mView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
+                        convViewHolder.mView.setOnClickListener(view -> {
 
 
-                                Intent chatIntent = new Intent(getContext(), Chat_activity.class);
-                                chatIntent.putExtra("user_id", list_user_id);
-                                chatIntent.putExtra("user_name", userName);
-                                startActivity(chatIntent);
+                            Intent chatIntent = new Intent(getContext(), Chat_activity.class);
+                            chatIntent.putExtra("user_id", list_user_id);
+                            chatIntent.putExtra("user_name", userName);
+                            startActivity(chatIntent);
 
-                            }
                         });
 
 
+                        //pDialog.dismissWithAnimation();
 
                     }
 
@@ -217,6 +228,7 @@ public class MessagesFragment extends Fragment {
         mConvList.addItemDecoration(new DividerItemDecoration(mConvList.getContext(), DividerItemDecoration.VERTICAL));
 
         mConvList.setAdapter(firebaseConvAdapter);
+        pDialog.dismissWithAnimation();
 
     }
 
@@ -231,9 +243,6 @@ public class MessagesFragment extends Fragment {
         super.onStart();
 
         firebaseConvAdapter.startListening();
-
-
-
 
     }
 
