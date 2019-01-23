@@ -90,9 +90,8 @@ public class MyBookEdit extends AppCompatActivity {
     int BookYear;
     String key;
     String download_url;
-    Boolean isPhotoSelected= false;
+    Boolean isPhotoSelected= true;
     String ImageURL;
-    Boolean fantastic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +103,7 @@ public class MyBookEdit extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         title = findViewById(getResources().getIdentifier("action_bar_title", "id", getPackageName()));
-        title.setText("Knygos redagavimas");
+        title.setText("Redagavimas");
 
         mImageStorage = FirebaseStorage.getInstance().getReference();
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
@@ -277,7 +276,7 @@ public class MyBookEdit extends AppCompatActivity {
         mUserBookDatabase.child(current_uid).child(BookKey).child("bookCondition").setValue(bookCondition);
         mUserBookDatabase.child(current_uid).child(BookKey).child("bookYear").setValue(BookYear);
 
-        if(isPhotoSelected)
+        if(download_url!= null)
             mUserBookDatabase.child(current_uid).child(BookKey).child("image").setValue(download_url);
         else
             mUserBookDatabase.child(current_uid).child(BookKey).child("image").setValue(ImageURL);
@@ -286,7 +285,7 @@ public class MyBookEdit extends AppCompatActivity {
         mUserBookDatabase.child(current_uid).child(BookKey).child("bookKey").setValue(key);
 
         new SweetAlertDialog(this)
-                .setTitleText("Knygą redagavimas sėkmingas! ")
+                .setTitleText("Redagavimas sėkmingas! ")
                 .setConfirmClickListener(sweetAlertDialog -> {
                     Intent intent = new Intent(MyBookEdit.this, MainActivity.class);
                     startActivity(intent);
