@@ -3,12 +3,12 @@ package com.agobal.KnyguKeitykla.API;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,14 +22,11 @@ import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.agobal.KnyguKeitykla.MainActivity;
 import com.agobal.KnyguKeitykla.R;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -50,8 +47,6 @@ import java.util.Objects;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.reactivex.Observable;
-
-import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
 public class BookEditAPI extends AppCompatActivity {
 
@@ -152,9 +147,6 @@ public class BookEditAPI extends AppCompatActivity {
             btnYear.setText("PASIRINKTI METUS");
 
         }
-
-        //String BookPageCount = getIntent().getStringExtra("bookPageCount");
-
         etBookName.setText(BookName);
         etBookAuthor.setText(BookAuthor);
         etPublisher.setText(BookPublisher);
@@ -210,15 +202,6 @@ public class BookEditAPI extends AppCompatActivity {
 
             download_url = result.toString();
             Log.d("onImagePicker_dwnld_url", download_url + " ");
-
-            /*
-
-            Glide.with(this)
-                    .load(result) // works for File or Uri
-                    .transition(withCrossFade())
-
-                    .apply(new RequestOptions().centerCrop())
-                    .into(ivPickedImage);*/
         }
     }
 
@@ -234,8 +217,6 @@ public class BookEditAPI extends AppCompatActivity {
         Log.d("DOWNLOAD_URL", download_url + " ");
         Log.d("IMAGE_URL", ImageURL + " ");
 
-
-
         if(BookYear==0)
         {
             Toast.makeText(getApplicationContext(), "Pasirinkite knygos išleidimo metus!",
@@ -246,8 +227,6 @@ public class BookEditAPI extends AppCompatActivity {
         if(!isPhotoSelected) {
             download_url = ImageURL;
             key = mBookDatabase.push().getKey();
-            //Toast.makeText(getApplicationContext(), "Pasirinkite nuotrauką!", Toast.LENGTH_LONG).show();
-            //return;
         }
 
         else
@@ -288,10 +267,8 @@ public class BookEditAPI extends AppCompatActivity {
         mBookDatabase.child(key).child("bookCondition").setValue(bookCondition);
         mBookDatabase.child(key).child("bookYear").setValue(BookYear);
 
-
         if(download_url == null)
             download_url = ImageURL;
-
 
         mBookDatabase.child(key).child("image").setValue(download_url);
 
@@ -314,9 +291,7 @@ public class BookEditAPI extends AppCompatActivity {
                     startActivity(intent);
                 })
                 .show();
-
     }
-
 
     private void selectCategory() {
 
@@ -325,9 +300,6 @@ public class BookEditAPI extends AppCompatActivity {
         mDatabaseCategory.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // Is better to use a List, because you don't know the size
-                // of the iterator returned by dataSnapshot.getChildren() to
-                // initialize the array
                 final List<String> categories = new ArrayList<>();
 
                 for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
@@ -345,7 +317,6 @@ public class BookEditAPI extends AppCompatActivity {
 
             }
         });
-
     }
 
     private void selectYear()
@@ -372,13 +343,11 @@ public class BookEditAPI extends AppCompatActivity {
 
         });
 
-
         d.setNegativeButton("Cancel", (dialogInterface, i) -> {
         });
 
         AlertDialog alertDialog = d.create();
         alertDialog.show();
-
 
     }
 
@@ -388,9 +357,9 @@ public class BookEditAPI extends AppCompatActivity {
         if (backstack > 0) {
             getSupportFragmentManager().popBackStack();
         }
-        else{
+        else
+        {
             super.onBackPressed();
-            //System.exit(0);
         }
     }
 

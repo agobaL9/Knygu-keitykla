@@ -181,7 +181,7 @@ public class Chat_activity extends AppCompatActivity {
 
                     long lastTime = Long.parseLong(online);
 
-                    String lastSeenTime = getTimeAgo.getTimeAgo(lastTime,getApplicationContext());
+                    String lastSeenTime = GetTimeAgo.getTimeAgo(lastTime,getApplicationContext());
 
                     mLastSeenView.setText(lastSeenTime);
                 }
@@ -212,7 +212,7 @@ public class Chat_activity extends AppCompatActivity {
                         @Override
                         public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                             if(databaseError!=null){
-                                Log.d("CHAT_LOG",databaseError.getMessage().toString());
+                                Log.d("CHAT_LOG", databaseError.getMessage());
                             }
                         }
                     });
@@ -327,7 +327,7 @@ public class Chat_activity extends AppCompatActivity {
 
                                 if(databaseError != null){
 
-                                    Log.d("CHAT_LOG", databaseError.getMessage().toString());
+                                    Log.d("CHAT_LOG", databaseError.getMessage());
 
                                 }
 
@@ -496,7 +496,7 @@ public class Chat_activity extends AppCompatActivity {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                     if(databaseError!=null){
-                        Log.d("CHAT_LOG",databaseError.getMessage().toString());
+                        Log.d("CHAT_LOG", databaseError.getMessage());
                     }
                 }
             });

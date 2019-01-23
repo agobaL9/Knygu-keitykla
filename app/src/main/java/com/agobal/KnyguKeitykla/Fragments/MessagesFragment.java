@@ -69,7 +69,7 @@ public class MessagesFragment extends Fragment {
         mConvList = mMainView.findViewById(R.id.conv_list);
         mAuth = FirebaseAuth.getInstance();
 
-        mCurrent_user_id = mAuth.getCurrentUser().getUid();
+        mCurrent_user_id = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
 
         Log.d("userID", mCurrent_user_id + " ");
 
@@ -108,11 +108,7 @@ public class MessagesFragment extends Fragment {
         mConvList.setLayoutManager(linearLayoutManager);
         mConvList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-
         onActivityStarted();
-
-        Log.d("messages", "yes");
-
 
         // Inflate the layout for this fragment
         return mMainView;
@@ -130,7 +126,6 @@ public class MessagesFragment extends Fragment {
 
         FirebaseRecyclerOptions<Conversation> personsOptions = new FirebaseRecyclerOptions.Builder<Conversation>().setQuery(conversationQuery, Conversation.class).build();
 
-
         firebaseConvAdapter = new FirebaseRecyclerAdapter<Conversation, ConvViewHolder>(personsOptions)
         {
 
@@ -147,69 +142,30 @@ public class MessagesFragment extends Fragment {
 
                 final String list_user_id = getRef(i).getKey();
 
-                Query lastMessageQuery = mMessageDatabase.child(list_user_id).limitToLast(1);
+                Query lastMessageQuery = mMessageDatabase.child(Objects.requireNonNull(list_user_id)).limitToLast(1);
 
                 lastMessageQuery.addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, String s) {
 
-                        String data = dataSnapshot.child("message").getValue().toString();
+                        String data = Objects.requireNonNull(dataSnapshot.child("message").getValue()).toString();
                         convViewHolder.setMessage(data, conv.isSeen());
 
 
                     }
 
                     @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, String s) {
 
                     }
 
                     @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
                     }
 
                     @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
-
-                mUsersDatabase.child(list_user_id).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                        final String userName = dataSnapshot.child("userName").getValue().toString();
-                        String userThumb = dataSnapshot.child("image").getValue().toString();
-
-                        if(dataSnapshot.hasChild("online")) {
-
-                            String userOnline = dataSnapshot.child("online").getValue().toString();
-                            convViewHolder.setUserOnline(userOnline);
-
-                        }
-
-                        convViewHolder.setName(userName);
-                        convViewHolder.setUserImage(userThumb, getContext());
-
-                        convViewHolder.mView.setOnClickListener(view -> {
-
-
-                            Intent chatIntent = new Intent(getContext(), Chat_activity.class);
-                            chatIntent.putExtra("user_id", list_user_id);
-                            chatIntent.putExtra("user_name", userName);
-                            startActivity(chatIntent);
-
-                        });
-
-
-                        //pDialog.dismissWithAnimation();
+                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, String s) {
 
                     }
 
@@ -219,10 +175,39 @@ public class MessagesFragment extends Fragment {
                     }
                 });
 
+
+                mUsersDatabase.child(list_user_id).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        final String userName = Objects.requireNonNull(dataSnapshot.child("userName").getValue()).toString();
+                        String userThumb = Objects.requireNonNull(dataSnapshot.child("image").getValue()).toString();
+
+                        if(dataSnapshot.hasChild("online")) {
+
+                            String userOnline = Objects.requireNonNull(dataSnapshot.child("online").getValue()).toString();
+                            convViewHolder.setUserOnline(userOnline);
+                        }
+
+                        convViewHolder.setName(userName);
+                        convViewHolder.setUserImage(userThumb, getContext());
+
+                        convViewHolder.mView.setOnClickListener(view -> {
+
+                            Intent chatIntent = new Intent(getContext(), Chat_activity.class);
+                            chatIntent.putExtra("user_id", list_user_id);
+                            chatIntent.putExtra("user_name", userName);
+                            startActivity(chatIntent);
+                        });
+
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
             }
-
-
-
         };
 
         mConvList.addItemDecoration(new DividerItemDecoration(mConvList.getContext(), DividerItemDecoration.VERTICAL));
@@ -243,7 +228,6 @@ public class MessagesFragment extends Fragment {
         super.onStart();
 
         firebaseConvAdapter.startListening();
-
     }
 
     public static class ConvViewHolder extends RecyclerView.ViewHolder {
@@ -254,7 +238,6 @@ public class MessagesFragment extends Fragment {
             super(itemView);
 
             mView = itemView;
-
         }
 
         void setMessage(String message, boolean isSeen){
@@ -295,13 +278,7 @@ public class MessagesFragment extends Fragment {
             } else {
 
                 userOnlineView.setVisibility(View.INVISIBLE);
-
             }
-
         }
-
-
     }
-
-
 }

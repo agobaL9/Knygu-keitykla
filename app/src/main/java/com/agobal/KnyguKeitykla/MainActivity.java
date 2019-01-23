@@ -14,26 +14,24 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.agobal.KnyguKeitykla.AccountActivity.LoginActivity;
+import com.agobal.KnyguKeitykla.Fragments.BookFragment;
 import com.agobal.KnyguKeitykla.Fragments.LibraryFragment;
 import com.agobal.KnyguKeitykla.Fragments.MessagesFragment;
 import com.agobal.KnyguKeitykla.Fragments.ProfileFragment;
-import com.agobal.KnyguKeitykla.Fragments.BookFragment;
-import com.agobal.KnyguKeitykla.AccountActivity.LoginActivity;
 import com.agobal.KnyguKeitykla.helper.BottomNavigationBehavior;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.perf.FirebasePerformance;
+import com.google.firebase.perf.metrics.Trace;
 
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ActionBar toolbar;
     private FirebaseAuth mAuth;
     private DatabaseReference mUserRef;
 
@@ -44,13 +42,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Trace myTrace = FirebasePerformance.getInstance().newTrace("test_trace");
+        myTrace.start();
+
         FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
         mAuth = FirebaseAuth.getInstance();
         mUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
 
 
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.action_bar_main);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         // load the store fragment by default
         title.setText("Knygos");
         loadFragment(new BookFragment());
-
+        myTrace.stop();
     }
 
     @Override
@@ -80,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
         if(currentUser == null)
         {
             logoutUser();
-
         }
         else
         {
@@ -91,12 +91,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-
         mUserRef.child("online").setValue(ServerValue.TIMESTAMP);
-
     }
-
-
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -179,12 +175,4 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-/*
-    private void sendToStart()
-    {
-        Intent startIntent = new Intent(MainActivity.this, LoginActivity.class);
-        startActivity(startIntent);
-        finish();
-    }
-*/
 }

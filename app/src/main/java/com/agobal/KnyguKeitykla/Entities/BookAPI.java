@@ -92,8 +92,6 @@ public class BookAPI implements Serializable {
         }
         return bookAPIS;
     }
-
-
 }
 
 

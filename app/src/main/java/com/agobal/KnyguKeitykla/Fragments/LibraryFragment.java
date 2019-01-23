@@ -90,8 +90,6 @@ public class LibraryFragment extends Fragment {
 
         IsUserHaveBooks();
 
-
-        //Log.d("tempID"," "+tempID);
         pDialog.dismissWithAnimation();
 
         FloatingActionButton fab = v.findViewById(R.id.fab);
@@ -115,16 +113,15 @@ public class LibraryFragment extends Fragment {
 
                 if(dataSnapshot.hasChildren()) {
                     for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                        //Log.d("All userID",""+ childDataSnapshot.getKey()); //got all users ID
                         userID = childDataSnapshot.getKey();
 
-                        if (userID.equals(current_uid)) { // ar yra dabartinis vartotojas userbooks šakoje
+                        if (Objects.requireNonNull(userID).equals(current_uid)) { // ar yra dabartinis vartotojas userbooks šakoje
                             Log.d("ar yra šakoje?", "taip");
                             isUserHaveBooks = true;
                         }
                     }
 
-                    if(isUserHaveBooks) //laikinai
+                    if(isUserHaveBooks)
                     {
                         fetchMyBooks();
                         tvEmpty.setVisibility(View.GONE);
@@ -136,16 +133,13 @@ public class LibraryFragment extends Fragment {
                 }
                 else
                     tvEmpty.setVisibility(View.VISIBLE);
-
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.d("onCancelled"," Suveikė canceled");
             }
         }) ;
     }
-
 
     void setupBookSelectedListener() {
         listView.setOnItemClickListener((parent, view, position, id) -> {
@@ -173,7 +167,6 @@ public class LibraryFragment extends Fragment {
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        //String BookName = dataSnapshot.child("bookName").getValue(String.class);
                         for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
                             Log.d("get key", "" + childDataSnapshot.getKey());//Gaunu visus knygų ID
 
@@ -213,23 +206,5 @@ public class LibraryFragment extends Fragment {
             }
         });
 
-
     }
-
-    public void readData(DatabaseReference mUserBooksUserDatabase, final OnGetDataListener listener) {
-        listener.onStart();
-        mUserBooksUserDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                listener.onSuccess(dataSnapshot);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                listener.onFailure();
-
-            }
-        });
-    }
-
 }

@@ -1,23 +1,20 @@
 package com.agobal.KnyguKeitykla.BookDetails;
 
 import android.content.Intent;
-import android.net.Uri;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.agobal.KnyguKeitykla.API.BookEditAPI;
 import com.agobal.KnyguKeitykla.Books.MyBookEdit;
 import com.agobal.KnyguKeitykla.Entities.MyBook;
 import com.agobal.KnyguKeitykla.Fragments.LibraryFragment;
-import com.agobal.KnyguKeitykla.R;
 import com.agobal.KnyguKeitykla.MainActivity;
-import com.bumptech.glide.Glide;
+import com.agobal.KnyguKeitykla.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -135,7 +132,6 @@ public class MyBookDetail extends AppCompatActivity {
                     .centerCrop()
                     .into(ivBookCover);
         }
-        //Picasso.get().load(Uri.parse(myBook.getBookImage())).error(R.drawable.ic_nocover).rotate(90).resize(400,600).centerCrop().into(ivBookCover);
         tvTitle.setText(myBook.getBookName());
         tvAuthor.setText(myBook.getBookAuthor());
         tvPublisher.setText(myBook.getBookPublisher());

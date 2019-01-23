@@ -31,12 +31,10 @@ public class LoginActivity extends Activity {
 
     private FirebaseAuth auth;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        DebugDB.getAddressLog();
         // remove title
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         //Remove notification bar
@@ -95,12 +93,8 @@ public class LoginActivity extends Activity {
         //firebase
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(LoginActivity.this, task -> {
-                    // If sign in fails, display a message to the user. If sign in succeeds
-                    // the auth state listener will be notified and logic to handle the
-                    // signed in user can be handled in the listener.
                     if (!task.isSuccessful())
                     {
-                        //there was an error
                         Toast.makeText(getApplicationContext(), "Prisijungti nepavyko, prašome patikrinti įvestus duomenis", Toast.LENGTH_LONG).show();
                         pDialog.dismissWithAnimation();
                     }

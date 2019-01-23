@@ -2,15 +2,11 @@ package com.agobal.KnyguKeitykla.Fragments;
 
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SearchRecentSuggestionsProvider;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,19 +14,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.agobal.KnyguKeitykla.BookDetails.BookDetails;
 import com.agobal.KnyguKeitykla.Entities.Books;
-import com.agobal.KnyguKeitykla.Entities.Category;
-import com.agobal.KnyguKeitykla.MainActivity;
 import com.agobal.KnyguKeitykla.R;
 import com.agobal.KnyguKeitykla.adapters.BooksAdapter;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -39,11 +29,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.yarolegovich.lovelydialog.LovelyChoiceDialog;
 import com.yarolegovich.lovelydialog.LovelyTextInputDialog;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -79,7 +67,7 @@ public class BookFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_books, container, false);
@@ -110,7 +98,6 @@ public class BookFragment extends Fragment {
 
                 if (dataSnapshot.hasChildren()) {
                     for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                        //Log.d("All userID",""+ childDataSnapshot.getKey()); //got all users ID
                         userID = childDataSnapshot.getKey();
 
                         if (userID != null && userID.equals(current_uid)) { // ar yra dabartinis vartotojas userbooks šakoje
@@ -275,7 +262,7 @@ public class BookFragment extends Fragment {
                             }
                         });
 
-                    }//if
+                    }
                 }
             }
 
@@ -294,24 +281,14 @@ public class BookFragment extends Fragment {
                         .setTopColorRes(R.color.colorPrimary)
                         .setTitle("Paieška")
                         .setMessage("Įrašykite knygos pavadinimą")
-                        .setInputFilter("Paieška nepavyko, patikrinkite įvedimo lauką", new LovelyTextInputDialog.TextFilter() {
-                            @Override
-                            public boolean check(String text) {
-                                return text.matches("\\w+");
-                            }
-                        })
-                        .setConfirmButton(android.R.string.ok, new LovelyTextInputDialog.OnTextInputConfirmListener() {
-                            @Override
-                            public void onTextInputConfirmed(String text) {
-                                queryText = text;
-                                Log.d("querrytext", queryText + " ");
-                                fetchBooksWithFilter(queryText);
+                        .setInputFilter("Paieška nepavyko, patikrinkite įvedimo lauką", text -> text.matches("\\w+"))
+                        .setConfirmButton(android.R.string.ok, text -> {
+                            queryText = text;
+                            Log.d("querrytext", queryText + " ");
+                            fetchBooksWithFilter(queryText);
 
-                            }
                         })
-                        .setNegativeButton("Išvalyti filtrą", (View.OnClickListener) text -> {
-                            fetchBooks();
-                        })
+                        .setNegativeButton("Išvalyti filtrą", text -> fetchBooks())
                         .setNegativeButtonColor(R.color.Red)
                         .show();
 

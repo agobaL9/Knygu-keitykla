@@ -65,7 +65,6 @@ public class ProfileFragment extends Fragment {
     ArrayList<Books> BookList = new ArrayList<>();
     FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
     String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
-    String tempID;
     private ListView listAllFavBooks;
     private BooksAdapter booksAdapter;
 
@@ -80,10 +79,7 @@ public class ProfileFragment extends Fragment {
     String UserKeyToDetails;
 
     String userID;
-    String bookID;
-
     Boolean isUserHaveFavBooks = false;
-
     TextView tvEmpty;
 
 
@@ -104,7 +100,6 @@ public class ProfileFragment extends Fragment {
         pDialog.show();
 
         ViewCompat.setNestedScrollingEnabled(v, true);
-
 
         final TextView T_firstAndLastName = v.findViewById(R.id.firstAndLastName);
         final TextView T_Desc = v.findViewById(R.id.email);
@@ -143,7 +138,7 @@ public class ProfileFragment extends Fragment {
                 lastName = dataSnapshot.child("lastName").getValue(String.class);
                 String cityName = dataSnapshot.child("cityName").getValue(String.class);
                 about = dataSnapshot.child("about").getValue(String.class);
-                String thumb_image = dataSnapshot.child("thumb_image").getValue(String.class);
+                //String thumb_image = dataSnapshot.child("thumb_image").getValue(String.class);
                 final String image = dataSnapshot.child("image").getValue(String.class);
 
                 assert image != null;
@@ -180,9 +175,7 @@ public class ProfileFragment extends Fragment {
                 T_City.setText(userData.cityName);
                 T_About.setText(about);
 
-                //hideDialog();
                 pDialog.dismiss();
-
             }
 
             @Override
@@ -199,13 +192,11 @@ public class ProfileFragment extends Fragment {
 
                 if (dataSnapshot.hasChildren()) {
                     for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                        //Log.d("All userID",""+ childDataSnapshot.getKey()); //got all users ID
                         userID = childDataSnapshot.getKey();
 
                         if (userID != null && userID.equals(current_uid)) { // ar yra dabartinis vartotojas userbooks šakoje
                             Log.d("ar yra šakoje?", "taip");
                             isUserHaveFavBooks = true;
-                            //tempID = userID;
                         }
                     }
                     tvEmpty.setVisibility(View.GONE);
@@ -251,14 +242,12 @@ public class ProfileFragment extends Fragment {
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        //String BookName = dataSnapshot.child("bookName").getValue(String.class);
                         for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
                             Log.d("get key", "" + childDataSnapshot.getKey());//Gaunu visus knygų ID
 
                             String path = childDataSnapshot.getRef().toString();
                             Log.d("path:",path+" ");
 
-                            //tempKey = childDataSnapshot.getKey();
                             BookKeyToDetails = childDataSnapshot.getKey();
 
                             UserKeyToDetails = dataSnapshot.getKey();
@@ -351,7 +340,7 @@ public class ProfileFragment extends Fragment {
                 else
                         Log.d("THUMB", "NEPAVYKO");
 
-                final byte[] thumb_byte = baos.toByteArray();
+                //final byte[] thumb_byte = baos.toByteArray();
 
                 final StorageReference filepath = mImageStorage.child("profile_images").child(current_user_id + ".jpg");
                 final StorageReference thumb_filepath = mImageStorage.child("profile_images").child("thumbs").child(current_user_id + ".jpg");

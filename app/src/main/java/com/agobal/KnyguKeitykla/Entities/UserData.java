@@ -47,17 +47,5 @@ public class UserData {
     {
 
     }
-
-    /*
-    public UserData(String userName, String FirstName, String LastName, String email, String CityName)
-    {
-        this.userName=userName;
-        this.firstName=FirstName;
-        this.lastName=LastName;
-        this.email=email;
-        this.cityName=CityName;
-    }
-    */
-
 }
 

@@ -213,9 +213,6 @@ public class MyBookEdit extends AppCompatActivity {
                     .into(ivPickedImage);
             Log.d(" else if", "yes");
         }
-
-
-
     }
 
     void saveBook()
@@ -295,8 +292,6 @@ public class MyBookEdit extends AppCompatActivity {
                     startActivity(intent);
                 })
                 .show();
-
-
     }
 
     @SuppressLint("CheckResult")
@@ -405,7 +400,6 @@ public class MyBookEdit extends AppCompatActivity {
 
             }
         });
-
     }
 
     private void selectYear()
@@ -421,7 +415,6 @@ public class MyBookEdit extends AppCompatActivity {
         numberPicker.setMinValue(1900);
         numberPicker.setValue(2000);
         numberPicker.setWrapSelectorWheel(false);
-
         numberPicker.setOnValueChangedListener((numberPicker1, i, i1) -> Log.d("TAG", "onValueChange: "));
 
         d.setPositiveButton("Done", (dialogInterface, i) -> {
@@ -432,13 +425,11 @@ public class MyBookEdit extends AppCompatActivity {
 
         });
 
-
         d.setNegativeButton("Cancel", (dialogInterface, i) -> {
         });
 
         AlertDialog alertDialog = d.create();
         alertDialog.show();
-
 
     }
 
@@ -448,9 +439,9 @@ public class MyBookEdit extends AppCompatActivity {
         if (backstack > 0) {
             getSupportFragmentManager().popBackStack();
         }
-        else{
+        else
+        {
             super.onBackPressed();
-            //System.exit(0);
         }
     }
 

@@ -13,18 +13,14 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.agobal.KnyguKeitykla.Entities.Category;
-import com.agobal.KnyguKeitykla.R;
 import com.agobal.KnyguKeitykla.MainActivity;
+import com.agobal.KnyguKeitykla.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-//import com.agobal.KnyguKeitykla.helper.SessionManager;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,7 +36,6 @@ public class UserDataActivity extends Activity{
     Boolean isDataCorrect = false;
 
     private Spinner spinnerCity;
-    private ArrayList<Category> citiesList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +51,6 @@ public class UserDataActivity extends Activity{
         inputLastName = findViewById(R.id.inputLastName);
         btnNext = findViewById(R.id.btnNext);
         spinnerCity = findViewById(R.id.spinCity);
-        citiesList = new ArrayList<>();
 
         btnNext.setOnClickListener(view -> {
 
@@ -74,7 +68,6 @@ public class UserDataActivity extends Activity{
                         finish();
                     }
                 }
-
         );
 
         selectCity();
@@ -89,9 +82,6 @@ public class UserDataActivity extends Activity{
         mDatabaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // Is better to use a List, because you don't know the size
-                // of the iterator returned by dataSnapshot.getChildren() to
-                // initialize the array
                 final List<String> areas = new ArrayList<>();
 
                 for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
@@ -137,7 +127,6 @@ public class UserDataActivity extends Activity{
     }
 
     private void storeUserData(String FirstName, String LastName, String CityName) {
-        //store userData in firebase
         FirebaseDatabase  database = FirebaseDatabase.getInstance();
         DatabaseReference mDatabaseRef = database.getReference("Users");
 
@@ -147,12 +136,10 @@ public class UserDataActivity extends Activity{
         hopperUpdates.put(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid() + "/lastName", LastName);
         hopperUpdates.put(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid() + "/cityName", CityName);
         mDatabaseRef.updateChildren(hopperUpdates);
-        //store userData in firebase
     }
 
     @Override
     public void onBackPressed() {
-        // Do Here what ever you want do on back press;
         Toast.makeText(getApplicationContext(),
                 "Turite užpildyti duomenis!", Toast.LENGTH_LONG).show();
     }

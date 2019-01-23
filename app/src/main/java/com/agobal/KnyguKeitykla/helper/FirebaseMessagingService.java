@@ -8,6 +8,8 @@ import android.support.v4.app.NotificationCompat;
 import com.agobal.KnyguKeitykla.R;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.util.Objects;
+
 /**
  * Created by zydrunas on 2017-11-29.
  */
@@ -18,7 +20,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
     @SuppressWarnings("deprecation")
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-        String notification_title = remoteMessage.getNotification().getTitle();
+        String notification_title = Objects.requireNonNull(remoteMessage.getNotification()).getTitle();
         String notification_message = remoteMessage.getNotification().getBody();
         String click_action = remoteMessage.getNotification().getClickAction();
 
@@ -50,6 +52,6 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         NotificationManager mNotifyMgr =
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
-        mNotifyMgr.notify(mNotificationId, mBuilder.build());
+        Objects.requireNonNull(mNotifyMgr).notify(mNotificationId, mBuilder.build());
     }
 }

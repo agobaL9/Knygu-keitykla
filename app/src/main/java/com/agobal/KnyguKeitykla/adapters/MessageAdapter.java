@@ -2,8 +2,10 @@ package com.agobal.KnyguKeitykla.adapters;
 
 
 import java.util.List;
+import java.util.Objects;
 
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.*;
@@ -22,16 +24,10 @@ import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-/**
- * Created by Vaidas on 2017-12-13.
- */
-
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder>{
 
 
     private List<Messages> mMessageList;
-    private DatabaseReference mUserDatabase;
-    private String imageURL;
 
     public MessageAdapter(List<Messages> mMessageList) {
 
@@ -39,8 +35,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     }
 
+    @NonNull
     @Override
-    public MessageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.message_single_layout ,parent, false);
@@ -49,14 +46,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     }
 
-    public class MessageViewHolder extends RecyclerView.ViewHolder {
+    class MessageViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView messageText;
-        public CircleImageView profileImage;
-        public TextView displayName;
-        public ImageView messageImage;
+        TextView messageText;
+        CircleImageView profileImage;
+        TextView displayName;
+        ImageView messageImage;
 
-        public MessageViewHolder(View view) {
+        MessageViewHolder(View view) {
             super(view);
 
             messageText = view.findViewById(R.id.message_text_layout);
@@ -69,7 +66,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     }
 
     @Override
-    public void onBindViewHolder(final MessageViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull final MessageViewHolder viewHolder, int i) {
 
         Messages msg = mMessageList.get(i);
 
@@ -77,24 +74,23 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         String message_type = msg.getType();
 
 
-        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(from_user);
+        DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(from_user);
 
         mUserDatabase.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                String name = dataSnapshot.child("userName").getValue().toString();
-                String image = dataSnapshot.child("image").getValue().toString();
+                String name = Objects.requireNonNull(dataSnapshot.child("userName").getValue()).toString();
+                String image = Objects.requireNonNull(dataSnapshot.child("image").getValue()).toString();
 
                 viewHolder.displayName.setText(name);
 
                 Picasso.get().load(image)
                         .placeholder(R.drawable.unknown_profile_pic).into(viewHolder.profileImage);
-
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
@@ -105,10 +101,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             viewHolder.messageText.setText(msg.getMessage());
             viewHolder.messageImage.setVisibility(View.INVISIBLE);
 
+        }
+        else {
 
-        } else {
-
-            imageURL = msg.getMessage();
+            String imageURL = msg.getMessage();
             viewHolder.messageText.setVisibility(View.INVISIBLE);
 
             Log.d("c.getmessageIMAGE ", imageURL + " ");
@@ -118,21 +114,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     .rotate(90)
                     //.centerCrop()
                     .placeholder(R.drawable.ic_image_black_24dp)
-                    .into(viewHolder.messageImage); //TODO: gauti image i msg.getmesage
-
+                    .into(viewHolder.messageImage);
         }
-
     }
 
     @Override
     public int getItemCount() {
         return mMessageList.size();
     }
-
-
-
-
-
-
 }
 

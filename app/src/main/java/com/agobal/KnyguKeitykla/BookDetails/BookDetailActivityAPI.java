@@ -35,27 +35,20 @@ import cz.msebera.android.httpclient.Header;
 
 public class BookDetailActivityAPI extends AppCompatActivity {
 
-    public static final String BOOK_DETAIL_KEY = "book";
-
-    private StorageReference mImageStorage;
-    private DatabaseReference mBookDatabase;
     DatabaseReference mUserDatabase;
     DatabaseReference mUserBookDatabase;
 
     FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
     String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
 
-    private BookClient client;
     private ImageView ivBookCover;
     private TextView tvTitle;
     private TextView tvAuthor;
     private TextView tvPublisher;
-    //private TextView tvPageCount;
     private TextView tvPublishYear;
     String imageURL;
     TextView title;
     Button btnSaveAndEdit;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,9 +61,7 @@ public class BookDetailActivityAPI extends AppCompatActivity {
 
         title = findViewById(getResources().getIdentifier("action_bar_title", "id", getPackageName()));
 
-        mImageStorage = FirebaseStorage.getInstance().getReference();
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
-        mBookDatabase = FirebaseDatabase.getInstance().getReference().child("Books");
         mUserBookDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks");
 
         // Fetch views
@@ -78,11 +69,9 @@ public class BookDetailActivityAPI extends AppCompatActivity {
         tvTitle = findViewById(R.id.tvTitle);
         tvAuthor = findViewById(R.id.tvAuthor);
         tvPublisher = findViewById(R.id.tvPublisher);
-        //tvPageCount = findViewById(R.id.tvPageCount);
         tvPublishYear = findViewById(R.id.tvPublishYear);
 
         btnSaveAndEdit = findViewById(R.id.btnSaveAndEdit);
-
         // Use the bookAPI to populate the data into our views
         BookAPI bookAPI = (BookAPI) getIntent().getSerializableExtra(SearchBookAPI.BOOK_DETAIL_KEY);
         loadBook(bookAPI);
@@ -99,21 +88,15 @@ public class BookDetailActivityAPI extends AppCompatActivity {
         String BookAuthor = tvAuthor.getText().toString().trim();
         String BookPublisher = tvPublisher.getText().toString().trim();
         String BookPublishYear = tvPublishYear.getText().toString().trim();
-        //String BookPageCount = tvPageCount.getText().toString().trim();
 
         Log.d("saveAndEdit image"," " + imageURL);
-
-
-
 
         Intent intent = new Intent(BookDetailActivityAPI.this,BookEditAPI.class);
         intent.putExtra("bookName", BookName);
         intent.putExtra("bookAuthor", BookAuthor);
         intent.putExtra("bookPublisher", BookPublisher);
         intent.putExtra("bookPublishYear", BookPublishYear);
-
         intent.putExtra("bookCover", imageURL);
-        //intent.putExtra("bookPageCount", BookPageCount);
         startActivity(intent);
 
     }
@@ -130,7 +113,7 @@ public class BookDetailActivityAPI extends AppCompatActivity {
         tvTitle.setText(bookAPI.getTitle());
         tvAuthor.setText(bookAPI.getAuthor());
         // fetch extra bookAPI data from books API
-        client = new BookClient();
+        BookClient client = new BookClient();
         client.getExtraBookDetails(bookAPI.getOpenLibraryId(),new JsonHttpResponseHandler() {
 
             @Override
@@ -146,13 +129,6 @@ public class BookDetailActivityAPI extends AppCompatActivity {
                         }
                         tvPublisher.setText(TextUtils.join(", ", publishers));
                     }
-                    /*
-                    if (response.has("number_of_pages")) {
-                        tvPageCount.setText("Puslapių skaičius: "+Integer.toString(response.getInt("number_of_pages")));
-                    }
-                    else
-                        tvPageCount.setText("Puslapių skaičius: - ");
-                    */
                     if(response.has("publish_date"))
                     {
                         tvPublishYear.setText("Išleidimo metai: "+Integer.toString(response.getInt("publish_date")));
@@ -174,9 +150,9 @@ public class BookDetailActivityAPI extends AppCompatActivity {
         if (backstack > 0) {
             getSupportFragmentManager().popBackStack();
         }
-        else{
+        else
+        {
             super.onBackPressed();
-            //System.exit(0);
         }
     }
 
@@ -189,5 +165,4 @@ public class BookDetailActivityAPI extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 }

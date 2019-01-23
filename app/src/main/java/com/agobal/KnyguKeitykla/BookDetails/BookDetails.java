@@ -2,12 +2,10 @@ package com.agobal.KnyguKeitykla.BookDetails;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.net.Uri;
-import android.provider.ContactsContract;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -39,6 +37,20 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class BookDetails extends AppCompatActivity {
 
+    TextView title;
+    ActionButton fab_message;
+    ActionButton fab_star;
+    String userName;
+    String email;
+    String firstName;
+    String lastName;
+    String about;
+    String BookKey;
+    String UserID;
+    String imageURL;
+    Boolean isBookSaved;
+    FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+    String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
     private ImageView ivBookCover;
     private TextView tvTitle;
     private TextView tvAuthor;
@@ -47,37 +59,12 @@ public class BookDetails extends AppCompatActivity {
     private TextView tvBookCondition;
     private TextView tvBookCategory;
     private TextView tvBookAbout;
-    TextView title;
-
-    ActionButton fab_message;
-    ActionButton fab_star;
-
-    private StorageReference mImageStorage;
-    private DatabaseReference mUserDatabase;
-    private DatabaseReference mUserFavBooks;
     private DatabaseReference mUserFavBookKey;
-    private DatabaseReference mBookDatabase;
-    private DatabaseReference mUserBookDatabase;
+
     private DatabaseReference mUserFavBookButton;
     private DatabaseReference mDatabase;
     private DatabaseReference mUserFavBookDelete;
 
-    String userName;
-    String email;
-    String firstName;
-    String lastName;
-    String cityName;
-    String about;
-    String BookKey;
-    String UserID;
-    String imageURL;
-
-    //String FavBookKey;
-
-    Boolean isBookSaved;
-
-    FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-    String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,14 +89,9 @@ public class BookDetails extends AppCompatActivity {
         fab_star.setButtonColor(getResources().getColor(R.color.colorAccent));
         fab_star.setButtonColorPressed(getResources().getColor(R.color.fab_material_amber_500));
 
-        mImageStorage = FirebaseStorage.getInstance().getReference();
-        FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-        String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
-        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
         mUserFavBookDelete = FirebaseDatabase.getInstance().getReference();
 
-
-         // Fetch views
+        // Fetch views
         ivBookCover = findViewById(R.id.ivBookCover);
         tvTitle = findViewById(R.id.tvTitle);
         tvAuthor = findViewById(R.id.tvAuthor);
@@ -121,7 +103,6 @@ public class BookDetails extends AppCompatActivity {
 
         // Use the book to populate the data into our views
         Books Book = (Books) getIntent().getSerializableExtra(BookFragment.BOOK_DETAIL_KEY);
-        //BookKey = getIntent().getStringExtra("BOOK_KEY");
 
         Log.d("BookKey", " "+ BookKey);
         Log.d("UserKey", " "+ UserID);
@@ -222,7 +203,7 @@ public class BookDetails extends AppCompatActivity {
     private void saveUserFavBook(Books Book) {
 
         mUserFavBookKey = mDatabase.child("UserFavBooks").child(current_uid);
-        mUserFavBooks = mDatabase.child("UserFavBooks").child(current_uid).child(BookKey);
+        DatabaseReference mUserFavBooks = mDatabase.child("UserFavBooks").child(current_uid).child(BookKey);
 
         mUserFavBooks.child("bookName").setValue(Book.getBookName());
         mUserFavBooks.child("bookAuthor").setValue(Book.getBookAuthor());
@@ -264,7 +245,6 @@ public class BookDetails extends AppCompatActivity {
         }
 
         // Populate data
-        //Picasso.get().load(Uri.parse(Book.getBookImage())).error(R.drawable.ic_nocover).rotate(90).resize(400,600).centerCrop().into(ivBookCover);
         tvTitle.setText(Book.getBookName());
         tvAuthor.setText(Book.getBookAuthor());
         tvPublisher.setText("Leidykla: "+ Book.getBookPublisher());
@@ -303,7 +283,7 @@ public class BookDetails extends AppCompatActivity {
                 lastName = dataSnapshot.child("lastName").getValue(String.class);
                 String cityName = dataSnapshot.child("cityName").getValue(String.class);
                 about = dataSnapshot.child("about").getValue(String.class);
-                String thumb_image = dataSnapshot.child("thumb_image").getValue(String.class);
+                //String thumb_image = dataSnapshot.child("thumb_image").getValue(String.class);
                 final String image = dataSnapshot.child("image").getValue(String.class);
 
                 Log.d("user info", userName +" " + email + " " +firstName+" "+ lastName+ " "+cityName);
@@ -311,24 +291,20 @@ public class BookDetails extends AppCompatActivity {
 
                 Picasso.get().load(image);
 
-                if(!image.equals("default")){
+                if (image != null && !image.equals("default")) {
                     Picasso.get().load(image).networkPolicy(NetworkPolicy.OFFLINE)
                             .placeholder(R.drawable.unknown_profile_pic).into(ProfilePic, new Callback() {
                         @Override
                         public void onSuccess() {
 
                         }
-
                         @Override
                         public void onError(Exception e) {
                             Picasso.get().load(image).placeholder(R.drawable.unknown_profile_pic).into(ProfilePic);
                         }
 
                     });
-
                 }
-
-
                 UserData userData = new UserData();
 
                 userData.setFirstName(firstName);
@@ -352,7 +328,7 @@ public class BookDetails extends AppCompatActivity {
 
             }
         }) ;
-        
+
     }
 
     public void onBackPressed() {
@@ -363,7 +339,6 @@ public class BookDetails extends AppCompatActivity {
         }
         else{
             super.onBackPressed();
-            //System.exit(0);
         }
     }
 
@@ -376,5 +351,4 @@ public class BookDetails extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 }

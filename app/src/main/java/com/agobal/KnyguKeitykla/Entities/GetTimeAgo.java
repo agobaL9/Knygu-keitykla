@@ -1,8 +1,10 @@
 package com.agobal.KnyguKeitykla.Entities;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 
+@SuppressLint("Registered")
 public class GetTimeAgo extends Application{
     private static final int SECOND_MILLIS = 1000;
     private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
@@ -29,18 +31,13 @@ public class GetTimeAgo extends Application{
             return "prieš " + diff / MINUTE_MILLIS + " minutes";
         } else if (diff < 90 * MINUTE_MILLIS) {
             return "prieš valandą";
-        }
-          else if(diff < 2 * HOUR_MILLIS){
+        } else if(diff < 2 * HOUR_MILLIS){
               return "prieš "+ diff / HOUR_MILLIS + "valandą";
-            }
-         else if (diff < 9 * HOUR_MILLIS && diff >2 * HOUR_MILLIS) {
+        } else if (diff < 9 * HOUR_MILLIS && diff >2 * HOUR_MILLIS) {
             return "prieš "+diff / HOUR_MILLIS + " valandas";
-        }
-        else if (diff < 21 * HOUR_MILLIS && diff >9 * HOUR_MILLIS) {
+        } else if (diff < 21 * HOUR_MILLIS && diff >9 * HOUR_MILLIS) {
             return "prieš "+diff / HOUR_MILLIS + " valandų";
-        }
-
-        else if (diff < 48 * HOUR_MILLIS) {
+        } else if (diff < 48 * HOUR_MILLIS) {
             return "vakar";
         } else {
             return diff / DAY_MILLIS + " days ago";

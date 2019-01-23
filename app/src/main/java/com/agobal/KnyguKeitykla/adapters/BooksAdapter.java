@@ -23,8 +23,6 @@ public class BooksAdapter extends ArrayAdapter<Books> {
 
         private Context mContext;
         private List<Books> allBookList;
-        String imageURL;
-        //ImageView ivBookCover;
 
         public BooksAdapter(@NonNull Context context, @SuppressLint("SupportAnnotationUsage") @LayoutRes ArrayList<Books> list) {
 
@@ -45,7 +43,7 @@ public class BooksAdapter extends ArrayAdapter<Books> {
 
             ImageView image = listItem.findViewById(R.id.ivBookCover);
 
-            imageURL= currentBook.getBookImage();
+            String imageURL = currentBook.getBookImage();
             if(imageURL.startsWith("https://firebasestorage"))
             {
                 Picasso.get().load(currentBook.getBookImage())
@@ -65,34 +63,11 @@ public class BooksAdapter extends ArrayAdapter<Books> {
                         .into(image);
             }
 
-            //Picasso.get().load(currentBook.getBookImage()).rotate(90).resize(200,200).centerCrop().into(image);
-
             TextView name = listItem.findViewById(R.id.tvTitle);
             name.setText(currentBook.getBookName());
 
             TextView author = listItem.findViewById(R.id.tvAuthor);
             author.setText(currentBook.getBookAuthor());
-
-/*
-            Switch switchButton = listItem.findViewById(R.id.switchButton);
-
-            if(currentBook.getBookTradable().equals("true"))
-                switchButton.setChecked(true);
-            else
-                switchButton.setChecked(false);
-
-            switchButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                // do something, the isChecked will be
-                // true if the switch is in the On position
-
-                if(isChecked) {
-                    Log.d("isChecked/?", "YES");
-                }
-                else
-                    Log.d("isChecked/?", "NO");
-
-            });
-*/
 
             return listItem;
         }

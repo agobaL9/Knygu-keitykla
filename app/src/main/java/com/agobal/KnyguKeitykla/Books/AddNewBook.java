@@ -28,8 +28,6 @@ import android.widget.Toast;
 
 import com.agobal.KnyguKeitykla.MainActivity;
 import com.agobal.KnyguKeitykla.R;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -42,8 +40,6 @@ import com.google.firebase.storage.StorageReference;
 import com.mlsdev.rximagepicker.RxImagePicker;
 import com.mlsdev.rximagepicker.Sources;
 import com.squareup.picasso.Picasso;
-
-import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -75,7 +71,7 @@ public class AddNewBook extends AppCompatActivity {
     Button btnYear;
     Button btnSave;
     RadioGroup radioGroup;
-    Switch switchButton;
+    //Switch switchButton;
 
     ImageView ivPickedImage;
     TextView title;
@@ -174,15 +170,6 @@ public class AddNewBook extends AppCompatActivity {
                     .centerCrop()
                     .error(R.drawable.ic_nocover)
                     .into(ivPickedImage);
-
-            /*
-
-            Glide.with(this)
-                    .load(result) // works for File or Uri
-                    .transition(withCrossFade())
-
-                    .apply(new RequestOptions().centerCrop())
-                    .into(ivPickedImage);*/
         }
     }
 
@@ -193,9 +180,6 @@ public class AddNewBook extends AppCompatActivity {
         mDatabaseCategory.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // Is better to use a List, because you don't know the size
-                // of the iterator returned by dataSnapshot.getChildren() to
-                // initialize the array
                 final List<String> categories = new ArrayList<>();
 
                 for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
@@ -213,11 +197,9 @@ public class AddNewBook extends AppCompatActivity {
 
             }
         });
-
     }
 
     private void saveBook() {
-
 
         String BookName = etBookName.getText().toString().trim();
         String BookAuthor = etBookAuthor.getText().toString().trim();
@@ -317,13 +299,11 @@ public class AddNewBook extends AppCompatActivity {
 
         });
 
-
         d.setNegativeButton("Cancel", (dialogInterface, i) -> {
         });
 
         AlertDialog alertDialog = d.create();
         alertDialog.show();
-
 
     }
 
@@ -333,9 +313,9 @@ public class AddNewBook extends AppCompatActivity {
         if (backstack > 0) {
             getSupportFragmentManager().popBackStack();
         }
-        else{
+        else
+        {
             super.onBackPressed();
-            //System.exit(0);
         }
     }
 

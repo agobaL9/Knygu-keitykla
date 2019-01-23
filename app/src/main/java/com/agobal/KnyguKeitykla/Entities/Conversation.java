@@ -2,8 +2,8 @@ package com.agobal.KnyguKeitykla.Entities;
 
 public class Conversation {
 
-    public boolean seen;
-    public long timestamp;
+    private boolean seen;
+    private long timestamp;
 
     public Conversation(){
 
