@@ -12,9 +12,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.agobal.KnyguKeitykla.R;
 import com.agobal.KnyguKeitykla.MainActivity;
-import com.amitshekhar.DebugDB;
+import com.agobal.KnyguKeitykla.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -81,7 +80,7 @@ public class LoginActivity extends Activity {
 
     }
 
-    void login(final String email, final String password)
+    private void login(final String email, final String password)
     {
 
         SweetAlertDialog pDialog = new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.PROGRESS_TYPE);

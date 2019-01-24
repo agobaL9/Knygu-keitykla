@@ -52,47 +52,41 @@ public class BookEditAPI extends AppCompatActivity {
 
     private StorageReference mImageStorage;
     private DatabaseReference mBookDatabase;
-    DatabaseReference mUserDatabase;
-    DatabaseReference mUserBookDatabase;
+    private DatabaseReference mUserBookDatabase;
 
-    FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-    String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
+    private final FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+    private final String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
 
-    EditText etBookName;
-    EditText etBookAuthor;
-    EditText etBookAbout;
-    EditText etPublisher;
-    Spinner spinCategory;
-    RadioButton rbBookNew;
-    RadioButton rbBookGood;
-    RadioButton rbBookFair;
-    Button btnYear;
-    Button btnSave;
-    RadioGroup radioGroup;
+    private EditText etBookName;
+    private EditText etBookAuthor;
+    private EditText etBookAbout;
+    private EditText etPublisher;
+    private Spinner spinCategory;
+    private Button btnYear;
+    private RadioGroup radioGroup;
 
-    ImageView ivBookCover;
-    TextView title;
+    private ImageView ivBookCover;
 
-    int BookYear;
-    String key;
-    String download_url;
-    String ImageURL;
-    Boolean isPhotoSelected= false;
+    private int BookYear;
+    private String key;
+    private String download_url;
+    private String ImageURL;
+    private Boolean isPhotoSelected= false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_edit_api);
 
-        getSupportActionBar().setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.action_bar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        title = findViewById(getResources().getIdentifier("action_bar_title", "id", getPackageName()));
+        TextView title = findViewById(getResources().getIdentifier("action_bar_title", "id", getPackageName()));
         title.setText("Knygos redagavimas");
 
         mImageStorage = FirebaseStorage.getInstance().getReference();
-        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
+        DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
         mBookDatabase = FirebaseDatabase.getInstance().getReference().child("Books");
         mUserBookDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks");
 
@@ -102,10 +96,10 @@ public class BookEditAPI extends AppCompatActivity {
         etPublisher = findViewById(R.id.etPublisher);
         spinCategory = findViewById(R.id.spinCategory);
         radioGroup = findViewById(R.id.rbGroup);
-        rbBookNew = findViewById(R.id.rbBookNew);
-        rbBookGood = findViewById(R.id.rbBookGood);
-        rbBookFair = findViewById(R.id.rbBookFair);
-        btnSave = findViewById(R.id.btnSave);
+        RadioButton rbBookNew = findViewById(R.id.rbBookNew);
+        RadioButton rbBookGood = findViewById(R.id.rbBookGood);
+        RadioButton rbBookFair = findViewById(R.id.rbBookFair);
+        Button btnSave = findViewById(R.id.btnSave);
         btnYear = findViewById(R.id.btnYear);
 
         ivBookCover = findViewById(R.id.ivBookCover);
@@ -155,6 +149,7 @@ public class BookEditAPI extends AppCompatActivity {
 
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @SuppressLint("CheckResult")
     private void pickImageFromSource(Sources source) {
         RxImagePicker.with(getFragmentManager()).requestImage(source).flatMap(uri -> {
@@ -205,7 +200,7 @@ public class BookEditAPI extends AppCompatActivity {
         }
     }
 
-    void saveBook()
+    private void saveBook()
     {
 
         String BookName = etBookName.getText().toString().trim();

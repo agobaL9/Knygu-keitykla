@@ -22,7 +22,6 @@ import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +44,6 @@ import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -58,55 +56,49 @@ public class MyBookEdit extends AppCompatActivity {
 
     private StorageReference mImageStorage;
     private DatabaseReference mBookDatabase;
-    DatabaseReference mUserDatabase;
-    DatabaseReference mUserBookDatabase;
+    private DatabaseReference mUserBookDatabase;
 
-    FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-    String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
+    private final FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+    private final String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
 
-    EditText etBookName;
-    EditText etBookAuthor;
-    EditText etBookAbout;
-    EditText etPublisher;
-    Spinner spinCategory;
-    RadioButton rbBookNew;
-    RadioButton rbBookGood;
-    RadioButton rbBookFair;
-    Button btnYear;
-    Button btnSave;
-    RadioGroup radioGroup;
+    private EditText etBookName;
+    private EditText etBookAuthor;
+    private EditText etBookAbout;
+    private EditText etPublisher;
+    private Spinner spinCategory;
+    private Button btnYear;
+    private RadioGroup radioGroup;
 
-    ImageView ivPickedImage;
-    TextView title;
+    private ImageView ivPickedImage;
 
-    String BookName;
-    String BookAuthor;
-    String BookPublisher;
-    String BookPublishYear;
-    String BookCondition;
-    String BookCategory;
-    String BookKey;
+    private String BookName;
+    private String BookAuthor;
+    private String BookPublisher;
+    private String BookPublishYear;
+    private String BookCondition;
+    private String BookCategory;
+    private String BookKey;
 
-    int BookYear;
-    String key;
-    String download_url;
-    Boolean isPhotoSelected= true;
-    String ImageURL;
+    private int BookYear;
+    private String key;
+    private String download_url;
+    private Boolean isPhotoSelected= true;
+    private String ImageURL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_book_edit);
 
-        getSupportActionBar().setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.action_bar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        title = findViewById(getResources().getIdentifier("action_bar_title", "id", getPackageName()));
+        TextView title = findViewById(getResources().getIdentifier("action_bar_title", "id", getPackageName()));
         title.setText("Redagavimas");
 
         mImageStorage = FirebaseStorage.getInstance().getReference();
-        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
+        DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
         mBookDatabase = FirebaseDatabase.getInstance().getReference().child("Books");
         mUserBookDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks");
 
@@ -116,10 +108,10 @@ public class MyBookEdit extends AppCompatActivity {
         etPublisher = findViewById(R.id.etPublisher);
         spinCategory = findViewById(R.id.spinCategory);
         radioGroup = findViewById(R.id.rbGroup);
-        rbBookNew = findViewById(R.id.rbBookNew);
-        rbBookGood = findViewById(R.id.rbBookGood);
-        rbBookFair = findViewById(R.id.rbBookFair);
-        btnSave = findViewById(R.id.btnSave);
+        RadioButton rbBookNew = findViewById(R.id.rbBookNew);
+        RadioButton rbBookGood = findViewById(R.id.rbBookGood);
+        RadioButton rbBookFair = findViewById(R.id.rbBookFair);
+        Button btnSave = findViewById(R.id.btnSave);
         btnYear = findViewById(R.id.btnYear);
 
         ivPickedImage = findViewById(R.id.ivPickedImage);
@@ -212,7 +204,7 @@ public class MyBookEdit extends AppCompatActivity {
         }
     }
 
-    void saveBook()
+    private void saveBook()
     {
         String BookName = etBookName.getText().toString().trim();
         String BookAuthor = etBookAuthor.getText().toString().trim();
@@ -291,6 +283,7 @@ public class MyBookEdit extends AppCompatActivity {
                 .show();
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @SuppressLint("CheckResult")
     private void pickImageFromSource(Sources source) {
         RxImagePicker.with(getFragmentManager()).requestImage(source).flatMap(uri -> {

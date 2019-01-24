@@ -24,8 +24,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.scalified.fab.ActionButton;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
@@ -37,20 +35,18 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class BookDetails extends AppCompatActivity {
 
-    TextView title;
-    ActionButton fab_message;
-    ActionButton fab_star;
-    String userName;
-    String email;
-    String firstName;
-    String lastName;
-    String about;
-    String BookKey;
-    String UserID;
-    String imageURL;
-    Boolean isBookSaved;
-    FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-    String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
+    private TextView title;
+    private ActionButton fab_star;
+    private String userName;
+    private String email;
+    private String firstName;
+    private String lastName;
+    private String about;
+    private String BookKey;
+    private String UserID;
+    private Boolean isBookSaved;
+    private final FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+    private final String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
     private ImageView ivBookCover;
     private TextView tvTitle;
     private TextView tvAuthor;
@@ -71,7 +67,7 @@ public class BookDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_details);
 
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.action_bar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -79,7 +75,7 @@ public class BookDetails extends AppCompatActivity {
 
         title = findViewById(getResources().getIdentifier("action_bar_title", "id", getPackageName()));
 
-        fab_message = findViewById(R.id.fb_message);
+        ActionButton fab_message = findViewById(R.id.fb_message);
         fab_star = findViewById(R.id.fb_star);
         fab_message.setImageResource(R.drawable.ic_message_white_24dp);
         fab_star.setImageResource(R.drawable.ic_star_white_24dp);
@@ -222,8 +218,8 @@ public class BookDetails extends AppCompatActivity {
         //change activity title
         title.setText(Book.getBookName());
 
-        imageURL= Book.getBookImage();
-        Log.d("bookDetailImageURL", " "+imageURL);
+        String imageURL = Book.getBookImage();
+        Log.d("bookDetailImageURL", " "+ imageURL);
         if(imageURL.startsWith("https://firebasestorage"))
         {
             Picasso.get().load(Book.getBookImage())

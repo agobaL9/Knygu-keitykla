@@ -30,10 +30,9 @@ import java.util.Objects;
 
 public class UserDataActivity extends Activity{
 
-    EditText inputName;
-    EditText inputLastName;
-    Button btnNext;
-    Boolean isDataCorrect = false;
+    private EditText inputName;
+    private EditText inputLastName;
+    private Boolean isDataCorrect = false;
 
     private Spinner spinnerCity;
 
@@ -49,7 +48,7 @@ public class UserDataActivity extends Activity{
 
         inputName = findViewById(R.id.inputName);
         inputLastName = findViewById(R.id.inputLastName);
-        btnNext = findViewById(R.id.btnNext);
+        Button btnNext = findViewById(R.id.btnNext);
         spinnerCity = findViewById(R.id.spinCity);
 
         btnNext.setOnClickListener(view -> {

@@ -21,8 +21,8 @@ import java.util.List;
 
 public class BooksAdapter extends ArrayAdapter<Books> {
 
-        private Context mContext;
-        private List<Books> allBookList;
+        private final Context mContext;
+        private final List<Books> allBookList;
 
         public BooksAdapter(@NonNull Context context, @SuppressLint("SupportAnnotationUsage") @LayoutRes ArrayList<Books> list) {
 

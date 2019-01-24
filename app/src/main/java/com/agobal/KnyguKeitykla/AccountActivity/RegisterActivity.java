@@ -73,7 +73,7 @@ public class RegisterActivity extends Activity {
         });
     }
 
-    void checkRegistrationData(String userName, String email, String password, String password2)
+    private void checkRegistrationData(String userName, String email, String password, String password2)
     {
         if(TextUtils.isEmpty(userName)) {
             inputUserName.setError("Šis laukas yra privalomas!");
@@ -180,7 +180,7 @@ public class RegisterActivity extends Activity {
                 });
 
     }
-    public static boolean isValidEmail(CharSequence target) {
+    private static boolean isValidEmail(CharSequence target) {
         return !TextUtils.isEmpty(target) && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
 

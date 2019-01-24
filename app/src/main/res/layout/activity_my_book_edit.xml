@@ -3,6 +3,7 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scroll"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -45,7 +46,8 @@
                         android:id="@+id/ivPickedImage"
                         android:layout_width="200dp"
                         android:layout_height="300dp"
-                        android:layout_gravity="center" />
+                        android:layout_gravity="center"
+                        android:contentDescription="TODO" />
 
                 </LinearLayout>
 
@@ -187,7 +189,8 @@
             android:layout_height="wrap_content"
             android:gravity="left"
             android:textColor="#05070a"
-            android:padding="10dip"/>
+            android:padding="10dip"
+            tools:ignore="RtlHardcoded" />
 
         <TextView android:layout_width="fill_parent"
             android:layout_height="wrap_content"

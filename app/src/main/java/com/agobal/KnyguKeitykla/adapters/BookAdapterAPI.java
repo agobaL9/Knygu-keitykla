@@ -22,8 +22,8 @@ public class BookAdapterAPI extends ArrayAdapter<BookAPI> {
     // View lookup cache
     private static class ViewHolder {
         ImageView ivCover;
-        public TextView tvTitle;
-        public TextView tvAuthor;
+        TextView tvTitle;
+        TextView tvAuthor;
     }
 
     public BookAdapterAPI(Context context, ArrayList<BookAPI> aBookAPIS) {

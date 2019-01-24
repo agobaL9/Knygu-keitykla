@@ -4,7 +4,6 @@ package com.agobal.KnyguKeitykla.adapters;
 import java.util.List;
 import java.util.Objects;
 
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,8 +12,6 @@ import android.widget.*;
 
 import com.agobal.KnyguKeitykla.Entities.Messages;
 import com.agobal.KnyguKeitykla.R;
-import com.bumptech.glide.Glide;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,7 +24,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder>{
 
 
-    private List<Messages> mMessageList;
+    private final List<Messages> mMessageList;
 
     public MessageAdapter(List<Messages> mMessageList) {
 
@@ -48,10 +45,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     class MessageViewHolder extends RecyclerView.ViewHolder {
 
-        TextView messageText;
-        CircleImageView profileImage;
-        TextView displayName;
-        ImageView messageImage;
+        final TextView messageText;
+        final CircleImageView profileImage;
+        final TextView displayName;
+        final ImageView messageImage;
 
         MessageViewHolder(View view) {
             super(view);

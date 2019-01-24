@@ -62,25 +62,25 @@ public class ProfileFragment extends Fragment {
     private DatabaseReference mUserFavBooksUser;
     private static final int GALLERY_PICK = 1;
 
-    ArrayList<Books> BookList = new ArrayList<>();
-    FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-    String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
+    private ArrayList<Books> BookList = new ArrayList<>();
+    private final FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+    private final String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
     private ListView listAllFavBooks;
     private BooksAdapter booksAdapter;
 
-    String userName;
-    String email;
-    String firstName;
-    String lastName;
-    String cityName;
-    String about;
+    private String userName;
+    private String email;
+    private String firstName;
+    private String lastName;
+    private String cityName;
+    private String about;
 
-    String BookKeyToDetails;
-    String UserKeyToDetails;
+    private String BookKeyToDetails;
+    private String UserKeyToDetails;
 
-    String userID;
-    Boolean isUserHaveFavBooks = false;
-    TextView tvEmpty;
+    private String userID;
+    private Boolean isUserHaveFavBooks = false;
+    private TextView tvEmpty;
 
 
     public ProfileFragment() {
@@ -375,7 +375,7 @@ public class ProfileFragment extends Fragment {
         startActivityForResult(Intent.createChooser(galleryIntent, "Pasirinkite nuotrauką"), GALLERY_PICK);
     }
 
-    void setupBookSelectedListener() {
+    private void setupBookSelectedListener() {
         listAllFavBooks.setOnItemClickListener((parent, view, position, id) -> {
             // Launch the detail view passing book as an extra
             Intent intent = new Intent(getActivity(), BookDetails.class);

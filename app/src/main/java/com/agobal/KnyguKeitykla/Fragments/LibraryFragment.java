@@ -16,7 +16,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.agobal.KnyguKeitykla.Entities.MyBook;
-import com.agobal.KnyguKeitykla.OnGetDataListener;
 import com.agobal.KnyguKeitykla.R;
 import com.agobal.KnyguKeitykla.BookDetails.MyBookDetail;
 import com.agobal.KnyguKeitykla.API.SearchBookAPI;
@@ -39,23 +38,22 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  */
 public class LibraryFragment extends Fragment {
 
-    public static String MY_BOOK_DETAIL_KEY = "my_book";
+    public static final String MY_BOOK_DETAIL_KEY = "my_book";
 
-    String userID;
-    TextView tvEmpty;
-    Boolean isUserHaveBooks = false;
+    private String userID;
+    private TextView tvEmpty;
+    private Boolean isUserHaveBooks = false;
 
-    DatabaseReference mUserDatabase;
-    DatabaseReference mUserBooksDatabase;
-    DatabaseReference mUserBooksUserDatabase;
+    private DatabaseReference mUserBooksDatabase;
+    private DatabaseReference mUserBooksUserDatabase;
 
-    ListView listView;
-    MyBookAdapter myBookAdapter;
-    ArrayList<MyBook> MyBookList = new ArrayList<>();
+    private ListView listView;
+    private MyBookAdapter myBookAdapter;
+    private ArrayList<MyBook> MyBookList = new ArrayList<>();
 
-    FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-    String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
-    String BookKeyToDetails;
+    private final FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+    private final String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
+    private String BookKeyToDetails;
 
     public LibraryFragment() {
         // Required empty public constructor
@@ -76,7 +74,7 @@ public class LibraryFragment extends Fragment {
         pDialog.setCancelable(false);
         pDialog.show();
 
-        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
+        DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
         mUserBooksDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks");
 
         listView = v.findViewById(R.id.listMyBooks);
@@ -141,7 +139,7 @@ public class LibraryFragment extends Fragment {
         }) ;
     }
 
-    void setupBookSelectedListener() {
+    private void setupBookSelectedListener() {
         listView.setOnItemClickListener((parent, view, position, id) -> {
             // Launch the detail view passing book as an extra
             Intent intent = new Intent(getActivity(), MyBookDetail.class);

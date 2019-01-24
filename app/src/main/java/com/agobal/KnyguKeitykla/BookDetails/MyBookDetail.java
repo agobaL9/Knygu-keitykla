@@ -27,9 +27,6 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class MyBookDetail extends AppCompatActivity {
 
-    DatabaseReference mUserDatabase;
-    DatabaseReference mUserBookDelete;
-
     private ImageView ivBookCover;
     private TextView tvTitle;
     private TextView tvAuthor;
@@ -37,27 +34,27 @@ public class MyBookDetail extends AppCompatActivity {
     private TextView tvBookYear;
     private TextView tvBookCondition;
     private TextView tvBookCategory;
-    TextView title;
+    private TextView title;
 
-    String BookName;
-    String BookAuthor;
-    String BookPublisher;
-    String BookPublishYear;
-    String BookCondition;
-    String BookCategory;
-    String BookKey;
+    private String BookName;
+    private String BookAuthor;
+    private String BookPublisher;
+    private String BookPublishYear;
+    private String BookCondition;
+    private String BookCategory;
+    private String BookKey;
 
-    String imageURL;
+    private String imageURL;
 
-    FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-    String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
+    private final FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+    private final String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_book_detail);
 
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.action_bar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -89,18 +86,16 @@ public class MyBookDetail extends AppCompatActivity {
             startActivity(intent);
         });
 
-        fabDelete.setOnClickListener(view -> {
-            new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText("Dėmėsio!")
-                    .setContentText("Ar tikrai norite ištrinti šią knygą?")
-                    .setConfirmText("Taip, noriu ištrinti")
-                    .setCancelText("Ne")
-                    .setConfirmClickListener(sDialog -> {
-                        deleteMyBook();
-                        sDialog.dismissWithAnimation();
-                    })
-                    .show();
-        });
+        fabDelete.setOnClickListener(view -> new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText("Dėmėsio!")
+                .setContentText("Ar tikrai norite ištrinti šią knygą?")
+                .setConfirmText("Taip, noriu ištrinti")
+                .setCancelText("Ne")
+                .setConfirmClickListener(sDialog -> {
+                    deleteMyBook();
+                    sDialog.dismissWithAnimation();
+                })
+                .show());
 
         // Use the book to populate the data into our views
         MyBook myBook = (MyBook) getIntent().getSerializableExtra(LibraryFragment.MY_BOOK_DETAIL_KEY);
@@ -150,8 +145,8 @@ public class MyBookDetail extends AppCompatActivity {
 
     private void deleteMyBook() {
 
-        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
-        mUserBookDelete = FirebaseDatabase.getInstance().getReference().child("UserBooks").child(current_uid).child(BookKey);
+        DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
+        DatabaseReference mUserBookDelete = FirebaseDatabase.getInstance().getReference().child("UserBooks").child(current_uid).child(BookKey);
         Log.d("TAG"," "+ BookKey);
         mUserBookDelete.setValue(null);
         new SweetAlertDialog(this)

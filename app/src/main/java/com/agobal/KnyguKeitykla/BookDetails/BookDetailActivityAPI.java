@@ -20,8 +20,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
 
@@ -33,36 +31,33 @@ import java.util.Objects;
 
 import cz.msebera.android.httpclient.Header;
 
+@SuppressWarnings("unused")
 public class BookDetailActivityAPI extends AppCompatActivity {
 
-    DatabaseReference mUserDatabase;
-    DatabaseReference mUserBookDatabase;
-
-    FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-    String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
+    private final FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+    private final String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
 
     private ImageView ivBookCover;
     private TextView tvTitle;
     private TextView tvAuthor;
     private TextView tvPublisher;
     private TextView tvPublishYear;
-    String imageURL;
-    TextView title;
-    Button btnSaveAndEdit;
+    private String imageURL;
+    private TextView title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_detail_api);
 
-        getSupportActionBar().setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.action_bar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         title = findViewById(getResources().getIdentifier("action_bar_title", "id", getPackageName()));
 
-        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
-        mUserBookDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks");
+        DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
+        DatabaseReference mUserBookDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks");
 
         // Fetch views
         ivBookCover = findViewById(R.id.ivBookCover);
@@ -71,14 +66,12 @@ public class BookDetailActivityAPI extends AppCompatActivity {
         tvPublisher = findViewById(R.id.tvPublisher);
         tvPublishYear = findViewById(R.id.tvPublishYear);
 
-        btnSaveAndEdit = findViewById(R.id.btnSaveAndEdit);
+        Button btnSaveAndEdit = findViewById(R.id.btnSaveAndEdit);
         // Use the bookAPI to populate the data into our views
         BookAPI bookAPI = (BookAPI) getIntent().getSerializableExtra(SearchBookAPI.BOOK_DETAIL_KEY);
         loadBook(bookAPI);
 
-        btnSaveAndEdit.setOnClickListener(view -> {
-            saveAndEdit();
-        });
+        btnSaveAndEdit.setOnClickListener(view -> saveAndEdit());
 
     }
 

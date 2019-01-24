@@ -1,6 +1,7 @@
 package com.agobal.KnyguKeitykla.Entities;
 
 
+@SuppressWarnings("unused")
 public class Messages {
 
     private String message, type , from;

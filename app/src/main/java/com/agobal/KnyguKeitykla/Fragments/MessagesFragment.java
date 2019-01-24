@@ -1,6 +1,5 @@
 package com.agobal.KnyguKeitykla.Fragments;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -43,15 +42,10 @@ public class MessagesFragment extends Fragment {
     private DatabaseReference mMessageDatabase;
     private DatabaseReference mUsersDatabase;
 
-    RecyclerView mConvList;
-    FirebaseRecyclerAdapter<Conversation, ConvViewHolder> firebaseConvAdapter;
+    private RecyclerView mConvList;
+    private FirebaseRecyclerAdapter<Conversation, ConvViewHolder> firebaseConvAdapter;
 
-    FirebaseAuth mAuth;
-    TextView tvEmpty;
-
-    String mCurrent_user_id;
-
-    View mMainView;
+    private TextView tvEmpty;
 
 
     public MessagesFragment() {
@@ -62,14 +56,14 @@ public class MessagesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        mMainView = inflater.inflate(R.layout.fragment_messages, container, false);
+        View mMainView = inflater.inflate(R.layout.fragment_messages, container, false);
 
         tvEmpty = mMainView.findViewById(R.id.tvEmpty);
         tvEmpty.setVisibility(View.GONE);
         mConvList = mMainView.findViewById(R.id.conv_list);
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
-        mCurrent_user_id = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
+        String mCurrent_user_id = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
 
         Log.d("userID", mCurrent_user_id + " ");
 
@@ -190,7 +184,7 @@ public class MessagesFragment extends Fragment {
                         }
 
                         convViewHolder.setName(userName);
-                        convViewHolder.setUserImage(userThumb, getContext());
+                        convViewHolder.setUserImage(userThumb);
 
                         convViewHolder.mView.setOnClickListener(view -> {
 
@@ -232,7 +226,7 @@ public class MessagesFragment extends Fragment {
 
     public static class ConvViewHolder extends RecyclerView.ViewHolder {
 
-        View mView;
+        final View mView;
 
         ConvViewHolder(View itemView) {
             super(itemView);
@@ -253,14 +247,14 @@ public class MessagesFragment extends Fragment {
 
         }
 
-        public void setName(String name){
+        void setName(String name){
 
             TextView userNameView = mView.findViewById(R.id.user_single_name);
             userNameView.setText(name);
 
         }
 
-        void setUserImage(String thumb_image, Context ctx){
+        void setUserImage(String thumb_image){
 
             CircleImageView userImageView = mView.findViewById(R.id.user_single_image);
             Picasso.get().load(thumb_image).placeholder(R.drawable.unknown_profile_pic).into(userImageView);

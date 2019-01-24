@@ -42,23 +42,22 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 public class BookFragment extends Fragment {
 
     public static final String BOOK_DETAIL_KEY = "book";
-    DatabaseReference mUserDatabase;
-    DatabaseReference mUserBookDatabase;
-    DatabaseReference mUserBooksUserDatabase;
-    ArrayList<Books> BookList = new ArrayList<>();
-    FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-    String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
-    String userID;
-    String tempID;
-    TextView tvEmpty;
-    Boolean isUserHaveBooks = false;
-    String tempKey;
+    private DatabaseReference mUserBookDatabase;
+    private DatabaseReference mUserBooksUserDatabase;
+    private ArrayList<Books> BookList = new ArrayList<>();
+    private final FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+    private final String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
+    private String userID;
+    private String tempID;
+    private TextView tvEmpty;
+    private Boolean isUserHaveBooks = false;
+    private String tempKey;
     private ListView listViewBooks;
     private BooksAdapter booksAdapter;
 
-    String BookKeyToDetails;
-    String UserKeyToDetails;
-    String queryText;
+    private String BookKeyToDetails;
+    private String UserKeyToDetails;
+    private String queryText;
 
 
 
@@ -81,7 +80,7 @@ public class BookFragment extends Fragment {
         pDialog.setCancelable(false);
         pDialog.show();
 
-        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
+        DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
         mUserBookDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks");
 
         listViewBooks = v.findViewById(R.id.listAllBooks);
@@ -295,7 +294,7 @@ public class BookFragment extends Fragment {
     }
 
 
-    void setupBookSelectedListener() {
+    private void setupBookSelectedListener() {
         listViewBooks.setOnItemClickListener((parent, view, position, id) -> {
             // Launch the detail view passing book as an extra
             Intent intent = new Intent(getActivity(), BookDetails.class);

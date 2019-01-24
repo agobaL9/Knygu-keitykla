@@ -31,26 +31,25 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class SearchBookAPI extends AppCompatActivity {
 
     public static final String BOOK_DETAIL_KEY = "book";
     private BookAdapterAPI bookAdapterAPI;
     private ListView lvBooks;
-    TextView empty_list_view;
-    TextView title;
-    String emptyString = "";
+    private TextView empty_list_view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_book_api);
 
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.action_bar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        title = findViewById(getResources().getIdentifier("action_bar_title", "id", getPackageName()));
+        TextView title = findViewById(getResources().getIdentifier("action_bar_title", "id", getPackageName()));
         title.setText("Paieška");
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
@@ -64,6 +63,7 @@ public class SearchBookAPI extends AppCompatActivity {
         bookAdapterAPI = new BookAdapterAPI(this, aBookAPIS);
         lvBooks.setEmptyView(empty_list_view);
         lvBooks.setAdapter(bookAdapterAPI);
+        String emptyString = "";
         fetchBooks(emptyString);
         empty_list_view.setVisibility(View.VISIBLE);
 
@@ -77,7 +77,7 @@ public class SearchBookAPI extends AppCompatActivity {
         });
     }
 
-    public void setupBookSelectedListener() {
+    private void setupBookSelectedListener() {
         lvBooks.setOnItemClickListener((parent, view, position, id) -> {
             // Launch the detail view passing book as an extra
             Intent intent = new Intent(SearchBookAPI.this, BookDetailActivityAPI.class);
@@ -102,7 +102,7 @@ public class SearchBookAPI extends AppCompatActivity {
                     pDialog.dismissWithAnimation();
 
                     Log.d("response API", response + " ");
-                    JSONArray docs = null;
+                    JSONArray docs;
                     if(response != null) {
                         empty_list_view.setVisibility(View.GONE);
                         // Get the docs json array
