@@ -76,6 +76,8 @@ dependencies {
     implementation 'com.yarolegovich:lovely-dialog:1.1.0'
     implementation "com.google.android.gms:play-services-auth:16.0.1"
     implementation 'com.google.firebase:firebase-perf:16.2.3'
+    implementation 'com.shaishavgandhi:login-buttons:1.0.0'
+
 
 }
 

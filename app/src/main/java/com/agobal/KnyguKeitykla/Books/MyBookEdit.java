@@ -178,8 +178,6 @@ public class MyBookEdit extends AppCompatActivity {
         etBookAuthor.setText(BookAuthor);
         etPublisher.setText(BookPublisher);
 
-        //TODO condition if condition = gera check radio
-
         switch (BookCondition) {
             case "Būklė: Gera":
                 Log.d("gera", "yes");

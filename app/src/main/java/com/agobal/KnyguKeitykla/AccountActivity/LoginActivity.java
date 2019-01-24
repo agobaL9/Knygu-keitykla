@@ -133,9 +133,10 @@ public class LoginActivity extends Activity {
         }
         else
         {
-            // Prompt user to enter credentials
+            pDialog.dismissWithAnimation();
             Toast.makeText(getApplicationContext(), "Prošome užpildyti laukus!", Toast.LENGTH_LONG)
                     .show();
+
         }
 
     }

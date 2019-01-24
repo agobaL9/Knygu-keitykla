@@ -23,6 +23,16 @@
         </service>
 
         <activity
+            android:name=".helper.SplashActivity"
+            android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".AccountActivity.LoginActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
@@ -37,6 +47,7 @@
         <activity
             android:name=".AccountActivity.RegisterActivity"
             android:label="@string/app_name"
+            android:parentActivityName="com.agobal.KnyguKeitykla.AccountActivity.LoginActivity"
             android:launchMode="singleTop"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".AccountActivity.UserDataActivity" />
