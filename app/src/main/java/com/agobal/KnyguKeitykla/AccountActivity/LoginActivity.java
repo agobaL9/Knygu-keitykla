@@ -83,13 +83,14 @@ public class LoginActivity extends Activity {
     private void login(final String email, final String password)
     {
 
-        SweetAlertDialog pDialog = new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        pDialog.setTitleText("Prašome palaukti");
-        pDialog.setCancelable(false);
-        pDialog.show();
         if (!email.isEmpty() && !password.isEmpty()) {
         //firebase
+            SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
+            pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+            pDialog.setTitleText("Loading");
+            pDialog.setCancelable(false);
+            pDialog.show();
+
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(LoginActivity.this, task -> {
                     if (!task.isSuccessful())
@@ -132,10 +133,8 @@ public class LoginActivity extends Activity {
         }
         else
         {
-            pDialog.dismissWithAnimation();
             Toast.makeText(getApplicationContext(), "Prošome užpildyti laukus!", Toast.LENGTH_LONG)
                     .show();
-
         }
 
     }
