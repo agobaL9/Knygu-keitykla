@@ -74,7 +74,7 @@ public class LibraryFragment extends Fragment {
         pDialog.setCancelable(false);
         pDialog.show();
 
-        DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
+        //DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
         mUserBooksDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks");
 
         listView = v.findViewById(R.id.listMyBooks);

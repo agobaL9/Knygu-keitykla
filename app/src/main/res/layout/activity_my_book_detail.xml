@@ -1,17 +1,11 @@
-
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<ScrollView android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/colorPrimary"
     android:orientation="vertical"
     tools:context=".API.SearchBookAPI">
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
         <LinearLayout
             android:gravity="center_horizontal"
@@ -182,4 +176,3 @@
 
         </LinearLayout>
     </ScrollView>
-</LinearLayout>

@@ -145,7 +145,7 @@ public class MyBookDetail extends AppCompatActivity {
 
     private void deleteMyBook() {
 
-        DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
+        //DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
         DatabaseReference mUserBookDelete = FirebaseDatabase.getInstance().getReference().child("UserBooks").child(current_uid).child(BookKey);
         Log.d("TAG"," "+ BookKey);
         mUserBookDelete.setValue(null);

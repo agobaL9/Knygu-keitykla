@@ -99,7 +99,8 @@
                 android:hint="Knygos pavadinimas"
                 android:inputType="textCapWords"
                 android:paddingTop="20dp"
-                android:singleLine="true"/>
+                android:singleLine="true"
+                tools:ignore="Autofill" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -122,7 +123,9 @@
                 android:paddingTop="20dp"
                 android:inputType="textCapWords"
                 android:singleLine="true"
-                android:textColorHint="#05070a"  />
+                android:textColorHint="#05070a"
+                android:autofillHints="Knygos autorius"
+                tools:ignore="UnusedAttribute" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -145,7 +148,9 @@
                 android:paddingTop="20dp"
                 android:inputType="textMultiLine"
                 android:singleLine="false"
-                android:textColorHint="#05070a"  />
+                android:textColorHint="#05070a"
+                android:autofillHints="Trumpai apie knygą"
+                tools:ignore="UnusedAttribute" />
 
         </android.support.design.widget.TextInputLayout>
 

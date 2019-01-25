@@ -86,7 +86,7 @@ public class BookEditAPI extends AppCompatActivity {
         title.setText("Knygos redagavimas");
 
         mImageStorage = FirebaseStorage.getInstance().getReference();
-        DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
+        //DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
         mBookDatabase = FirebaseDatabase.getInstance().getReference().child("Books");
         mUserBookDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks");
 
@@ -96,9 +96,9 @@ public class BookEditAPI extends AppCompatActivity {
         etPublisher = findViewById(R.id.etPublisher);
         spinCategory = findViewById(R.id.spinCategory);
         radioGroup = findViewById(R.id.rbGroup);
-        RadioButton rbBookNew = findViewById(R.id.rbBookNew);
-        RadioButton rbBookGood = findViewById(R.id.rbBookGood);
-        RadioButton rbBookFair = findViewById(R.id.rbBookFair);
+        //RadioButton rbBookNew = findViewById(R.id.rbBookNew);
+        //RadioButton rbBookGood = findViewById(R.id.rbBookGood);
+        //RadioButton rbBookFair = findViewById(R.id.rbBookFair);
         Button btnSave = findViewById(R.id.btnSave);
         btnYear = findViewById(R.id.btnYear);
 

@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -32,7 +33,8 @@
             android:hint="Vartotojo vardas"
             android:inputType="textCapWords"
             android:singleLine="true"
-            android:textColorHint="#05070a" />
+            android:textColorHint="#05070a"
+            tools:ignore="Autofill"/>
 
         </android.support.design.widget.TextInputLayout>
         <View
@@ -55,7 +57,8 @@
             android:hint="El. pašto adresas"
             android:inputType="textEmailAddress"
             android:singleLine="true"
-            android:textColorHint="#05070a" />
+            android:textColorHint="#05070a"
+            tools:ignore="Autofill" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -79,7 +82,8 @@
             android:hint="Slaptažodis"
             android:inputType="textPassword"
             android:singleLine="true"
-            android:textColorHint="#05070a" />
+            android:textColorHint="#05070a"
+            tools:ignore="Autofill" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -103,7 +107,8 @@
             android:hint="Pakartokite slaptažodį"
             android:inputType="textPassword"
             android:singleLine="true"
-            android:textColorHint="#05070a" />
+            android:textColorHint="#05070a"
+            tools:ignore="Autofill" />
 
         </android.support.design.widget.TextInputLayout>
 

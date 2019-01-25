@@ -23,7 +23,8 @@
         android:hint="Vardas"
         android:inputType="textCapWords"
         android:singleLine="true"
-        android:textColorHint="@color/Black"  />
+        android:textColorHint="@color/Black"
+        tools:ignore="Autofill" />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -46,7 +47,8 @@
         android:paddingTop="12dp"
         android:inputType="textCapWords"
         android:singleLine="true"
-        android:textColorHint="@color/Black"  />
+        android:textColorHint="@color/Black"
+        tools:ignore="Autofill" />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -66,7 +68,7 @@
     <Spinner android:id="@+id/spinCity"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="left"
+        android:gravity="start"
         android:textColor="#05070a"
         android:padding="10dip"/>
 

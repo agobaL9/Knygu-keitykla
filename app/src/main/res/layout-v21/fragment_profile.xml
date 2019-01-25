@@ -5,7 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorPrimary"
     android:orientation="vertical"
-    tools:context=".API.SearchBookAPI">
+    tools:context=".API.SearchBookAPI"
+    tools:ignore="Overdraw">
 
     <ScrollView
         android:layout_width="match_parent"

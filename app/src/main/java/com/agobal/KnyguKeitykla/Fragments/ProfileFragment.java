@@ -72,14 +72,14 @@ public class ProfileFragment extends Fragment {
     private String email;
     private String firstName;
     private String lastName;
-    private String cityName;
+    String cityName;
     private String about;
 
     private String BookKeyToDetails;
     private String UserKeyToDetails;
 
     private String userID;
-    private Boolean isUserHaveFavBooks = false;
+    Boolean isUserHaveFavBooks = false;
     private TextView tvEmpty;
 
 

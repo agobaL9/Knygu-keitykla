@@ -19,6 +19,7 @@
         android:padding="10dp"
         tools:context=".Books.AddNewBook">
 
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="320dp"
@@ -43,10 +44,11 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:id="@+id/ivPickedImage"
+                        android:id="@+id/ivBookCover"
                         android:layout_width="200dp"
                         android:layout_height="300dp"
-                        android:layout_gravity="center"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="8dp"
                         android:contentDescription="TODO" />
 
                 </LinearLayout>
@@ -54,7 +56,6 @@
             </android.support.v7.widget.CardView>
 
         </LinearLayout>
-
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -86,7 +87,7 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:textColorHint="#05070a">
 
             <EditText
@@ -123,7 +124,31 @@
                 android:inputType="textCapWords"
                 android:singleLine="true"
                 android:textColorHint="#05070a"
-                tools:ignore="Autofill" />
+                android:autofillHints="" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#05070a" />
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="#05070a">
+
+            <EditText
+                android:id="@+id/etBookAbout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:hint="Trumpai apie knygą"
+                android:paddingTop="20dp"
+                android:inputType="textMultiLine"
+                android:singleLine="false"
+                android:textColorHint="#05070a"
+                android:autofillHints="" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -148,30 +173,6 @@
                 android:singleLine="true"
                 android:textColorHint="#05070a"
                 tools:ignore="Autofill" />
-
-        </android.support.design.widget.TextInputLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#05070a" />
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColorHint="#05070a">
-            <EditText
-                android:id="@+id/etBookAbout"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:hint="Trumpai apie knygą"
-                android:paddingTop="20dp"
-                android:inputType="textMultiLine"
-                android:singleLine="false"
-                android:textColorHint="#05070a"
-                tools:ignore="Autofill" />
-
 
         </android.support.design.widget.TextInputLayout>
 
@@ -231,7 +232,7 @@
             android:id="@+id/btnYear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Pasirinkti metus"
+            android:text=""
             android:background="@drawable/background_login"
             android:layout_marginTop="10dp"
             android:textColor="@color/cyan"/>

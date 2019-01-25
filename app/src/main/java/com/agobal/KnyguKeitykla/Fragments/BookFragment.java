@@ -48,10 +48,9 @@ public class BookFragment extends Fragment {
     private final FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
     private final String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
     private String userID;
-    private String tempID;
     private TextView tvEmpty;
-    private Boolean isUserHaveBooks = false;
-    private String tempKey;
+    Boolean isUserHaveBooks = false;
+    String tempKey;
     private ListView listViewBooks;
     private BooksAdapter booksAdapter;
 
@@ -80,7 +79,7 @@ public class BookFragment extends Fragment {
         pDialog.setCancelable(false);
         pDialog.show();
 
-        DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
+        //DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
         mUserBookDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks");
 
         listViewBooks = v.findViewById(R.id.listAllBooks);
@@ -102,7 +101,6 @@ public class BookFragment extends Fragment {
                         if (userID != null && userID.equals(current_uid)) { // ar yra dabartinis vartotojas userbooks šakoje
                             Log.d("ar yra šakoje?", "taip");
                             isUserHaveBooks = true;
-                            tempID = userID;
                         }
                     }
                     tvEmpty.setVisibility(View.GONE);
