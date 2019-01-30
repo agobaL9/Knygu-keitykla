@@ -3,6 +3,7 @@ package com.agobal.KnyguKeitykla.Chat;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -38,6 +39,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -46,6 +48,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Chat_activity extends AppCompatActivity {
@@ -131,6 +134,12 @@ public class Chat_activity extends AppCompatActivity {
 
         mImageStorage = FirebaseStorage.getInstance().getReference();
 
+        SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.setTitleText("Prašome palaukti...");
+        pDialog.setCancelable(false);
+        pDialog.show();
+
         mRootRef.child("Chat").child(mCurrentUserId).child(mChatUser).child("seen").setValue(true);
         mRootRef.keepSynced(true);
         loadMessages();
@@ -155,7 +164,20 @@ public class Chat_activity extends AppCompatActivity {
                     mLastSeenView.setText(lastSeenTime);
                 }
 
-                Picasso.get().load(image).error(R.drawable.unknown_profile_pic).into(mProfileImage);
+                Picasso.get()
+                        .load(image)
+                        .error(R.drawable.unknown_profile_pic)
+                        .into(mProfileImage, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                pDialog.dismissWithAnimation();
+                            }
+
+                            @Override
+                            public void onError(Exception e) {
+
+                            }
+                        });
             }
 
             @Override

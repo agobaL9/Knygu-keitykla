@@ -279,13 +279,17 @@ public class BookEditAPI extends AppCompatActivity {
         mUserBookDatabase.child(current_uid).child(key).child("userID").setValue(current_uid);
         mUserBookDatabase.child(current_uid).child(key).child("bookKey").setValue(key);
 
-        new SweetAlertDialog(this)
-                .setTitleText("Knygą pridėta! ")
+        Log.d("bookKeyAPI", " "+ key);
+
+        new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                .setTitleText("Pavyko!")
+                .setContentText("Knygą pridėta!")
                 .setConfirmClickListener(sweetAlertDialog -> {
                     Intent intent = new Intent(BookEditAPI.this, MainActivity.class);
                     startActivity(intent);
                 })
                 .show();
+
     }
 
     private void selectCategory() {

@@ -2,6 +2,7 @@ package com.agobal.KnyguKeitykla.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,13 +12,18 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.agobal.KnyguKeitykla.Entities.Books;
 import com.agobal.KnyguKeitykla.R;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class BooksAdapter extends ArrayAdapter<Books> {
 
@@ -39,6 +45,12 @@ public class BooksAdapter extends ArrayAdapter<Books> {
             if(listItem == null)
                 listItem = LayoutInflater.from(mContext).inflate(R.layout.item_allbooks,parent,false);
 
+//            SweetAlertDialog pDialog = new SweetAlertDialog(Objects.requireNonNull(getContext()), SweetAlertDialog.PROGRESS_TYPE);
+//            pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+//            pDialog.setTitleText("Prašome palaukti");
+//            pDialog.setCancelable(false);
+//            pDialog.show();
+
             Books currentBook = allBookList.get(position);
 
             ImageView image = listItem.findViewById(R.id.ivBookCover);
@@ -51,7 +63,17 @@ public class BooksAdapter extends ArrayAdapter<Books> {
                         .resize(200,200)
                         .centerCrop()
                         .error(R.drawable.ic_nocover)
-                        .into(image);
+                        .into(image, new Callback() {
+                            @Override
+                            public void onSuccess() {
+//                                Toast.makeText(getContext(), "downloaded!", Toast.LENGTH_LONG).show();
+                        }
+
+                            @Override
+                            public void onError(Exception e) {
+
+                            }
+                        });
             }
             else
             {
@@ -60,7 +82,17 @@ public class BooksAdapter extends ArrayAdapter<Books> {
                         .resize(200,200)
                         .error(R.drawable.ic_nocover)
                         .centerCrop()
-                        .into(image);
+                        .into(image, new Callback() {
+                            @Override
+                            public void onSuccess() {
+//                                Toast.makeText(getContext(), "downloaded!", Toast.LENGTH_LONG).show();
+                            }
+
+                            @Override
+                            public void onError(Exception e) {
+
+                            }
+                        });
             }
 
             TextView name = listItem.findViewById(R.id.tvTitle);

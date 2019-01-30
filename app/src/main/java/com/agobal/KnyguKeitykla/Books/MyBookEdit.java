@@ -274,8 +274,9 @@ public class MyBookEdit extends AppCompatActivity {
         mUserBookDatabase.child(current_uid).child(BookKey).child("userID").setValue(current_uid);
         mUserBookDatabase.child(current_uid).child(BookKey).child("bookKey").setValue(key);
 
-        new SweetAlertDialog(this)
-                .setTitleText("Redagavimas sėkmingas! ")
+        new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                .setTitleText("Pavyko!")
+                .setContentText("Redagavimas sėkmingas!")
                 .setConfirmClickListener(sweetAlertDialog -> {
                     Intent intent = new Intent(MyBookEdit.this, MainActivity.class);
                     startActivity(intent);

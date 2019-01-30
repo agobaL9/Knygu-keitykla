@@ -1,6 +1,7 @@
 package com.agobal.KnyguKeitykla.BookDetails;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
@@ -10,6 +11,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.agobal.KnyguKeitykla.AccountActivity.LoginActivity;
 import com.agobal.KnyguKeitykla.Books.MyBookEdit;
 import com.agobal.KnyguKeitykla.Entities.MyBook;
 import com.agobal.KnyguKeitykla.Fragments.LibraryFragment;
@@ -19,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
@@ -86,16 +89,28 @@ public class MyBookDetail extends AppCompatActivity {
             startActivity(intent);
         });
 
-        fabDelete.setOnClickListener(view -> new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                .setTitleText("Dėmėsio!")
-                .setContentText("Ar tikrai norite ištrinti šią knygą?")
-                .setConfirmText("Taip, noriu ištrinti")
-                .setCancelText("Ne")
-                .setConfirmClickListener(sDialog -> {
-                    deleteMyBook();
-                    sDialog.dismissWithAnimation();
-                })
-                .show());
+        fabDelete.setOnClickListener(view -> {
+            new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText("Dėmėsio!")
+                    .setContentText("Ar tikrai norite ištrinti šią knygą?")
+                    .setConfirmText("Taip")
+                    .setCancelText("Ne")
+                    .setConfirmClickListener(sDialog -> {
+                        deleteMyBook();
+                        sDialog.dismissWithAnimation();
+                        new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                                .setTitleText("Pavyko!")
+                                .setContentText("Knyga panaikinta!")
+                                .setConfirmClickListener(sweetAlertDialog -> {
+                                    sweetAlertDialog.dismissWithAnimation();
+                                    Intent intent = new Intent(MyBookDetail.this, MainActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                })
+                                .show();
+                    })
+                    .show();
+        });
 
         // Use the book to populate the data into our views
         MyBook myBook = (MyBook) getIntent().getSerializableExtra(LibraryFragment.MY_BOOK_DETAIL_KEY);
@@ -106,6 +121,12 @@ public class MyBookDetail extends AppCompatActivity {
 
     private void loadBook(MyBook myBook) {
         //change activity title
+        SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.setTitleText("Prašome palaukti...");
+        pDialog.setCancelable(false);
+        pDialog.show();
+
         title.setText(myBook.getBookName());
         // Populate data
         imageURL= myBook.getBookImage();
@@ -116,7 +137,17 @@ public class MyBookDetail extends AppCompatActivity {
                     .resize(400,600)
                     .centerCrop()
                     .error(R.drawable.ic_nocover)
-                    .into(ivBookCover);
+                    .into(ivBookCover, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            pDialog.dismissWithAnimation();
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+
+                        }
+                    });
         }
         else
         {
@@ -125,7 +156,17 @@ public class MyBookDetail extends AppCompatActivity {
                     .resize(400,600)
                     .error(R.drawable.ic_nocover)
                     .centerCrop()
-                    .into(ivBookCover);
+                    .into(ivBookCover, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            pDialog.dismissWithAnimation();
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+
+                        }
+                    });
         }
         tvTitle.setText(myBook.getBookName());
         tvAuthor.setText(myBook.getBookAuthor());
@@ -149,14 +190,6 @@ public class MyBookDetail extends AppCompatActivity {
         DatabaseReference mUserBookDelete = FirebaseDatabase.getInstance().getReference().child("UserBooks").child(current_uid).child(BookKey);
         Log.d("TAG"," "+ BookKey);
         mUserBookDelete.setValue(null);
-        new SweetAlertDialog(this)
-                .setTitleText("Knyga panaikinta!")
-                .setConfirmClickListener(sweetAlertDialog -> {
-                    Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(i);
-                    finish();
-                })
-                .show();
     }
 
     public void onBackPressed() {

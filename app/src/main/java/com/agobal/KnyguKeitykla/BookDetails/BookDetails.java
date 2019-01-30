@@ -2,6 +2,7 @@ package com.agobal.KnyguKeitykla.BookDetails;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
@@ -31,6 +32,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class BookDetails extends AppCompatActivity {
@@ -60,6 +62,7 @@ public class BookDetails extends AppCompatActivity {
     private DatabaseReference mUserFavBookButton;
     private DatabaseReference mDatabase;
     private DatabaseReference mUserFavBookDelete;
+    private DatabaseReference mUserFavBooks;
 
 
     @Override
@@ -198,8 +201,13 @@ public class BookDetails extends AppCompatActivity {
 
     private void saveUserFavBook(Books Book) {
 
+        Log.d("currentID", " "+ current_uid);
+        Log.d("BookKey", " "+ BookKey);
+
         mUserFavBookKey = mDatabase.child("UserFavBooks").child(current_uid);
-        DatabaseReference mUserFavBooks = mDatabase.child("UserFavBooks").child(current_uid).child(BookKey);
+        mUserFavBooks = mDatabase.child("UserFavBooks").child(current_uid).child(BookKey);
+
+
 
         mUserFavBooks.child("bookName").setValue(Book.getBookName());
         mUserFavBooks.child("bookAuthor").setValue(Book.getBookAuthor());
@@ -216,6 +224,12 @@ public class BookDetails extends AppCompatActivity {
 
     private void loadBook(Books Book) {
         //change activity title
+        SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.setTitleText("Prašome palaukti...");
+        pDialog.setCancelable(false);
+        pDialog.show();
+
         title.setText(Book.getBookName());
 
         String imageURL = Book.getBookImage();
@@ -227,7 +241,17 @@ public class BookDetails extends AppCompatActivity {
                     .resize(400,600)
                     .centerCrop()
                     .error(R.drawable.ic_nocover)
-                    .into(ivBookCover);
+                    .into(ivBookCover, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            pDialog.dismissWithAnimation();
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+
+                        }
+                    });
         }
         else
         {
@@ -236,7 +260,17 @@ public class BookDetails extends AppCompatActivity {
                     .resize(400,600)
                     .error(R.drawable.ic_nocover)
                     .centerCrop()
-                    .into(ivBookCover);
+                    .into(ivBookCover, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            pDialog.dismissWithAnimation();
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+
+                        }
+                    });
             Log.d(" else if", "yes");
         }
 

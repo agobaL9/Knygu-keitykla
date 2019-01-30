@@ -176,9 +176,11 @@ public class ProfileEdit extends AppCompatActivity {
         hopperUpdates.put(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid() + "/about", about);
         mDatabaseRef.updateChildren(hopperUpdates);
 
-        new SweetAlertDialog(this)
-                .setTitleText("Duomenys atnaujinti! ")
+        new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                .setTitleText("Pavyko!")
+                .setContentText("Duomenys atnaujinti!")
                 .show();
+
     }
 
     public void onBackPressed() {

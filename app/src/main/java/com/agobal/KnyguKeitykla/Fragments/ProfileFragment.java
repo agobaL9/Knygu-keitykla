@@ -144,10 +144,10 @@ public class ProfileFragment extends Fragment {
                 assert image != null;
                 if(!image.equals("default")){
                     Picasso.get().load(image).networkPolicy(NetworkPolicy.OFFLINE)
-                            .placeholder(R.drawable.unknown_profile_pic).into(ProfilePic, new Callback() {
+                            .placeholder(R.drawable.unknown_profile_pic)
+                            .into(ProfilePic, new Callback() {
                         @Override
                         public void onSuccess() {
-
                             pDialog.dismissWithAnimation();
                         }
 
@@ -175,7 +175,6 @@ public class ProfileFragment extends Fragment {
                 T_City.setText(userData.cityName);
                 T_About.setText(about);
 
-                pDialog.dismiss();
             }
 
             @Override

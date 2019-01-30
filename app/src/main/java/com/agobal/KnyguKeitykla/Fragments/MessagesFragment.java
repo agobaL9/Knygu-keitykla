@@ -29,6 +29,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
@@ -109,12 +110,6 @@ public class MessagesFragment extends Fragment {
     }
 
     private void onActivityStarted() {
-
-        SweetAlertDialog pDialog = new SweetAlertDialog(Objects.requireNonNull(getContext()), SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        pDialog.setTitleText("Prašome palaukti");
-        pDialog.setCancelable(false);
-        pDialog.show();
 
         Query conversationQuery = mConvDatabase.orderByKey();
 
@@ -207,7 +202,6 @@ public class MessagesFragment extends Fragment {
         mConvList.addItemDecoration(new DividerItemDecoration(mConvList.getContext(), DividerItemDecoration.VERTICAL));
 
         mConvList.setAdapter(firebaseConvAdapter);
-        pDialog.dismissWithAnimation();
 
     }
 
@@ -224,7 +218,8 @@ public class MessagesFragment extends Fragment {
         firebaseConvAdapter.startListening();
     }
 
-    public static class ConvViewHolder extends RecyclerView.ViewHolder {
+    public class ConvViewHolder extends RecyclerView.ViewHolder {
+
 
         final View mView;
 
@@ -256,8 +251,28 @@ public class MessagesFragment extends Fragment {
 
         void setUserImage(String thumb_image){
 
+            SweetAlertDialog pDialog = new SweetAlertDialog(Objects.requireNonNull(getContext()), SweetAlertDialog.PROGRESS_TYPE);
+            pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+            pDialog.setTitleText("Prašome palaukti");
+            pDialog.setCancelable(false);
+            pDialog.show();
+
             CircleImageView userImageView = mView.findViewById(R.id.user_single_image);
-            Picasso.get().load(thumb_image).placeholder(R.drawable.unknown_profile_pic).into(userImageView);
+            Picasso.get()
+                    .load(thumb_image)
+                    .placeholder(R.drawable.unknown_profile_pic)
+                    .into(userImageView, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            pDialog.dismissWithAnimation();
+
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+
+                        }
+                    });
 
         }
 

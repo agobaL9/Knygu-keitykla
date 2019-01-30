@@ -259,8 +259,9 @@ public class AddNewBook extends AppCompatActivity {
         mUserBookDatabase.child(current_uid).child(key).child("userID").setValue(current_uid);
         mUserBookDatabase.child(current_uid).child(key).child("bookKey").setValue(key);
 
-        new SweetAlertDialog(this)
-                .setTitleText("Knygą pridėta! ")
+        new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                .setTitleText("Pavyko!")
+                .setContentText("Knygą pridėta!")
                 .setConfirmClickListener(sweetAlertDialog -> {
                     Intent intent = new Intent(AddNewBook.this, MainActivity.class);
                     startActivity(intent);

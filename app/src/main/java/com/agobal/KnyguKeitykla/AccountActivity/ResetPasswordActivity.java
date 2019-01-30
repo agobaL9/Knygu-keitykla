@@ -66,8 +66,9 @@ public class ResetPasswordActivity extends Activity {
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
 
-                            new SweetAlertDialog(this)
-                                    .setTitleText("Slaptažodžio pakeitimo nuoroda Jums išsiųsta į el. pašto adresą! ")
+                            new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                                    .setTitleText("Pavyko!")
+                                    .setContentText("Slaptažodžio pakeitimo nuoroda Jums išsiųsta į el. pašto adresą")
                                     .setConfirmClickListener(sweetAlertDialog -> {
                                         Intent intent = new Intent(ResetPasswordActivity.this, MainActivity.class);
                                         startActivity(intent);
@@ -75,8 +76,9 @@ public class ResetPasswordActivity extends Activity {
                                     .show();
 
                         } else {
-                            new SweetAlertDialog(this)
-                                    .setTitleText("Nuorodos su slaptažodžiu išsiųsti nepavyko. Prašome patikrinti duomenis! ")
+                            new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                                    .setTitleText("Pavyko!")
+                                    .setContentText("Nuorodos su slaptažodžiu išsiųsti nepavyko. Prašome patikrinti duomenis!")
                                     .setConfirmClickListener(sweetAlertDialog -> {
                                         Intent intent = new Intent(ResetPasswordActivity.this, MainActivity.class);
                                         startActivity(intent);

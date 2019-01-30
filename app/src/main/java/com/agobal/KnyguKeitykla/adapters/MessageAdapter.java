@@ -83,7 +83,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 viewHolder.displayName.setText(name);
 
                 Picasso.get().load(image)
-                        .placeholder(R.drawable.unknown_profile_pic).into(viewHolder.profileImage);
+                        .placeholder(R.drawable.unknown_profile_pic)
+                        .into(viewHolder.profileImage);
             }
 
             @Override
@@ -103,6 +104,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
             String imageURL = msg.getMessage();
             viewHolder.messageText.setVisibility(View.INVISIBLE);
+            viewHolder.messageImage.setVisibility(View.VISIBLE);
 
             Log.d("c.getmessageIMAGE ", imageURL + " ");
             Picasso.get().load(imageURL)
