@@ -1,15 +1,14 @@
-package com.agobal.KnyguKeitykla;
+package com.agobal.KnyguKeitykla.API;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,18 +22,11 @@ import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.agobal.KnyguKeitykla.API.SearchBookAPI;
-import com.agobal.KnyguKeitykla.BookDetails.BookDetailActivityAPI;
-import com.agobal.KnyguKeitykla.Books.AddNewBook;
-import com.agobal.KnyguKeitykla.Entities.BookAPI;
+import com.agobal.KnyguKeitykla.MainActivity;
 import com.agobal.KnyguKeitykla.R;
-import com.agobal.KnyguKeitykla.helper.BookClient;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -44,14 +36,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.mlsdev.rximagepicker.RxImagePicker;
 import com.mlsdev.rximagepicker.Sources;
 import com.squareup.picasso.Picasso;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -59,57 +46,47 @@ import java.util.List;
 import java.util.Objects;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import cz.msebera.android.httpclient.Header;
 import io.reactivex.Observable;
-
-import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
 public class BookEditAPI extends AppCompatActivity {
 
     private StorageReference mImageStorage;
     private DatabaseReference mBookDatabase;
-    DatabaseReference mUserDatabase;
-    DatabaseReference mUserBookDatabase;
+    private DatabaseReference mUserBookDatabase;
 
-    FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-    String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
+    private final FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+    private final String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
 
-    EditText etBookName;
-    EditText etBookAuthor;
-    EditText etBookAbout;
-    EditText etPublisher;
-    Spinner spinCategory;
-    RadioButton rbBookNew;
-    RadioButton rbBookGood;
-    RadioButton rbBookFair;
-    Button btnYear;
-    Button btnSave;
-    RadioGroup radioGroup;
-    Switch switchButton;
+    private EditText etBookName;
+    private EditText etBookAuthor;
+    private EditText etBookAbout;
+    private EditText etPublisher;
+    private Spinner spinCategory;
+    private Button btnYear;
+    private RadioGroup radioGroup;
 
-    ImageView ivBookCover;
-    TextView title;
+    private ImageView ivBookCover;
 
-    int BookYear;
-    String key;
-    String download_url;
-    String ImageURL;
-    Boolean isPhotoSelected= false;
+    private int BookYear;
+    private String key;
+    private String download_url;
+    private String ImageURL;
+    private Boolean isPhotoSelected= false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_edit_api);
 
-        getSupportActionBar().setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.action_bar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        title = findViewById(getResources().getIdentifier("action_bar_title", "id", getPackageName()));
+        TextView title = findViewById(getResources().getIdentifier("action_bar_title", "id", getPackageName()));
         title.setText("Knygos redagavimas");
 
         mImageStorage = FirebaseStorage.getInstance().getReference();
-        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
+        //DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
         mBookDatabase = FirebaseDatabase.getInstance().getReference().child("Books");
         mUserBookDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks");
 
@@ -119,12 +96,10 @@ public class BookEditAPI extends AppCompatActivity {
         etPublisher = findViewById(R.id.etPublisher);
         spinCategory = findViewById(R.id.spinCategory);
         radioGroup = findViewById(R.id.rbGroup);
-        rbBookNew = findViewById(R.id.rbBookNew);
-        rbBookGood = findViewById(R.id.rbBookGood);
-        rbBookFair = findViewById(R.id.rbBookFair);
-        switchButton = findViewById(R.id.switchButton);
-        switchButton.setChecked(true);
-        btnSave = findViewById(R.id.btnSave);
+        //RadioButton rbBookNew = findViewById(R.id.rbBookNew);
+        //RadioButton rbBookGood = findViewById(R.id.rbBookGood);
+        //RadioButton rbBookFair = findViewById(R.id.rbBookFair);
+        Button btnSave = findViewById(R.id.btnSave);
         btnYear = findViewById(R.id.btnYear);
 
         ivBookCover = findViewById(R.id.ivBookCover);
@@ -134,7 +109,6 @@ public class BookEditAPI extends AppCompatActivity {
 
         fabCamera.setOnClickListener(view -> pickImageFromSource(Sources.CAMERA));
         fabGallery.setOnClickListener(view -> pickImageFromSource(Sources.GALLERY));
-
 
         loadBookfromAPI();
         btnYear.setOnClickListener(view -> selectYear());
@@ -167,9 +141,6 @@ public class BookEditAPI extends AppCompatActivity {
             btnYear.setText("PASIRINKTI METUS");
 
         }
-
-        //String BookPageCount = getIntent().getStringExtra("bookPageCount");
-
         etBookName.setText(BookName);
         etBookAuthor.setText(BookAuthor);
         etPublisher.setText(BookPublisher);
@@ -178,6 +149,7 @@ public class BookEditAPI extends AppCompatActivity {
 
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @SuppressLint("CheckResult")
     private void pickImageFromSource(Sources source) {
         RxImagePicker.with(getFragmentManager()).requestImage(source).flatMap(uri -> {
@@ -191,10 +163,10 @@ public class BookEditAPI extends AppCompatActivity {
             bmp.compress(Bitmap.CompressFormat.JPEG, 50, baos);
             byte[] data = baos.toByteArray();
 
-            filepath.putBytes(data)
-                    .addOnSuccessListener(taskSnapshot -> filepath.getDownloadUrl()
-                            .addOnSuccessListener(uri1 ->
+            filepath.putBytes(data).addOnSuccessListener(taskSnapshot -> filepath.getDownloadUrl().addOnSuccessListener(uri1 ->
                                     download_url = uri1.toString()));
+            Log.d("pickImgFromSrcDwnldUrl", download_url + " ");
+
 
             return Observable.just(uri);
 
@@ -202,6 +174,7 @@ public class BookEditAPI extends AppCompatActivity {
                 .subscribe(this::onImagePicked, throwable -> Toast.makeText(BookEditAPI.this, String.format("Error: %s", throwable), Toast.LENGTH_LONG).show());
 
         isPhotoSelected=true;
+
     }
 
     private void onImagePicked(Object result)
@@ -210,18 +183,24 @@ public class BookEditAPI extends AppCompatActivity {
         if (result instanceof Bitmap)
         {
             ivBookCover.setImageBitmap((Bitmap) result);
+            Log.d("instance", "taip");
         }
         else
         {
-            Glide.with(this)
-                    .load(result) // works for File or Uri
-                    .transition(withCrossFade())
-                    .apply(new RequestOptions().centerCrop())
+            Log.d("instace1", "taip");
+            Picasso.get().load(result.toString())
+                    .rotate(90)
+                    .fit()
+                    .centerCrop()
+                    .error(R.drawable.ic_nocover)
                     .into(ivBookCover);
+
+            download_url = result.toString();
+            Log.d("onImagePicker_dwnld_url", download_url + " ");
         }
     }
 
-    void saveBook()
+    private void saveBook()
     {
 
         String BookName = etBookName.getText().toString().trim();
@@ -230,7 +209,8 @@ public class BookEditAPI extends AppCompatActivity {
         String BookCategory = spinCategory.getSelectedItem().toString();
         String BookPublisher = etPublisher.getText().toString().trim();
 
-
+        Log.d("DOWNLOAD_URL", download_url + " ");
+        Log.d("IMAGE_URL", ImageURL + " ");
 
         if(BookYear==0)
         {
@@ -240,12 +220,15 @@ public class BookEditAPI extends AppCompatActivity {
         }
 
         if(!isPhotoSelected) {
-//TODO: foto sukimasis
             download_url = ImageURL;
             key = mBookDatabase.push().getKey();
-            //Toast.makeText(getApplicationContext(), "Pasirinkite nuotrauką!", Toast.LENGTH_LONG).show();
-            //return;
         }
+
+        else
+        {
+            key = mBookDatabase.push().getKey();
+        }
+
 
 
         if(TextUtils.isEmpty(BookName)) {
@@ -278,6 +261,10 @@ public class BookEditAPI extends AppCompatActivity {
         mBookDatabase.child(key).child("bookCategory").setValue(BookCategory);
         mBookDatabase.child(key).child("bookCondition").setValue(bookCondition);
         mBookDatabase.child(key).child("bookYear").setValue(BookYear);
+
+        if(download_url == null)
+            download_url = ImageURL;
+
         mBookDatabase.child(key).child("image").setValue(download_url);
 
         mUserBookDatabase.child(current_uid).child(key).child("bookName").setValue(BookName);
@@ -292,15 +279,11 @@ public class BookEditAPI extends AppCompatActivity {
         mUserBookDatabase.child(current_uid).child(key).child("userID").setValue(current_uid);
         mUserBookDatabase.child(current_uid).child(key).child("bookKey").setValue(key);
 
-        if (switchButton.isChecked()) {
-            mUserBookDatabase.child(current_uid).child(key).child("tradable").setValue("true");
-        }
-        else {
-            mUserBookDatabase.child(current_uid).child(key).child("tradable").setValue("false");
-        }
+        Log.d("bookKeyAPI", " "+ key);
 
-        new SweetAlertDialog(this)
-                .setTitleText("Knygą pridėta! ")
+        new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                .setTitleText("Pavyko!")
+                .setContentText("Knygą pridėta!")
                 .setConfirmClickListener(sweetAlertDialog -> {
                     Intent intent = new Intent(BookEditAPI.this, MainActivity.class);
                     startActivity(intent);
@@ -309,7 +292,6 @@ public class BookEditAPI extends AppCompatActivity {
 
     }
 
-
     private void selectCategory() {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -317,9 +299,6 @@ public class BookEditAPI extends AppCompatActivity {
         mDatabaseCategory.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // Is better to use a List, because you don't know the size
-                // of the iterator returned by dataSnapshot.getChildren() to
-                // initialize the array
                 final List<String> categories = new ArrayList<>();
 
                 for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
@@ -337,7 +316,6 @@ public class BookEditAPI extends AppCompatActivity {
 
             }
         });
-
     }
 
     private void selectYear()
@@ -364,13 +342,11 @@ public class BookEditAPI extends AppCompatActivity {
 
         });
 
-
         d.setNegativeButton("Cancel", (dialogInterface, i) -> {
         });
 
         AlertDialog alertDialog = d.create();
         alertDialog.show();
-
 
     }
 
@@ -380,9 +356,9 @@ public class BookEditAPI extends AppCompatActivity {
         if (backstack > 0) {
             getSupportFragmentManager().popBackStack();
         }
-        else{
+        else
+        {
             super.onBackPressed();
-            //System.exit(0);
         }
     }
 

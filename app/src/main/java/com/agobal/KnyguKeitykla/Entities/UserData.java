@@ -1,7 +1,11 @@
 package com.agobal.KnyguKeitykla.Entities;
 
 public class UserData {
-    public String userName, email, firstName, lastName, cityName;
+    private String userName;
+    public String email;
+    public String firstName;
+    public String lastName;
+    public String cityName;
 
     public String getUserName() {
         return userName;
@@ -47,17 +51,5 @@ public class UserData {
     {
 
     }
-
-    /*
-    public UserData(String userName, String FirstName, String LastName, String email, String CityName)
-    {
-        this.userName=userName;
-        this.firstName=FirstName;
-        this.lastName=LastName;
-        this.email=email;
-        this.cityName=CityName;
-    }
-    */
-
 }
 

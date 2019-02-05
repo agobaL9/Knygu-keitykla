@@ -16,7 +16,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.agobal.KnyguKeitykla.Entities.MyBook;
-import com.agobal.KnyguKeitykla.OnGetDataListener;
 import com.agobal.KnyguKeitykla.R;
 import com.agobal.KnyguKeitykla.BookDetails.MyBookDetail;
 import com.agobal.KnyguKeitykla.API.SearchBookAPI;
@@ -39,23 +38,22 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  */
 public class LibraryFragment extends Fragment {
 
-    public static String MY_BOOK_DETAIL_KEY = "my_book";
+    public static final String MY_BOOK_DETAIL_KEY = "my_book";
 
-    String userID;
-    TextView tvEmpty;
-    Boolean isUserHaveBooks = false;
+    private String userID;
+    private TextView tvEmpty;
+    private Boolean isUserHaveBooks = false;
 
-    DatabaseReference mUserDatabase;
-    DatabaseReference mUserBooksDatabase;
-    DatabaseReference mUserBooksUserDatabase;
+    private DatabaseReference mUserBooksDatabase;
+    private DatabaseReference mUserBooksUserDatabase;
 
-    ListView listView;
-    MyBookAdapter myBookAdapter;
-    ArrayList<MyBook> MyBookList = new ArrayList<>();
+    private ListView listView;
+    private MyBookAdapter myBookAdapter;
+    private ArrayList<MyBook> MyBookList = new ArrayList<>();
 
-    FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-    String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
-    String BookKeyToDetails;
+    private final FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+    private final String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
+    private String BookKeyToDetails;
 
     public LibraryFragment() {
         // Required empty public constructor
@@ -76,7 +74,7 @@ public class LibraryFragment extends Fragment {
         pDialog.setCancelable(false);
         pDialog.show();
 
-        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
+        //DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
         mUserBooksDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks");
 
         listView = v.findViewById(R.id.listMyBooks);
@@ -90,8 +88,6 @@ public class LibraryFragment extends Fragment {
 
         IsUserHaveBooks();
 
-
-        //Log.d("tempID"," "+tempID);
         pDialog.dismissWithAnimation();
 
         FloatingActionButton fab = v.findViewById(R.id.fab);
@@ -115,16 +111,15 @@ public class LibraryFragment extends Fragment {
 
                 if(dataSnapshot.hasChildren()) {
                     for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                        //Log.d("All userID",""+ childDataSnapshot.getKey()); //got all users ID
                         userID = childDataSnapshot.getKey();
 
-                        if (userID.equals(current_uid)) { // ar yra dabartinis vartotojas userbooks šakoje
+                        if (Objects.requireNonNull(userID).equals(current_uid)) { // ar yra dabartinis vartotojas userbooks šakoje
                             Log.d("ar yra šakoje?", "taip");
                             isUserHaveBooks = true;
                         }
                     }
 
-                    if(isUserHaveBooks) //laikinai
+                    if(isUserHaveBooks)
                     {
                         fetchMyBooks();
                         tvEmpty.setVisibility(View.GONE);
@@ -136,9 +131,7 @@ public class LibraryFragment extends Fragment {
                 }
                 else
                     tvEmpty.setVisibility(View.VISIBLE);
-
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.d("onCancelled"," Suveikė canceled");
@@ -146,8 +139,7 @@ public class LibraryFragment extends Fragment {
         }) ;
     }
 
-
-    void setupBookSelectedListener() {
+    private void setupBookSelectedListener() {
         listView.setOnItemClickListener((parent, view, position, id) -> {
             // Launch the detail view passing book as an extra
             Intent intent = new Intent(getActivity(), MyBookDetail.class);
@@ -173,7 +165,6 @@ public class LibraryFragment extends Fragment {
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        //String BookName = dataSnapshot.child("bookName").getValue(String.class);
                         for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
                             Log.d("get key", "" + childDataSnapshot.getKey());//Gaunu visus knygų ID
 
@@ -213,23 +204,5 @@ public class LibraryFragment extends Fragment {
             }
         });
 
-
     }
-
-    public void readData(DatabaseReference mUserBooksUserDatabase, final OnGetDataListener listener) {
-        listener.onStart();
-        mUserBooksUserDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                listener.onSuccess(dataSnapshot);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                listener.onFailure();
-
-            }
-        });
-    }
-
 }

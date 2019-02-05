@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.agobal.KnyguKeitykla.Entities.MyBook;
@@ -23,8 +22,8 @@ import java.util.List;
 
 public class MyBookAdapter extends ArrayAdapter<MyBook> {
 
-    private Context mContext;
-    private List<MyBook> myBookList;
+    private final Context mContext;
+    private final List<MyBook> myBookList;
 
     public MyBookAdapter(@NonNull Context context, @SuppressLint("SupportAnnotationUsage") @LayoutRes ArrayList<MyBook> list) {
 

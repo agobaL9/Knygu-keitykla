@@ -22,16 +22,15 @@ public class BookAdapterAPI extends ArrayAdapter<BookAPI> {
     // View lookup cache
     private static class ViewHolder {
         ImageView ivCover;
-        public TextView tvTitle;
-        public TextView tvAuthor;
+        TextView tvTitle;
+        TextView tvAuthor;
     }
 
     public BookAdapterAPI(Context context, ArrayList<BookAPI> aBookAPIS) {
         super(context, 0, aBookAPIS);
     }
 
-    // Translates a particular `BookAPI` given a position
-    // into a relevant row within an AdapterView
+
     @NonNull
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
@@ -51,15 +50,11 @@ public class BookAdapterAPI extends ArrayAdapter<BookAPI> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         // Populate the data into the template view using the data object
-        viewHolder.tvTitle.setText(bookAPI.getTitle());
+        viewHolder.tvTitle.setText(Objects.requireNonNull(bookAPI).getTitle());
         viewHolder.tvAuthor.setText(bookAPI.getAuthor());
         Picasso.get().load(Uri.parse(bookAPI.getCoverUrl())).error(R.drawable.ic_nocover).into(viewHolder.ivCover);
         // Return the completed view to render on screen
         return convertView;
     }
 
-    public void add(String bookName) {
-
-
-    }
 }

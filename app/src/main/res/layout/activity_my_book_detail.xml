@@ -1,17 +1,11 @@
-
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<ScrollView android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/colorPrimary"
     android:orientation="vertical"
     tools:context=".API.SearchBookAPI">
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
         <LinearLayout
             android:gravity="center_horizontal"
@@ -46,7 +40,8 @@
                         android:id="@+id/ivBookCover"
                         android:layout_width="250dp"
                         android:layout_height="250dp"
-                        android:layout_gravity="center"/>
+                        android:layout_gravity="center"
+                        android:contentDescription="TODO" />
 
                 </LinearLayout>
 
@@ -105,7 +100,7 @@
                         <View
                             android:background="@android:color/darker_gray"
                             android:layout_width="330dp"
-                            android:layout_height="2px"
+                            android:layout_height="2dp"
                             android:layout_marginTop="8dp" />
 
                         <TextView
@@ -181,4 +176,3 @@
 
         </LinearLayout>
     </ScrollView>
-</LinearLayout>

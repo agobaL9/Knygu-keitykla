@@ -9,7 +9,7 @@ import java.net.URLEncoder;
 public class BookClient {
 
     private static final String API_BASE_URL = "http://openlibrary.org/";
-    private AsyncHttpClient client;
+    private final AsyncHttpClient client;
 
     public BookClient() {
         this.client = new AsyncHttpClient();

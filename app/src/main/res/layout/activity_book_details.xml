@@ -1,4 +1,5 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,9 +8,6 @@
     android:orientation="vertical"
     tools:context=".API.SearchBookAPI">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -44,7 +42,8 @@
                             android:id="@+id/ivBookCover"
                             android:layout_width="280dp"
                             android:layout_height="280dp"
-                            android:layout_gravity="center" />
+                            android:layout_gravity="center"
+                            android:contentDescription="TODO" />
 
                     </LinearLayout>
 
@@ -102,7 +101,7 @@
 
                         <View
                             android:layout_width="330dp"
-                            android:layout_height="2px"
+                            android:layout_height="2dp"
                             android:layout_marginTop="8dp"
                             android:background="@android:color/darker_gray" />
 
@@ -171,7 +170,8 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp">
+                    android:layout_marginTop="30dp"
+                    tools:ignore="UselessParent">
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/profilePic"
@@ -179,7 +179,8 @@
                         android:layout_height="150dp"
                         android:layout_centerHorizontal="true"
                         android:elevation="1dp"
-                        android:src="@drawable/unknown_profile_pic" />
+                        android:src="@drawable/unknown_profile_pic"
+                        tools:targetApi="lollipop" />
 
 
                     <LinearLayout
@@ -291,4 +292,3 @@
 
         </LinearLayout>
     </ScrollView>
-</LinearLayout>

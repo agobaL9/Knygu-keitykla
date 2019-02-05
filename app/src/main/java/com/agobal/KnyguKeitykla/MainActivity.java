@@ -9,36 +9,49 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.agobal.KnyguKeitykla.AccountActivity.LoginActivity;
+import com.agobal.KnyguKeitykla.Fragments.BookFragment;
 import com.agobal.KnyguKeitykla.Fragments.LibraryFragment;
 import com.agobal.KnyguKeitykla.Fragments.MessagesFragment;
 import com.agobal.KnyguKeitykla.Fragments.ProfileFragment;
-import com.agobal.KnyguKeitykla.Fragments.BookFragment;
-import com.agobal.KnyguKeitykla.AccountActivity.LoginActivity;
 import com.agobal.KnyguKeitykla.helper.BottomNavigationBehavior;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
+import com.google.firebase.perf.FirebasePerformance;
+import com.google.firebase.perf.metrics.Trace;
 
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ActionBar toolbar;
+    private FirebaseAuth mAuth;
+    private DatabaseReference mUserRef;
 
-    FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-    String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
-
-    TextView title;
+    private TextView title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        Trace myTrace = FirebasePerformance.getInstance().newTrace("test_trace");
+        myTrace.start();
+
+        FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
+        mAuth = FirebaseAuth.getInstance();
+        mUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
+
+
+        Objects.requireNonNull(getSupportActionBar()).setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.action_bar_main);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -54,29 +67,34 @@ public class MainActivity extends AppCompatActivity {
         // load the store fragment by default
         title.setText("Knygos");
         loadFragment(new BookFragment());
-
+        myTrace.stop();
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
-    }
+    public void onStart()
+    {
+        super.onStart();
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id){
-            case R.id.item1:
-                logoutUser();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        //Log.d("ar online?", currentUser + "");
+
+        if(currentUser == null)
+        {
+            logoutUser();
+        }
+        else
+        {
+            mUserRef.child("online").setValue("true");
         }
     }
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mUserRef.child("online").setValue(ServerValue.TIMESTAMP);
+    }
+
+    private final BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
@@ -94,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                     loadFragment(fragment);
                     return true;
                 case R.id.navigation_library:
-                    title.setText("Biblioteka");
+                    title.setText("Mano knygos");
                     fragment = new LibraryFragment();
                     loadFragment(fragment);
                     return true;
@@ -119,8 +137,42 @@ public class MainActivity extends AppCompatActivity {
 
     private void logoutUser() {
 
+        mUserRef.child("online").setValue(ServerValue.TIMESTAMP);
         FirebaseAuth.getInstance().signOut();
-        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        //Log.d("ar online?", currentUser + "");
+
+        if(currentUser == null)
+        {
+            Log.d("Atsijungimas:", " Atsijunge");
+
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
+            //sendToStart();
+
+        }
+        else
+            Log.d("Atsijungimas:", " Neatsijunge");
+
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.item1:
+                logoutUser();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }

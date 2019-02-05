@@ -31,26 +31,23 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class ProfileEdit extends AppCompatActivity {
 
-    Spinner spinnerCity;
-    ArrayList<Category> citiesList;
+    private Spinner spinnerCity;
 
-    EditText E_ProfileInputName;
-    EditText E_ProfileInputLastName;
-    EditText E_ProfileInputEmail;
-    EditText E_ProfileInputUsername;
-    EditText E_ProfileInputAbout;
+    private EditText E_ProfileInputName;
+    private EditText E_ProfileInputLastName;
+    private EditText E_ProfileInputEmail;
+    private EditText E_ProfileInputUsername;
+    private EditText E_ProfileInputAbout;
 
-    DatabaseReference mUserCity;
-    FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-
-    String cityName;
+    private DatabaseReference mUserCity;
+    private final FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_edit);
 
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.action_bar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -66,14 +63,16 @@ public class ProfileEdit extends AppCompatActivity {
         spinnerCity = findViewById(R.id.ProfileSpinCity);
         Button BtnProfileSave= findViewById(R.id.btnSave);
 
-        citiesList = new ArrayList<>();
+        //noinspection unused
+        ArrayList<Category> citiesList = new ArrayList<>();
 
         String firstName= getIntent().getStringExtra("firstName");
         String lastName= getIntent().getStringExtra("lastName");
         String email= getIntent().getStringExtra("email");
         String userName= getIntent().getStringExtra("userName");
         String about = getIntent().getStringExtra("about");
-        cityName= getIntent().getStringExtra("cityName");
+        //noinspection unused
+        String cityName = getIntent().getStringExtra("cityName");
 
         getUserData(firstName, lastName, email, userName, about);
 
@@ -177,9 +176,11 @@ public class ProfileEdit extends AppCompatActivity {
         hopperUpdates.put(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid() + "/about", about);
         mDatabaseRef.updateChildren(hopperUpdates);
 
-        new SweetAlertDialog(this)
-                .setTitleText("Duomenys atnaujinti! ")
+        new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                .setTitleText("Pavyko!")
+                .setContentText("Duomenys atnaujinti!")
                 .show();
+
     }
 
     public void onBackPressed() {
@@ -204,18 +205,4 @@ public class ProfileEdit extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-/*
-    public void setTitle(String title){
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        TextView textView = new TextView(this);
-        textView.setText(title);
-        textView.setTextSize(20);
-        textView.setTypeface(null, Typeface.NORMAL);
-        textView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-        textView.setGravity(Gravity.CENTER);
-        textView.setTextColor(getResources().getColor(R.color.Black));
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setCustomView(textView);
-    }*/
 }

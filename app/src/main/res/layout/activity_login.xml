@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="18dp"
-    android:paddingRight="18dp"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:background="@color/colorPrimary">
 
-    <ScrollView
+    <ScrollView xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:paddingLeft="18dp"
+        android:paddingRight="18dp"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:background="@color/colorPrimary">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -24,106 +23,147 @@
                 android:layout_width="350dp"
                 android:layout_height="200dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="50dp"/>
+                android:layout_marginTop="50dp"
+                android:contentDescription="TODO" />
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColorHint="#05070a">
 
-            <EditText
-                android:id="@+id/email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"
-                android:ems="10"
-                android:background="@android:color/transparent"
-                android:drawablePadding="12dp"
-                android:padding="8dp"
-                android:hint="El. pašto adresas"
-                android:textColorHint="#05070a"
-                android:maxLines="1"
-                android:drawableStart="@drawable/ic_person_black_24dp"
-                android:layout_marginTop="70dp" />
+                <EditText
+                    android:id="@+id/email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="70dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@android:color/transparent"
+                    android:drawableStart="@drawable/ic_person_black_24dp"
+                    android:drawablePadding="12dp"
+                    android:ems="10"
+                    android:hint="El. pašto adresas"
+                    android:inputType="textEmailAddress"
+                    android:maxLines="1"
+                    android:padding="8dp"
+                    android:textColorHint="#05070a"
+                    tools:ignore="Autofill" />
 
             </android.support.design.widget.TextInputLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
                 android:background="#05070a" />
+
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColorHint="#05070a">
 
-            <EditText
-                android:id="@+id/password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:ems="10"
-                android:drawablePadding="12dp"
-                android:padding="8dp"
-                android:hint="Slaptažodis"
-                android:textColorHint="#05070a"
-                android:maxLines="1"
-                android:background="@android:color/transparent"
-                android:layout_marginTop="4dp"
-                android:drawableStart="@drawable/ic_lock_white_24dp"/>
+                <EditText
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@android:color/transparent"
+                    android:drawableStart="@drawable/ic_lock_white_24dp"
+                    android:drawablePadding="12dp"
+                    android:ems="10"
+                    android:hint="Slaptažodis"
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:padding="8dp"
+                    android:textColorHint="#05070a"
+                    tools:ignore="Autofill" />
 
             </android.support.design.widget.TextInputLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
                 android:background="#05070a" />
 
             <Button
                 android:id="@+id/btnLogin"
+                style="@style/Base.TextAppearance.AppCompat.Body1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/background_login"
-                android:text="Prisijungti"
-                android:textColor="@color/cyan"
-                android:textAllCaps="false"
-                android:padding="16dp"
-                android:clickable="true"
-                style="@style/Base.TextAppearance.AppCompat.Body1"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="24dp"
-                android:textSize="18sp"
-                android:focusable="true" />
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/background_login"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="16dp"
+                android:text="Prisijungti"
+                android:textAllCaps="false"
+                android:textColor="@color/cyan"
+                android:textSize="18sp" />
 
             <Button
                 android:id="@+id/btnLinkToRegisterScreen"
+                style="@style/Base.TextAppearance.AppCompat.Body1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/background_signup"
-                android:text="Registruotis"
-                style="@style/Base.TextAppearance.AppCompat.Body1"
-                android:textColor="#05070a"
-                android:textAllCaps="false"
-                android:textSize="18sp"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/background_signup"
                 android:clickable="true"
-                android:padding="16dp"/>
+                android:padding="16dp"
+                android:text="Registruotis"
+                android:textAllCaps="false"
+                android:textColor="#05070a"
+                android:textSize="18sp"
+                android:focusable="true" />
 
             <TextView
                 android:id="@+id/btn_reset_password"
+                style="@style/TextAppearance.AppCompat.Body2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Pamiršote slaptažodį?"
-                style="@style/TextAppearance.AppCompat.Body2"
-                android:textColor="#05070a"
-                android:padding="16dp"
-                android:clickable="true"
                 android:layout_marginBottom="16dp"
-                android:gravity="center_horizontal"
-                android:focusable="true" />
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:padding="16dp"
+                android:text="Pamiršote slaptažodį?"
+                android:textColor="#05070a" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center">
+
+                <com.shaishavgandhi.loginbuttons.FacebookButton
+                    android:id="@+id/btn_facebook"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:layout_marginEnd="50dp"
+                    app:iconSize="30dp"
+                    app:roundedCorner="true"
+                    app:roundedCornerRadius="75dp"
+                    app:transparentBackground="false" />
+
+                <com.shaishavgandhi.loginbuttons.GoogleButton
+                    android:id="@+id/btn_google"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    app:iconSize="30dp"
+                    app:roundedCorner="true"
+                    app:roundedCornerRadius="75dp"
+                    app:transparentBackground="false" />
+
+            </LinearLayout>
 
 
         </LinearLayout>
     </ScrollView>
-
-</LinearLayout>

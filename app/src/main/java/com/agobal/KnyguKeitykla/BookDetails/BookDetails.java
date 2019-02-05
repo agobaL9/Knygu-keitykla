@@ -1,18 +1,19 @@
 package com.agobal.KnyguKeitykla.BookDetails;
 
 import android.annotation.SuppressLint;
-import android.net.Uri;
-import android.provider.ContactsContract;
+import android.content.Intent;
+import android.graphics.Color;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.agobal.KnyguKeitykla.Chat.Chat_activity;
 import com.agobal.KnyguKeitykla.Entities.Books;
 import com.agobal.KnyguKeitykla.Entities.UserData;
 import com.agobal.KnyguKeitykla.Fragments.BookFragment;
@@ -24,8 +25,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.scalified.fab.ActionButton;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
@@ -33,10 +32,23 @@ import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class BookDetails extends AppCompatActivity {
 
+    private TextView title;
+    private ActionButton fab_star;
+    private String userName;
+    private String email;
+    private String firstName;
+    private String lastName;
+    private String about;
+    private String BookKey;
+    private String UserID;
+    private Boolean isBookSaved;
+    private final FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+    private final String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
     private ImageView ivBookCover;
     private TextView tvTitle;
     private TextView tvAuthor;
@@ -45,44 +57,20 @@ public class BookDetails extends AppCompatActivity {
     private TextView tvBookCondition;
     private TextView tvBookCategory;
     private TextView tvBookAbout;
-    TextView title;
-
-    ActionButton fab_message;
-    ActionButton fab_star;
-
-    private StorageReference mImageStorage;
-    private DatabaseReference mUserDatabase;
-    private DatabaseReference mUserFavBooks;
     private DatabaseReference mUserFavBookKey;
-    private DatabaseReference mBookDatabase;
-    private DatabaseReference mUserBookDatabase;
+
     private DatabaseReference mUserFavBookButton;
     private DatabaseReference mDatabase;
     private DatabaseReference mUserFavBookDelete;
+    private DatabaseReference mUserFavBooks;
 
-    String userName;
-    String email;
-    String firstName;
-    String lastName;
-    String cityName;
-    String about;
-    String BookKey;
-    String UserID;
-    String imageURL;
-
-    //String FavBookKey;
-
-    Boolean isBookSaved;
-
-    FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-    String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_details);
 
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.action_bar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -90,7 +78,7 @@ public class BookDetails extends AppCompatActivity {
 
         title = findViewById(getResources().getIdentifier("action_bar_title", "id", getPackageName()));
 
-        fab_message = findViewById(R.id.fb_message);
+        ActionButton fab_message = findViewById(R.id.fb_message);
         fab_star = findViewById(R.id.fb_star);
         fab_message.setImageResource(R.drawable.ic_message_white_24dp);
         fab_star.setImageResource(R.drawable.ic_star_white_24dp);
@@ -100,14 +88,9 @@ public class BookDetails extends AppCompatActivity {
         fab_star.setButtonColor(getResources().getColor(R.color.colorAccent));
         fab_star.setButtonColorPressed(getResources().getColor(R.color.fab_material_amber_500));
 
-        mImageStorage = FirebaseStorage.getInstance().getReference();
-        FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-        String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
-        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
         mUserFavBookDelete = FirebaseDatabase.getInstance().getReference();
 
-
-         // Fetch views
+        // Fetch views
         ivBookCover = findViewById(R.id.ivBookCover);
         tvTitle = findViewById(R.id.tvTitle);
         tvAuthor = findViewById(R.id.tvAuthor);
@@ -119,7 +102,6 @@ public class BookDetails extends AppCompatActivity {
 
         // Use the book to populate the data into our views
         Books Book = (Books) getIntent().getSerializableExtra(BookFragment.BOOK_DETAIL_KEY);
-        //BookKey = getIntent().getStringExtra("BOOK_KEY");
 
         Log.d("BookKey", " "+ BookKey);
         Log.d("UserKey", " "+ UserID);
@@ -130,8 +112,10 @@ public class BookDetails extends AppCompatActivity {
         loadFabButton();
 
         fab_message.setOnClickListener(view -> {
-            //Intent intent = new Intent(MyBookDetail.this, test.class);
-            //startActivity(intent);
+            Intent intent = new Intent(BookDetails.this, Chat_activity.class);
+            intent.putExtra("user_id", UserID);
+            intent.putExtra("user_name", userName);
+            startActivity(intent);
         });
 
         fab_star.setOnClickListener(view -> {
@@ -217,9 +201,13 @@ public class BookDetails extends AppCompatActivity {
 
     private void saveUserFavBook(Books Book) {
 
+        Log.d("currentID", " "+ current_uid);
+        Log.d("BookKey", " "+ BookKey);
+
         mUserFavBookKey = mDatabase.child("UserFavBooks").child(current_uid);
-        //FavBookKey = mUserFavBookKey.push().getKey(); // TODO: reikia kad butu knygos id o ne random
         mUserFavBooks = mDatabase.child("UserFavBooks").child(current_uid).child(BookKey);
+
+
 
         mUserFavBooks.child("bookName").setValue(Book.getBookName());
         mUserFavBooks.child("bookAuthor").setValue(Book.getBookAuthor());
@@ -236,10 +224,16 @@ public class BookDetails extends AppCompatActivity {
 
     private void loadBook(Books Book) {
         //change activity title
+        SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.setTitleText("Prašome palaukti...");
+        pDialog.setCancelable(false);
+        pDialog.show();
+
         title.setText(Book.getBookName());
 
-        imageURL= Book.getBookImage();
-        Log.d("bookDetailImageURL", " "+imageURL);
+        String imageURL = Book.getBookImage();
+        Log.d("bookDetailImageURL", " "+ imageURL);
         if(imageURL.startsWith("https://firebasestorage"))
         {
             Picasso.get().load(Book.getBookImage())
@@ -247,7 +241,17 @@ public class BookDetails extends AppCompatActivity {
                     .resize(400,600)
                     .centerCrop()
                     .error(R.drawable.ic_nocover)
-                    .into(ivBookCover);
+                    .into(ivBookCover, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            pDialog.dismissWithAnimation();
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+
+                        }
+                    });
         }
         else
         {
@@ -256,12 +260,21 @@ public class BookDetails extends AppCompatActivity {
                     .resize(400,600)
                     .error(R.drawable.ic_nocover)
                     .centerCrop()
-                    .into(ivBookCover);
+                    .into(ivBookCover, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            pDialog.dismissWithAnimation();
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+
+                        }
+                    });
             Log.d(" else if", "yes");
         }
 
         // Populate data
-        //Picasso.get().load(Uri.parse(Book.getBookImage())).error(R.drawable.ic_nocover).rotate(90).resize(400,600).centerCrop().into(ivBookCover);
         tvTitle.setText(Book.getBookName());
         tvAuthor.setText(Book.getBookAuthor());
         tvPublisher.setText("Leidykla: "+ Book.getBookPublisher());
@@ -300,7 +313,7 @@ public class BookDetails extends AppCompatActivity {
                 lastName = dataSnapshot.child("lastName").getValue(String.class);
                 String cityName = dataSnapshot.child("cityName").getValue(String.class);
                 about = dataSnapshot.child("about").getValue(String.class);
-                String thumb_image = dataSnapshot.child("thumb_image").getValue(String.class);
+                //String thumb_image = dataSnapshot.child("thumb_image").getValue(String.class);
                 final String image = dataSnapshot.child("image").getValue(String.class);
 
                 Log.d("user info", userName +" " + email + " " +firstName+" "+ lastName+ " "+cityName);
@@ -308,24 +321,20 @@ public class BookDetails extends AppCompatActivity {
 
                 Picasso.get().load(image);
 
-                if(!image.equals("default")){
+                if (image != null && !image.equals("default")) {
                     Picasso.get().load(image).networkPolicy(NetworkPolicy.OFFLINE)
                             .placeholder(R.drawable.unknown_profile_pic).into(ProfilePic, new Callback() {
                         @Override
                         public void onSuccess() {
 
                         }
-
                         @Override
                         public void onError(Exception e) {
                             Picasso.get().load(image).placeholder(R.drawable.unknown_profile_pic).into(ProfilePic);
                         }
 
                     });
-
                 }
-
-
                 UserData userData = new UserData();
 
                 userData.setFirstName(firstName);
@@ -349,7 +358,7 @@ public class BookDetails extends AppCompatActivity {
 
             }
         }) ;
-        
+
     }
 
     public void onBackPressed() {
@@ -360,7 +369,6 @@ public class BookDetails extends AppCompatActivity {
         }
         else{
             super.onBackPressed();
-            //System.exit(0);
         }
     }
 
@@ -373,5 +381,4 @@ public class BookDetails extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 }

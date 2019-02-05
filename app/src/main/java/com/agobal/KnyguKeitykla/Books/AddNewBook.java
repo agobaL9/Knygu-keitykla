@@ -22,14 +22,11 @@ import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.agobal.KnyguKeitykla.MainActivity;
 import com.agobal.KnyguKeitykla.R;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -41,8 +38,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.mlsdev.rximagepicker.RxImagePicker;
 import com.mlsdev.rximagepicker.Sources;
-
-import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -57,32 +53,26 @@ public class AddNewBook extends AppCompatActivity {
 
     private StorageReference mImageStorage;
     private DatabaseReference mBookDatabase;
-    DatabaseReference mUserDatabase;
-    DatabaseReference mUserBookDatabase;
+    private DatabaseReference mUserBookDatabase;
 
-    FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-    String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
+    private final FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+    private final String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
 
-    EditText etBookName;
-    EditText etBookAuthor;
-    EditText etBookAbout;
-    EditText etPublisher;
-    Spinner spinCategory;
-    RadioButton rbBookNew;
-    RadioButton rbBookGood;
-    RadioButton rbBookFair;
-    Button btnYear;
-    Button btnSave;
-    RadioGroup radioGroup;
-    Switch switchButton;
+    private EditText etBookName;
+    private EditText etBookAuthor;
+    private EditText etBookAbout;
+    private EditText etPublisher;
+    private Spinner spinCategory;
+    private Button btnYear;
+    private RadioGroup radioGroup;
+    //Switch switchButton;
 
-    ImageView ivPickedImage;
-    TextView title;
+    private ImageView ivPickedImage;
 
-    int BookYear;
-    String key;
-    String download_url;
-    Boolean isPhotoSelected= false;
+    private int BookYear;
+    private String key;
+    private String download_url;
+    private Boolean isPhotoSelected= false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,15 +80,15 @@ public class AddNewBook extends AppCompatActivity {
 
         setContentView(R.layout.activity_add_new_book);
 
-        getSupportActionBar().setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.action_bar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        title = findViewById(getResources().getIdentifier("action_bar_title", "id", getPackageName()));
+        TextView title = findViewById(getResources().getIdentifier("action_bar_title", "id", getPackageName()));
         title.setText("Pridėti naują knygą");
 
         mImageStorage = FirebaseStorage.getInstance().getReference();
-        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
+        //DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
         mBookDatabase = FirebaseDatabase.getInstance().getReference().child("Books");
         mUserBookDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks");
 
@@ -108,15 +98,13 @@ public class AddNewBook extends AppCompatActivity {
         etPublisher = findViewById(R.id.etPublisher);
         spinCategory = findViewById(R.id.spinCategory);
         radioGroup = findViewById(R.id.rbGroup);
-        rbBookNew = findViewById(R.id.rbBookNew);
-        rbBookGood = findViewById(R.id.rbBookGood);
-        rbBookFair = findViewById(R.id.rbBookFair);
-        switchButton = findViewById(R.id.switchButton);
-        switchButton.setChecked(true);
-        btnSave = findViewById(R.id.btnSave);
+        //RadioButton rbBookNew = findViewById(R.id.rbBookNew);
+        //RadioButton rbBookGood = findViewById(R.id.rbBookGood);
+        //RadioButton rbBookFair = findViewById(R.id.rbBookFair);
+        Button btnSave = findViewById(R.id.btnSave);
         btnYear = findViewById(R.id.btnYear);
 
-        ivPickedImage = findViewById(R.id.ivPicedImage);
+        ivPickedImage = findViewById(R.id.ivPickedImage);
 
         FloatingActionButton fabCamera = findViewById(R.id.fab_pick_camera);
         FloatingActionButton fabGallery = findViewById(R.id.fab_pick_gallery);
@@ -132,6 +120,7 @@ public class AddNewBook extends AppCompatActivity {
     }
 
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @SuppressLint("CheckResult")
     private void pickImageFromSource(Sources source) {
         RxImagePicker.with(getFragmentManager()).requestImage(source).flatMap(uri -> {
@@ -145,9 +134,8 @@ public class AddNewBook extends AppCompatActivity {
                     bmp.compress(Bitmap.CompressFormat.JPEG, 50, baos);
                     byte[] data = baos.toByteArray();
 
-                    filepath.putBytes(data)
-                            .addOnSuccessListener(taskSnapshot -> filepath.getDownloadUrl()
-                            .addOnSuccessListener(uri1 ->
+                    filepath.putBytes(data).addOnSuccessListener(taskSnapshot ->
+                            filepath.getDownloadUrl().addOnSuccessListener(uri1 ->
                                     download_url = uri1.toString()));
 
                             return Observable.just(uri);
@@ -164,13 +152,17 @@ public class AddNewBook extends AppCompatActivity {
         if (result instanceof Bitmap)
         {
             ivPickedImage.setImageBitmap((Bitmap) result);
+            Log.d("instance", "taip");
         }
         else
         {
-            Glide.with(this)
-                    .load(result) // works for File or Uri
-                    .transition(withCrossFade())
-                    .apply(new RequestOptions().centerCrop())
+            Log.d("instace1", "taip");
+            Picasso.get().load(result.toString())
+                    .rotate(90)
+                    //.fit()
+                    .resize(ivPickedImage.getMeasuredWidth(),ivPickedImage.getMeasuredHeight())
+                    .centerCrop()
+                    .error(R.drawable.ic_nocover)
                     .into(ivPickedImage);
         }
     }
@@ -182,9 +174,6 @@ public class AddNewBook extends AppCompatActivity {
         mDatabaseCategory.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // Is better to use a List, because you don't know the size
-                // of the iterator returned by dataSnapshot.getChildren() to
-                // initialize the array
                 final List<String> categories = new ArrayList<>();
 
                 for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
@@ -202,11 +191,9 @@ public class AddNewBook extends AppCompatActivity {
 
             }
         });
-
     }
 
     private void saveBook() {
-
 
         String BookName = etBookName.getText().toString().trim();
         String BookAuthor = etBookAuthor.getText().toString().trim();
@@ -272,15 +259,9 @@ public class AddNewBook extends AppCompatActivity {
         mUserBookDatabase.child(current_uid).child(key).child("userID").setValue(current_uid);
         mUserBookDatabase.child(current_uid).child(key).child("bookKey").setValue(key);
 
-        if (switchButton.isChecked()) {
-            mUserBookDatabase.child(current_uid).child(key).child("tradable").setValue("true");
-        }
-        else {
-            mUserBookDatabase.child(current_uid).child(key).child("tradable").setValue("false");
-        }
-
-        new SweetAlertDialog(this)
-                .setTitleText("Knygą pridėta! ")
+        new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                .setTitleText("Pavyko!")
+                .setContentText("Knygą pridėta!")
                 .setConfirmClickListener(sweetAlertDialog -> {
                     Intent intent = new Intent(AddNewBook.this, MainActivity.class);
                     startActivity(intent);
@@ -313,13 +294,11 @@ public class AddNewBook extends AppCompatActivity {
 
         });
 
-
         d.setNegativeButton("Cancel", (dialogInterface, i) -> {
         });
 
         AlertDialog alertDialog = d.create();
         alertDialog.show();
-
 
     }
 
@@ -329,9 +308,9 @@ public class AddNewBook extends AppCompatActivity {
         if (backstack > 0) {
             getSupportFragmentManager().popBackStack();
         }
-        else{
+        else
+        {
             super.onBackPressed();
-            //System.exit(0);
         }
     }
 

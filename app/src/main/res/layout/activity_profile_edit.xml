@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:id="@+id/profEdit"
@@ -26,7 +25,8 @@
             android:hint="Vardas"
             android:inputType="textCapWords"
             android:singleLine="true"
-            android:textColorHint="@color/Black"  />
+            android:textColorHint="@color/Black"
+            tools:ignore="Autofill" />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -49,7 +49,8 @@
             android:hint="Pavardė"
             android:inputType="textCapWords"
             android:singleLine="true"
-            android:textColorHint="@color/Black"  />
+            android:textColorHint="@color/Black"
+            tools:ignore="Autofill" />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -72,7 +73,8 @@
             android:hint="El. paštas"
             android:inputType="textEmailAddress"
             android:singleLine="true"
-            android:textColorHint="@color/Black"  />
+            android:textColorHint="@color/Black"
+            tools:ignore="Autofill" />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -95,7 +97,8 @@
             android:hint="Vartotojo Vardas"
             android:inputType="textCapWords"
             android:singleLine="true"
-            android:textColorHint="@color/Black"  />
+            android:textColorHint="@color/Black"
+            tools:ignore="Autofill" />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -118,7 +121,8 @@
             android:hint="Dominanti literatūra"
             android:inputType="text"
             android:singleLine="true"
-            android:textColorHint="@color/Black"  />
+            android:textColorHint="@color/Black"
+            tools:ignore="Autofill" />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -137,7 +141,7 @@
     <Spinner android:id="@+id/ProfileSpinCity"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="left"
+        android:gravity="start"
         android:textColor="@color/Black"
         android:padding="10dip"/>
 

@@ -3,6 +3,7 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scroll"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -44,10 +45,11 @@
 
                     <ImageView
                         android:id="@+id/ivBookCover"
-                        android:layout_width="280dp"
-                        android:layout_height="280dp"
+                        android:layout_width="200dp"
+                        android:layout_height="300dp"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="8dp" />
+                        android:layout_marginTop="8dp"
+                        android:contentDescription="TODO" />
 
                 </LinearLayout>
 
@@ -97,7 +99,8 @@
                 android:hint="Knygos pavadinimas"
                 android:inputType="textCapWords"
                 android:paddingTop="20dp"
-                android:singleLine="true"/>
+                android:singleLine="true"
+                tools:ignore="Autofill" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -120,7 +123,9 @@
                 android:paddingTop="20dp"
                 android:inputType="textCapWords"
                 android:singleLine="true"
-                android:textColorHint="#05070a"  />
+                android:textColorHint="#05070a"
+                android:autofillHints="Knygos autorius"
+                tools:ignore="UnusedAttribute" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -143,7 +148,9 @@
                 android:paddingTop="20dp"
                 android:inputType="textMultiLine"
                 android:singleLine="false"
-                android:textColorHint="#05070a"  />
+                android:textColorHint="#05070a"
+                android:autofillHints="Trumpai apie knygą"
+                tools:ignore="UnusedAttribute" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -188,7 +195,8 @@
             android:layout_height="wrap_content"
             android:gravity="left"
             android:textColor="#05070a"
-            android:padding="10dip"/>
+            android:padding="10dip"
+            tools:ignore="RtlHardcoded" />
 
         <TextView android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -220,14 +228,6 @@
                 android:layout_height="match_parent"
                 android:text="Patenkinama" />
         </RadioGroup>
-
-        <Switch
-            android:id="@+id/switchButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Ar šią knygą norite keisti?" />
-
 
         <Button
             android:id="@+id/btnYear"

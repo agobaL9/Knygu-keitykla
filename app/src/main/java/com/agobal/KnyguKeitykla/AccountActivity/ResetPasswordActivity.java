@@ -2,6 +2,7 @@ package com.agobal.KnyguKeitykla.AccountActivity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -22,7 +23,6 @@ public class ResetPasswordActivity extends Activity {
 
     private EditText inputEmail;
     private FirebaseAuth auth;
-    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +38,6 @@ public class ResetPasswordActivity extends Activity {
         inputEmail = findViewById(R.id.email);
         Button btnReset = findViewById(R.id.btn_reset_password);
         Button btnBack = findViewById(R.id.btn_back);
-        progressBar = findViewById(R.id.progressBar);
 
         auth = FirebaseAuth.getInstance();
 
@@ -57,13 +56,19 @@ public class ResetPasswordActivity extends Activity {
                 return;
             }
 
-            progressBar.setVisibility(View.VISIBLE);
+            SweetAlertDialog pDialog = new SweetAlertDialog(ResetPasswordActivity.this, SweetAlertDialog.PROGRESS_TYPE);
+            pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+            pDialog.setTitleText("Prašome palaukti");
+            pDialog.setCancelable(false);
+            pDialog.show();
+
             auth.sendPasswordResetEmail(email)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
 
-                            new SweetAlertDialog(this)
-                                    .setTitleText("Slaptažodžio pakeitimo nuoroda Jums išsiųsta į el. pašto adresą! ")
+                            new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                                    .setTitleText("Pavyko!")
+                                    .setContentText("Slaptažodžio pakeitimo nuoroda Jums išsiųsta į el. pašto adresą")
                                     .setConfirmClickListener(sweetAlertDialog -> {
                                         Intent intent = new Intent(ResetPasswordActivity.this, MainActivity.class);
                                         startActivity(intent);
@@ -71,8 +76,9 @@ public class ResetPasswordActivity extends Activity {
                                     .show();
 
                         } else {
-                            new SweetAlertDialog(this)
-                                    .setTitleText("Nuorodos su slaptažodžiu išsiųsti nepavyko. Prašome patikrinti duomenis! ")
+                            new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                                    .setTitleText("Pavyko!")
+                                    .setContentText("Nuorodos su slaptažodžiu išsiųsti nepavyko. Prašome patikrinti duomenis!")
                                     .setConfirmClickListener(sweetAlertDialog -> {
                                         Intent intent = new Intent(ResetPasswordActivity.this, MainActivity.class);
                                         startActivity(intent);
@@ -80,7 +86,7 @@ public class ResetPasswordActivity extends Activity {
                                     .show();
                         }
 
-                        progressBar.setVisibility(View.GONE);
+                        pDialog.dismissWithAnimation();
                     });
         });
     }
