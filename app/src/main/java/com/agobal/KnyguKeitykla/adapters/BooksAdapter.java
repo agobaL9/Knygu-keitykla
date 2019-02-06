@@ -30,6 +30,8 @@ public class BooksAdapter extends ArrayAdapter<Books> {
         private final Context mContext;
         private final List<Books> allBookList;
 
+
+
         public BooksAdapter(@NonNull Context context, @SuppressLint("SupportAnnotationUsage") @LayoutRes ArrayList<Books> list) {
 
             super(context, 0 , list);
@@ -40,6 +42,7 @@ public class BooksAdapter extends ArrayAdapter<Books> {
         @NonNull
         @Override
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+
 
             View listItem = convertView;
             if(listItem == null)
@@ -67,7 +70,7 @@ public class BooksAdapter extends ArrayAdapter<Books> {
                             @Override
                             public void onSuccess() {
 //                                Toast.makeText(getContext(), "downloaded!", Toast.LENGTH_LONG).show();
-                        }
+                            }
 
                             @Override
                             public void onError(Exception e) {
@@ -77,6 +80,8 @@ public class BooksAdapter extends ArrayAdapter<Books> {
             }
             else
             {
+
+
                 Picasso.get().load(currentBook.getBookImage())
                         //.rotate(90)
                         .resize(200,200)
@@ -85,7 +90,8 @@ public class BooksAdapter extends ArrayAdapter<Books> {
                         .into(image, new Callback() {
                             @Override
                             public void onSuccess() {
-//                                Toast.makeText(getContext(), "downloaded!", Toast.LENGTH_LONG).show();
+
+
                             }
 
                             @Override
@@ -100,6 +106,7 @@ public class BooksAdapter extends ArrayAdapter<Books> {
 
             TextView author = listItem.findViewById(R.id.tvAuthor);
             author.setText(currentBook.getBookAuthor());
+
 
             return listItem;
         }

@@ -149,7 +149,7 @@ public class BookEditAPI extends AppCompatActivity {
 
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
+    @SuppressWarnings({"ResultOfMethodCallIgnored", "deprecation"})
     @SuppressLint("CheckResult")
     private void pickImageFromSource(Sources source) {
         RxImagePicker.with(getFragmentManager()).requestImage(source).flatMap(uri -> {

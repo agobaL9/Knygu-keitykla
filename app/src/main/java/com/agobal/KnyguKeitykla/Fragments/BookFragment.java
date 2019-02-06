@@ -21,6 +21,8 @@ import com.agobal.KnyguKeitykla.BookDetails.BookDetails;
 import com.agobal.KnyguKeitykla.Entities.Books;
 import com.agobal.KnyguKeitykla.R;
 import com.agobal.KnyguKeitykla.adapters.BooksAdapter;
+import com.agobal.KnyguKeitykla.helper.AsyncTaskCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -34,15 +36,13 @@ import com.yarolegovich.lovelydialog.LovelyTextInputDialog;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import javax.security.auth.callback.Callback;
-
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class BookFragment extends Fragment {
+public class BookFragment extends Fragment implements AsyncTaskCompleteListener {
 
     public static final String BOOK_DETAIL_KEY = "book";
     private DatabaseReference mUserBookDatabase;
@@ -52,16 +52,15 @@ public class BookFragment extends Fragment {
     private final String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
     private String userID;
     private TextView tvEmpty;
-    Boolean isUserHaveBooks = false;
-    String tempKey;
+    private Boolean isUserHaveBooks = false;
+    private String tempKey;
     private ListView listViewBooks;
     private BooksAdapter booksAdapter;
 
     private String BookKeyToDetails;
     private String UserKeyToDetails;
     private String queryText;
-
-
+    SweetAlertDialog pDialog;
 
     public BookFragment() {
         // Required empty public constructor
@@ -73,14 +72,13 @@ public class BookFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_books, container, false);
 
-        setHasOptionsMenu(true);
-
-
-        SweetAlertDialog pDialog = new SweetAlertDialog(Objects.requireNonNull(getContext()), SweetAlertDialog.PROGRESS_TYPE);
+        pDialog = new SweetAlertDialog(Objects.requireNonNull(getContext()), SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        pDialog.setTitleText("Prašome palaukti");
+        pDialog.setTitleText("Prašome palauktiMAIN");
         pDialog.setCancelable(false);
         pDialog.show();
+
+        setHasOptionsMenu(true);
 
         //DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
         mUserBookDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks");
@@ -111,7 +109,7 @@ public class BookFragment extends Fragment {
                 } else
                     tvEmpty.setVisibility(View.VISIBLE);
 
-                pDialog.dismissWithAnimation();
+                //pDialog.dismissWithAnimation();
             }
 
             @Override
@@ -173,8 +171,11 @@ public class BookFragment extends Fragment {
                                     BookList.add(new Books(BookName, BookAuthor, BookPublisher, BookYear, BookCondition, BookCategory, BookAbout, Image, Tradable, UserID, BookID));
 
                                     booksAdapter = new BooksAdapter(Objects.requireNonNull(getContext()), BookList);
+                                    listViewBooks.setVisibility(View.GONE);
                                     listViewBooks.setAdapter(booksAdapter);
                                     booksAdapter.notifyDataSetChanged();
+
+
                                 }
                             }
 
@@ -326,4 +327,10 @@ public class BookFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onTaskComplete() {
+        Log.d("taskComplete", "TAIP");
+        //pDialog.dismissWithAnimation();
+
+    }
 }

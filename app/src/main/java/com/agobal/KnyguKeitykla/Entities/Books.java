@@ -1,6 +1,8 @@
 package com.agobal.KnyguKeitykla.Entities;
 
 
+import android.support.annotation.NonNull;
+
 import java.io.Serializable;
 
 public class Books implements Serializable {
@@ -92,6 +94,7 @@ public class Books implements Serializable {
 
     public void setBookID(String bookID) { BookID = bookID; }
 
+    @NonNull
     public String toString(){
         return "name : " + BookName + "\nAge : " + BookAuthor + "\nColor : " + BookImage;
     }

@@ -15,7 +15,7 @@ public class BottomNavigationBehavior extends CoordinatorLayout.Behavior<BottomN
     }
 
     @Override
-    public boolean layoutDependsOn(CoordinatorLayout parent, BottomNavigationView child, View dependency) {
+    public boolean layoutDependsOn(@NonNull CoordinatorLayout parent, @NonNull BottomNavigationView child, @NonNull View dependency) {
         return dependency instanceof FrameLayout;
     }
 

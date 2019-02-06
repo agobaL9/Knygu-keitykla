@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.agobal.KnyguKeitykla.AccountActivity.LoginActivity;
 import com.agobal.KnyguKeitykla.Books.MyBookEdit;
 import com.agobal.KnyguKeitykla.Entities.MyBook;
 import com.agobal.KnyguKeitykla.Fragments.LibraryFragment;
@@ -89,28 +88,26 @@ public class MyBookDetail extends AppCompatActivity {
             startActivity(intent);
         });
 
-        fabDelete.setOnClickListener(view -> {
-            new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText("Dėmėsio!")
-                    .setContentText("Ar tikrai norite ištrinti šią knygą?")
-                    .setConfirmText("Taip")
-                    .setCancelText("Ne")
-                    .setConfirmClickListener(sDialog -> {
-                        deleteMyBook();
-                        sDialog.dismissWithAnimation();
-                        new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
-                                .setTitleText("Pavyko!")
-                                .setContentText("Knyga panaikinta!")
-                                .setConfirmClickListener(sweetAlertDialog -> {
-                                    sweetAlertDialog.dismissWithAnimation();
-                                    Intent intent = new Intent(MyBookDetail.this, MainActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                })
-                                .show();
-                    })
-                    .show();
-        });
+        fabDelete.setOnClickListener(view -> new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText("Dėmėsio!")
+                .setContentText("Ar tikrai norite ištrinti šią knygą?")
+                .setConfirmText("Taip")
+                .setCancelText("Ne")
+                .setConfirmClickListener(sDialog -> {
+                    deleteMyBook();
+                    sDialog.dismissWithAnimation();
+                    new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                            .setTitleText("Pavyko!")
+                            .setContentText("Knyga panaikinta!")
+                            .setConfirmClickListener(sweetAlertDialog -> {
+                                sweetAlertDialog.dismissWithAnimation();
+                                Intent intent = new Intent(MyBookDetail.this, MainActivity.class);
+                                startActivity(intent);
+                                finish();
+                            })
+                            .show();
+                })
+                .show());
 
         // Use the book to populate the data into our views
         MyBook myBook = (MyBook) getIntent().getSerializableExtra(LibraryFragment.MY_BOOK_DETAIL_KEY);

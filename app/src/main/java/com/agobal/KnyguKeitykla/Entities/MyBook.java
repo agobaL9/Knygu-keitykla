@@ -1,6 +1,8 @@
 package com.agobal.KnyguKeitykla.Entities;
 
 
+import android.support.annotation.NonNull;
+
 import java.io.Serializable;
 
 public class MyBook implements Serializable {
@@ -73,6 +75,7 @@ public class MyBook implements Serializable {
         BookTradable = bookTradable;
     }
 
+    @NonNull
     public String toString(){
         return "name : " + BookName + "\nAge : " + BookAuthor + "\nColor : " + BookImage;
     }
