@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.agobal.KnyguKeitykla.Entities.MyBook;
 import com.agobal.KnyguKeitykla.R;
+import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -48,21 +49,31 @@ public class MyBookAdapter extends ArrayAdapter<MyBook> {
 
         if(imageURL.startsWith("https://firebasestorage"))
         {
+            Glide.with(getContext())
+                    .load(currentBook.getBookImage())
+                    .into(image);
+            /*
             Picasso.get().load(currentBook.getBookImage())
                     .rotate(90)
                     .error(R.drawable.ic_nocover)
                     .resize(200,200)
                     .centerCrop()
                     .into(image);
+                    */
         }
         else
         {
+            Glide.with(getContext())
+                    .load(currentBook.getBookImage())
+                    .into(image);
+            /*
             Picasso.get().load(currentBook.getBookImage())
                     //.rotate(90)
                     .resize(200,200)
                     .error(R.drawable.ic_nocover)
                     .centerCrop()
                     .into(image);
+                    */
         }
 
         TextView name = listItem.findViewById(R.id.tvTitle);

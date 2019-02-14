@@ -22,7 +22,6 @@ import com.agobal.KnyguKeitykla.Entities.Books;
 import com.agobal.KnyguKeitykla.R;
 import com.agobal.KnyguKeitykla.adapters.BooksAdapter;
 import com.agobal.KnyguKeitykla.helper.AsyncTaskCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -75,7 +74,7 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
         pDialog = new SweetAlertDialog(Objects.requireNonNull(getContext()), SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         pDialog.setTitleText("Prašome palauktiMAIN");
-        pDialog.setCancelable(false);
+        pDialog.setCancelable(true);
         pDialog.show();
 
         setHasOptionsMenu(true);
@@ -109,7 +108,7 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
                 } else
                     tvEmpty.setVisibility(View.VISIBLE);
 
-                //pDialog.dismissWithAnimation();
+                pDialog.dismissWithAnimation();
             }
 
             @Override
@@ -171,7 +170,6 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
                                     BookList.add(new Books(BookName, BookAuthor, BookPublisher, BookYear, BookCondition, BookCategory, BookAbout, Image, Tradable, UserID, BookID));
 
                                     booksAdapter = new BooksAdapter(Objects.requireNonNull(getContext()), BookList);
-                                    listViewBooks.setVisibility(View.GONE);
                                     listViewBooks.setAdapter(booksAdapter);
                                     booksAdapter.notifyDataSetChanged();
 

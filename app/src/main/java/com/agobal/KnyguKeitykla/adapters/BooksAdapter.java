@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.agobal.KnyguKeitykla.Entities.Books;
 import com.agobal.KnyguKeitykla.R;
+import com.bumptech.glide.Glide;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -48,12 +49,6 @@ public class BooksAdapter extends ArrayAdapter<Books> {
             if(listItem == null)
                 listItem = LayoutInflater.from(mContext).inflate(R.layout.item_allbooks,parent,false);
 
-//            SweetAlertDialog pDialog = new SweetAlertDialog(Objects.requireNonNull(getContext()), SweetAlertDialog.PROGRESS_TYPE);
-//            pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-//            pDialog.setTitleText("Prašome palaukti");
-//            pDialog.setCancelable(false);
-//            pDialog.show();
-
             Books currentBook = allBookList.get(position);
 
             ImageView image = listItem.findViewById(R.id.ivBookCover);
@@ -61,6 +56,11 @@ public class BooksAdapter extends ArrayAdapter<Books> {
             String imageURL = currentBook.getBookImage();
             if(imageURL.startsWith("https://firebasestorage"))
             {
+                Glide.with(getContext())
+                        .load(currentBook.getBookImage())
+                        .into(image);
+
+                /*
                 Picasso.get().load(currentBook.getBookImage())
                         .rotate(90)
                         .resize(200,200)
@@ -76,12 +76,14 @@ public class BooksAdapter extends ArrayAdapter<Books> {
                             public void onError(Exception e) {
 
                             }
-                        });
+                        });*/
             }
             else
             {
-
-
+                Glide.with(getContext())
+                        .load(currentBook.getBookImage())
+                        .into(image);
+/*
                 Picasso.get().load(currentBook.getBookImage())
                         //.rotate(90)
                         .resize(200,200)
@@ -98,7 +100,7 @@ public class BooksAdapter extends ArrayAdapter<Books> {
                             public void onError(Exception e) {
 
                             }
-                        });
+                        });*/
             }
 
             TextView name = listItem.findViewById(R.id.tvTitle);
