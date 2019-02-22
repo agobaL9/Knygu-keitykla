@@ -73,7 +73,7 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
 
         pDialog = new SweetAlertDialog(Objects.requireNonNull(getContext()), SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        pDialog.setTitleText("Prašome palauktiMAIN");
+        pDialog.setTitleText("Prašome palaukti");
         pDialog.setCancelable(true);
         pDialog.show();
 
