@@ -142,25 +142,23 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center">
-
+<!--
                 <com.shaishavgandhi.loginbuttons.FacebookButton
-                    android:id="@+id/btn_facebook"
+                    android:id="@+id/fb_login"
                     android:layout_width="75dp"
-                    android:layout_height="75dp"
-                    android:layout_marginEnd="50dp"
                     app:iconSize="30dp"
-                    app:roundedCorner="true"
-                    app:roundedCornerRadius="75dp"
-                    app:transparentBackground="false" />
+                    android:layout_height="75dp"
+                    app:roundedCorner="true"/>
+-->
+                <com.google.android.gms.common.SignInButton
+                    android:id="@+id/sign_in_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center"
 
-                <com.shaishavgandhi.loginbuttons.GoogleButton
-                    android:id="@+id/btn_google"
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
-                    app:iconSize="30dp"
-                    app:roundedCorner="true"
-                    app:roundedCornerRadius="75dp"
-                    app:transparentBackground="false" />
+                    android:visibility="visible" />
+
 
             </LinearLayout>
 

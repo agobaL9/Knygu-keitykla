@@ -30,6 +30,10 @@ import java.util.Objects;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class RegisterActivity extends Activity {
+
+    private static final String TAG = "RegisterActivity";
+
+
     private EditText inputUserName;
     private EditText inputEmail;
     private EditText inputPassword;
@@ -60,7 +64,6 @@ public class RegisterActivity extends Activity {
             final String email = inputEmail.getText().toString().trim();
             String password = inputPassword.getText().toString().trim();
             String password2 = inputPassword2.getText().toString().trim();
-
             checkRegistrationData(userName, email, password, password2);
         });
 
@@ -154,7 +157,7 @@ public class RegisterActivity extends Activity {
 
                         pDialog.dismissWithAnimation();
 
-                        mUserDatabase.addValueEventListener(new ValueEventListener() {
+                        mUserDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 

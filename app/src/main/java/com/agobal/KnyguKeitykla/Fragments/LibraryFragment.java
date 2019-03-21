@@ -38,6 +38,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  */
 public class LibraryFragment extends Fragment {
 
+    private static final String TAG = "LibraryFragment";
     public static final String MY_BOOK_DETAIL_KEY = "my_book";
 
     private String userID;
@@ -66,7 +67,7 @@ public class LibraryFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_library, container, false);
 
-        Log.d("currentID", " " + current_uid);
+        Log.d(TAG, "currentID " + current_uid);
 
         SweetAlertDialog pDialog = new SweetAlertDialog(Objects.requireNonNull(getContext()), SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
@@ -114,7 +115,7 @@ public class LibraryFragment extends Fragment {
                         userID = childDataSnapshot.getKey();
 
                         if (Objects.requireNonNull(userID).equals(current_uid)) { // ar yra dabartinis vartotojas userbooks šakoje
-                            Log.d("ar yra šakoje?", "taip");
+                            Log.d(TAG, "yra šakoje? taip");
                             isUserHaveBooks = true;
                         }
                     }
@@ -134,7 +135,7 @@ public class LibraryFragment extends Fragment {
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("onCancelled"," Suveikė canceled");
+                Log.d(TAG," Suveikė canceled");
             }
         }) ;
     }
@@ -146,7 +147,7 @@ public class LibraryFragment extends Fragment {
             intent.putExtra(MY_BOOK_DETAIL_KEY, myBookAdapter.getItem(position));
             intent.putExtra("BOOK_KEY", BookKeyToDetails);
             startActivity(intent);
-            Log.d("NEW_INTENT", "VEIKIA");
+            Log.d(TAG, "NEW_INTENT VEIKIA");
         });
     }
 
@@ -166,10 +167,10 @@ public class LibraryFragment extends Fragment {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                            Log.d("get key", "" + childDataSnapshot.getKey());//Gaunu visus knygų ID
+                            Log.d(TAG, "get key " + childDataSnapshot.getKey());//Gaunu visus knygų ID
 
                             String path = childDataSnapshot.getRef().toString();
-                            Log.d("path:",path+" ");
+                            Log.d(TAG,"path:" +path);
 
                             BookKeyToDetails = childDataSnapshot.getKey();
 
@@ -200,7 +201,7 @@ public class LibraryFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("onCancelled"," Suveikė canceled2");
+                Log.d(TAG," Suveikė canceled2");
             }
         });
 

@@ -2,22 +2,22 @@ package com.agobal.KnyguKeitykla.API;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
-import android.support.v7.widget.SearchView;
 import android.widget.TextView;
 
+import com.agobal.KnyguKeitykla.BookDetails.BookDetailActivityAPI;
+import com.agobal.KnyguKeitykla.Books.AddNewBook;
 import com.agobal.KnyguKeitykla.Entities.BookAPI;
 import com.agobal.KnyguKeitykla.R;
-import com.agobal.KnyguKeitykla.Books.AddNewBook;
-import com.agobal.KnyguKeitykla.BookDetails.BookDetailActivityAPI;
 import com.agobal.KnyguKeitykla.adapters.BookAdapterAPI;
 import com.agobal.KnyguKeitykla.helper.BookClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -26,14 +26,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import cz.msebera.android.httpclient.Header;
-import cn.pedant.SweetAlert.SweetAlertDialog;
-
-
 import java.util.ArrayList;
 import java.util.Objects;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+import cz.msebera.android.httpclient.Header;
+
 public class SearchBookAPI extends AppCompatActivity {
+
+    private static final String TAG = "SearchBookActivity";
+
 
     public static final String BOOK_DETAIL_KEY = "book";
     private BookAdapterAPI bookAdapterAPI;

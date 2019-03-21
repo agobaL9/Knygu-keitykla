@@ -53,6 +53,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Chat_activity extends AppCompatActivity {
 
+    private static final String TAG = "ChatAtivity";
+
+
     private String mChatUser;
 
     private DatabaseReference mRootRef; // comment
@@ -201,7 +204,7 @@ public class Chat_activity extends AppCompatActivity {
 
                     mRootRef.updateChildren(chatUserMap, (databaseError, databaseReference) -> {
                         if(databaseError!=null){
-                            Log.d("CHAT_LOG", databaseError.getMessage());
+                            Log.d(TAG,"CHAT_LOG" + databaseError.getMessage());
                         }
                     });
                 }
@@ -283,7 +286,7 @@ public class Chat_activity extends AppCompatActivity {
 
                         if (databaseError != null) {
 
-                            Log.d("CHAT_LOG", databaseError.getMessage());
+                            Log.d(TAG,"CHAT_LOG " + databaseError.getMessage());
 
                         }
 
@@ -436,7 +439,7 @@ public class Chat_activity extends AppCompatActivity {
 
             mRootRef.updateChildren(messageUserMap, (databaseError, databaseReference) -> {
                 if(databaseError!=null){
-                    Log.d("CHAT_LOG", databaseError.getMessage());
+                    Log.d(TAG,"CHAT_LOG "+ databaseError.getMessage());
                 }
             });
         }

@@ -11,8 +11,10 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.agobal.KnyguKeitykla.AccountActivity.LoginActivity;
 import com.agobal.KnyguKeitykla.Fragments.BookFragment;
@@ -20,6 +22,8 @@ import com.agobal.KnyguKeitykla.Fragments.LibraryFragment;
 import com.agobal.KnyguKeitykla.Fragments.MessagesFragment;
 import com.agobal.KnyguKeitykla.Fragments.ProfileFragment;
 import com.agobal.KnyguKeitykla.helper.BottomNavigationBehavior;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -30,26 +34,78 @@ import com.google.firebase.perf.metrics.Trace;
 
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
 
-    private FirebaseAuth mAuth;
+    private static final String TAG = "MainActivity";
+
+    private FirebaseAuth auth;
     private DatabaseReference mUserRef;
-
     private TextView title;
+
+    FirebaseAuth.AuthStateListener mAuthListener;
+
+    //private GoogleApiClient mGoogleApiClient;
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        Log.d(TAG, "on Start");
+
+
+        mAuthListener = firebaseAuth -> {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if(user==null){
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+            else
+                mUserRef.child("online").setValue("true");
+        };
+        auth.addAuthStateListener(mAuthListener);
+
+        mUserRef.child("online").setValue("true");
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "on Stop");
+
+        mUserRef.child("online").setValue(ServerValue.TIMESTAMP);
+
+        auth.removeAuthStateListener(mAuthListener);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Log.d(TAG, "started");
+
         Trace myTrace = FirebasePerformance.getInstance().newTrace("test_trace");
         myTrace.start();
 
         FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        Log.d(TAG, "current user: " + mCurrentUser);
+
+        auth = FirebaseAuth.getInstance();
+
+
         String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
-        mAuth = FirebaseAuth.getInstance();
         mUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
 
+        /*
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this , this )
+                .addApi(Auth.GOOGLE_SIGN_IN_API)
+                .build();
+        */
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.action_bar_main);
@@ -68,31 +124,10 @@ public class MainActivity extends AppCompatActivity {
         title.setText("Knygos");
         loadFragment(new BookFragment());
         myTrace.stop();
+
     }
 
-    @Override
-    public void onStart()
-    {
-        super.onStart();
 
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        //Log.d("ar online?", currentUser + "");
-
-        if(currentUser == null)
-        {
-            logoutUser();
-        }
-        else
-        {
-            mUserRef.child("online").setValue("true");
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mUserRef.child("online").setValue(ServerValue.TIMESTAMP);
-    }
 
     private final BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -137,30 +172,27 @@ public class MainActivity extends AppCompatActivity {
 
     private void logoutUser() {
 
-        mUserRef.child("online").setValue(ServerValue.TIMESTAMP);
         FirebaseAuth.getInstance().signOut();
+        auth.signOut();
 
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        //Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+
+        FirebaseUser currentUser = auth.getCurrentUser();
+
         //Log.d("ar online?", currentUser + "");
 
-        if(currentUser == null)
-        {
-            Log.d("Atsijungimas:", " Atsijunge");
-
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-            finish();
-            //sendToStart();
-
-        }
-        else
-            Log.d("Atsijungimas:", " Neatsijunge");
+        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+        finish();
+        //sendToStart();
+        Log.d(TAG, " Atsijunge");
 
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main_menu, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
         return true;
     }
 
@@ -174,5 +206,13 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        // An unresolvable error has occurred and Google APIs (including Sign-In) will not
+        // be available.
+        Log.d(TAG, "onConnectionFailed:" + connectionResult);
+        Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
     }
 }

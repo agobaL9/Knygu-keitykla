@@ -37,6 +37,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class BookDetails extends AppCompatActivity {
 
+    private static final String TAG = "BookDetailActivity";
+
+
     private TextView title;
     private ActionButton fab_star;
     private String userName;
@@ -103,8 +106,8 @@ public class BookDetails extends AppCompatActivity {
         // Use the book to populate the data into our views
         Books Book = (Books) getIntent().getSerializableExtra(BookFragment.BOOK_DETAIL_KEY);
 
-        Log.d("BookKey", " "+ BookKey);
-        Log.d("UserKey", " "+ UserID);
+        Log.d(TAG, "BookKey "+ BookKey);
+        Log.d(TAG, "UserKey "+ UserID);
 
         loadBook(Book);
         loadUserInfo();
@@ -192,17 +195,17 @@ public class BookDetails extends AppCompatActivity {
     }
 
     private void deleteBookFromFav() {
-        Log.d("UserFabBooks", " "+ mUserFavBookKey);
+        Log.d(TAG, "UserFabBooks "+ mUserFavBookKey);
         mUserFavBookDelete.child("UserFavBooks").child(current_uid).child(BookKey).setValue(null);
-        Log.d("UserFabBooks1", " "+ mUserFavBookKey);
+        Log.d(TAG, "UserFabBooks1 "+ mUserFavBookKey);
         Toast.makeText(getApplicationContext(), "Knyga panaikinta!", Toast.LENGTH_LONG).show();
 
     }
 
     private void saveUserFavBook(Books Book) {
 
-        Log.d("currentID", " "+ current_uid);
-        Log.d("BookKey", " "+ BookKey);
+        Log.d(TAG,"currentID "+ current_uid);
+        Log.d(TAG, "BookKey "+ BookKey);
 
         mUserFavBookKey = mDatabase.child("UserFavBooks").child(current_uid);
         mUserFavBooks = mDatabase.child("UserFavBooks").child(current_uid).child(BookKey);
@@ -227,13 +230,13 @@ public class BookDetails extends AppCompatActivity {
         SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         pDialog.setTitleText("Prašome palaukti...");
-        pDialog.setCancelable(false);
+        pDialog.setCancelable(true);
         pDialog.show();
 
         title.setText(Book.getBookName());
 
         String imageURL = Book.getBookImage();
-        Log.d("bookDetailImageURL", " "+ imageURL);
+        Log.d(TAG, "bookDetailImageURL "+ imageURL);
         if(imageURL.startsWith("https://firebasestorage"))
         {
             Picasso.get().load(Book.getBookImage())
@@ -299,7 +302,7 @@ public class BookDetails extends AppCompatActivity {
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         DatabaseReference mUserInfoInDetais = mDatabase.child("Users").child(UserID);
 
-        Log.d("UserID", " "+ mUserInfoInDetais);
+        Log.d(TAG, "UserID "+ mUserInfoInDetais);
 
         mUserInfoInDetais.keepSynced(true);
 
@@ -316,8 +319,8 @@ public class BookDetails extends AppCompatActivity {
                 //String thumb_image = dataSnapshot.child("thumb_image").getValue(String.class);
                 final String image = dataSnapshot.child("image").getValue(String.class);
 
-                Log.d("user info", userName +" " + email + " " +firstName+" "+ lastName+ " "+cityName);
-                Log.d( "Image"," "+ image);
+                Log.d(TAG,"user info "+userName +" " + email + " " +firstName+" "+ lastName+ " "+cityName);
+                Log.d(TAG,"Image "+ image);
 
                 Picasso.get().load(image);
 
@@ -342,7 +345,7 @@ public class BookDetails extends AppCompatActivity {
                 userData.setCityName(cityName);
                 userData.setEmail(email);
                 userData.setUserName(userName);
-                Log.d("user info: ", userName +" " + email + " " +firstName+" "+ lastName+ " "+cityName);
+                Log.d(TAG,"user info: " + userName +" " + email + " " +firstName+" "+ lastName+ " "+cityName);
 
                 T_firstAndLastName.setText(userData.firstName+" "+userData.lastName);
                 T_Desc.setText(userData.email);

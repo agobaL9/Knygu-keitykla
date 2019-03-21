@@ -29,6 +29,9 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class MyBookDetail extends AppCompatActivity {
 
+    private static final String TAG = "MyBookDetailActivity";
+
+
     private ImageView ivBookCover;
     private TextView tvTitle;
     private TextView tvAuthor;
@@ -121,7 +124,7 @@ public class MyBookDetail extends AppCompatActivity {
         SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         pDialog.setTitleText("Prašome palaukti...");
-        pDialog.setCancelable(false);
+        pDialog.setCancelable(true);
         pDialog.show();
 
         title.setText(myBook.getBookName());
@@ -185,7 +188,7 @@ public class MyBookDetail extends AppCompatActivity {
 
         //DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
         DatabaseReference mUserBookDelete = FirebaseDatabase.getInstance().getReference().child("UserBooks").child(current_uid).child(BookKey);
-        Log.d("TAG"," "+ BookKey);
+        Log.d(TAG,"Book key "+ BookKey);
         mUserBookDelete.setValue(null);
     }
 

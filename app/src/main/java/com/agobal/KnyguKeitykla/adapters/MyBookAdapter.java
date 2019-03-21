@@ -2,6 +2,8 @@ package com.agobal.KnyguKeitykla.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,12 +18,18 @@ import android.widget.TextView;
 import com.agobal.KnyguKeitykla.Entities.MyBook;
 import com.agobal.KnyguKeitykla.R;
 import com.bumptech.glide.Glide;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
+import com.bumptech.glide.request.RequestOptions;
 
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MyBookAdapter extends ArrayAdapter<MyBook> {
+
+    private static final String TAG = "MyBookAdapterActivity";
+
 
     private final Context mContext;
     private final List<MyBook> myBookList;
@@ -44,13 +52,14 @@ public class MyBookAdapter extends ArrayAdapter<MyBook> {
         MyBook currentBook = myBookList.get(position);
 
         ImageView image = listItem.findViewById(R.id.ivBookCover);
-        Log.d("imageUrl", " " + currentBook.getBookImage());
+        Log.d(TAG, "imageUrl " + currentBook.getBookImage());
         String imageURL = currentBook.getBookImage();
 
         if(imageURL.startsWith("https://firebasestorage"))
         {
             Glide.with(getContext())
                     .load(currentBook.getBookImage())
+                    .apply(new RequestOptions().transform(new RotateTransformation(this,90f)))
                     .into(image);
             /*
             Picasso.get().load(currentBook.getBookImage())
@@ -82,7 +91,7 @@ public class MyBookAdapter extends ArrayAdapter<MyBook> {
         TextView author = listItem.findViewById(R.id.tvAuthor);
         author.setText(currentBook.getBookAuthor());
 
-        Log.d("Tradable", " "+ currentBook.getBookTradable());
+        Log.d(TAG, "Tradable "+ currentBook.getBookTradable());
 
 /*
         if(currentBook.getBookTradable().equals("true"))
@@ -108,6 +117,29 @@ public class MyBookAdapter extends ArrayAdapter<MyBook> {
     return listItem;
     }
 
+    public class RotateTransformation extends BitmapTransformation {
 
+        private float rotateRotationAngle = 0f;
+
+        RotateTransformation(MyBookAdapter context, float rotateRotationAngle) {
+            super();
+
+            this.rotateRotationAngle = rotateRotationAngle;
+        }
+
+        @Override
+        protected Bitmap transform(BitmapPool pool, Bitmap toTransform, int outWidth, int outHeight) {
+            Matrix matrix = new Matrix();
+
+            matrix.postRotate(rotateRotationAngle);
+
+            return Bitmap.createBitmap(toTransform, 0, 0, toTransform.getWidth(), toTransform.getHeight(), matrix, true);
+        }
+
+        @Override
+        public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
+
+        }
+    }
 
 }

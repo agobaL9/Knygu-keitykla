@@ -14,4 +14,13 @@
     <dimen name="slide_title">30dp</dimen>
     <dimen name="slide_desc">16dp</dimen>
     <dimen name="desc_padding">40dp</dimen>
+
+
+    <dimen name="activity_horizontal_margin_fullScreen">16dp</dimen>
+    <dimen name="activity_vertical_margin_fullScreen">16dp</dimen>
+
+    <dimen name="size_avatar_toolbar">40dp</dimen>
+    <dimen name="spacing_double">16dp</dimen>
+    <dimen name="elevation_header">4dp</dimen>
+
 </resources>

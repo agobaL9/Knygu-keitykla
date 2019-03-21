@@ -34,6 +34,9 @@ import cz.msebera.android.httpclient.Header;
 @SuppressWarnings("unused")
 public class BookDetailActivityAPI extends AppCompatActivity {
 
+    private static final String TAG = "BookDetailActivityAPI";
+
+
     private final FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
     private final String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
 
@@ -82,7 +85,7 @@ public class BookDetailActivityAPI extends AppCompatActivity {
         String BookPublisher = tvPublisher.getText().toString().trim();
         String BookPublishYear = tvPublishYear.getText().toString().trim();
 
-        Log.d("saveAndEdit image"," " + imageURL);
+        Log.d(TAG,"aveAndEdit image " + imageURL);
 
         Intent intent = new Intent(BookDetailActivityAPI.this,BookEditAPI.class);
         intent.putExtra("bookName", BookName);
@@ -102,7 +105,7 @@ public class BookDetailActivityAPI extends AppCompatActivity {
         //Picasso.get().load(Uri.parse(bookAPI.getLargeCoverUrl())).into(imageURL);
         imageURL = bookAPI.getLargeCoverUrl();
 
-        Log.d("image"," " + imageURL);
+        Log.d(TAG,"image " + imageURL);
         tvTitle.setText(bookAPI.getTitle());
         tvAuthor.setText(bookAPI.getAuthor());
         // fetch extra bookAPI data from books API

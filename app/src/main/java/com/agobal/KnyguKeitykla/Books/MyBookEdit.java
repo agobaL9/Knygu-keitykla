@@ -54,6 +54,9 @@ import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOption
 
 public class MyBookEdit extends AppCompatActivity {
 
+    private static final String TAG = "MyBookEditActivity";
+
+
     private StorageReference mImageStorage;
     private DatabaseReference mBookDatabase;
     private DatabaseReference mUserBookDatabase;
@@ -172,7 +175,7 @@ public class MyBookEdit extends AppCompatActivity {
 
         switch (BookCondition) {
             case "Būklė: Gera":
-                Log.d("gera", "yes");
+                Log.d(TAG, "gera yes");
                 radioGroup.check(R.id.rbBookGood);
                 break;
             case "Būklė: Nauja":

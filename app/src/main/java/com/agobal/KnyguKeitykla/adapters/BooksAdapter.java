@@ -2,7 +2,6 @@ package com.agobal.KnyguKeitykla.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,19 +11,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.agobal.KnyguKeitykla.Entities.Books;
 import com.agobal.KnyguKeitykla.R;
 import com.bumptech.glide.Glide;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class BooksAdapter extends ArrayAdapter<Books> {
 
@@ -58,6 +51,7 @@ public class BooksAdapter extends ArrayAdapter<Books> {
             {
                 Glide.with(getContext())
                         .load(currentBook.getBookImage())
+
                         .into(image);
 
                 /*

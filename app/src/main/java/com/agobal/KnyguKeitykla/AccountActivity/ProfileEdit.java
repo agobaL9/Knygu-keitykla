@@ -31,6 +31,8 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class ProfileEdit extends AppCompatActivity {
 
+    private static final String TAG = "ProfileEditActivity";
+
     private Spinner spinnerCity;
 
     private EditText E_ProfileInputName;
@@ -98,7 +100,7 @@ public class ProfileEdit extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 String userCity = dataSnapshot.getValue(String.class);
-                Log.d("city: ", " "+ userCity);
+                Log.d(TAG, "miestas: "+ userCity);
 
                 FirebaseDatabase  database = FirebaseDatabase.getInstance();
                 DatabaseReference mDatabaseRef = database.getReference("City");
@@ -122,7 +124,7 @@ public class ProfileEdit extends AppCompatActivity {
                         areaSpinner.setAdapter(areasAdapter);
 
                         areaSpinner.setSelection(getIndex(areaSpinner, userCity));
-                        Log.d("2city: ", " "+ userCity);
+                        Log.d(TAG, "Miestas: "+ userCity);
 
                     }
 

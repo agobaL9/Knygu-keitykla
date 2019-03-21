@@ -19,6 +19,8 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class ResetPasswordActivity extends Activity {
 
+    private static final String TAG = "ResetPasswordActivity";
+
     private EditText inputEmail;
     private FirebaseAuth auth;
 

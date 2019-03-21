@@ -39,6 +39,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MessagesFragment extends Fragment {
 
+    private static final String TAG = "MessageFragment";
+
     private DatabaseReference mConvDatabase;
     private DatabaseReference mMessageDatabase;
     private DatabaseReference mUsersDatabase;
@@ -66,7 +68,7 @@ public class MessagesFragment extends Fragment {
 
         String mCurrent_user_id = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
 
-        Log.d("userID", mCurrent_user_id + " ");
+        Log.d(TAG, "userID"+mCurrent_user_id);
 
         mConvDatabase = FirebaseDatabase.getInstance().getReference().child("Chat").child(mCurrent_user_id);
 

@@ -43,19 +43,21 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  */
 public class BookFragment extends Fragment implements AsyncTaskCompleteListener {
 
+    private static final String TAG = "BookFragment";
+
     public static final String BOOK_DETAIL_KEY = "book";
     private DatabaseReference mUserBookDatabase;
     private DatabaseReference mUserBooksUserDatabase;
+    private DatabaseReference mUserRef;
     private ArrayList<Books> BookList = new ArrayList<>();
-    private final FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-    private final String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
+    private String current_uid;
     private String userID;
     private TextView tvEmpty;
     private Boolean isUserHaveBooks = false;
     private String tempKey;
     private ListView listViewBooks;
     private BooksAdapter booksAdapter;
-
+    FirebaseUser mCurrentUser;
     private String BookKeyToDetails;
     private String UserKeyToDetails;
     private String queryText;
@@ -71,52 +73,59 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
 
         View v = inflater.inflate(R.layout.fragment_books, container, false);
 
-        pDialog = new SweetAlertDialog(Objects.requireNonNull(getContext()), SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        pDialog.setTitleText("Prašome palaukti");
-        pDialog.setCancelable(true);
-        pDialog.show();
+        Log.d(TAG, "started");
 
-        setHasOptionsMenu(true);
+        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        //DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
-        mUserBookDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks");
+            current_uid = Objects.requireNonNull(mCurrentUser).getUid();
+            mUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
 
-        listViewBooks = v.findViewById(R.id.listAllBooks);
-        tvEmpty = v.findViewById(R.id.tvEmpty);
-        tvEmpty.setVisibility(View.GONE);
 
-        setupBookSelectedListener();
+            pDialog = new SweetAlertDialog(Objects.requireNonNull(getContext()), SweetAlertDialog.PROGRESS_TYPE);
+            pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+            pDialog.setTitleText("Prašome palaukti");
+            pDialog.setCancelable(true);
+            pDialog.show();
 
-        mUserBookDatabase.keepSynced(true);
+            setHasOptionsMenu(true);
 
-        mUserBookDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            //DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
+            mUserBookDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks");
 
-                if (dataSnapshot.hasChildren()) {
-                    for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                        userID = childDataSnapshot.getKey();
+            listViewBooks = v.findViewById(R.id.listAllBooks);
+            tvEmpty = v.findViewById(R.id.tvEmpty);
+            tvEmpty.setVisibility(View.GONE);
 
-                        if (userID != null && userID.equals(current_uid)) { // ar yra dabartinis vartotojas userbooks šakoje
-                            Log.d("ar yra šakoje?", "taip");
-                            isUserHaveBooks = true;
+            setupBookSelectedListener();
+
+            mUserBookDatabase.keepSynced(true);
+
+            mUserBookDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    if (dataSnapshot.hasChildren()) {
+                        for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                            userID = childDataSnapshot.getKey();
+
+                            if (userID != null && userID.equals(current_uid)) { // ar yra dabartinis vartotojas userbooks šakoje
+                                Log.d(TAG, "ar yra šakoje? taip");
+                                isUserHaveBooks = true;
+                            }
                         }
-                    }
-                    tvEmpty.setVisibility(View.GONE);
-                    fetchBooks();
-                } else
-                    tvEmpty.setVisibility(View.VISIBLE);
+                        tvEmpty.setVisibility(View.GONE);
+                        fetchBooks();
+                    } else
+                        tvEmpty.setVisibility(View.VISIBLE);
 
-                pDialog.dismissWithAnimation();
-            }
+                    pDialog.dismissWithAnimation();
+                }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("onCancelled", " Suveikė canceled");
-            }
-        });
-
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.d(TAG, " Suveikė canceled");
+                }
+            });
         return v;
     }
 
@@ -129,7 +138,7 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                    Log.d("All userID", "" + childDataSnapshot.getKey()); //got all users ID
+                    Log.d(TAG, "All userID " + childDataSnapshot.getKey()); //got all users ID
 
                     userID = childDataSnapshot.getKey();
 
@@ -143,10 +152,10 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 //String BookName = dataSnapshot.child("bookName").getValue(String.class);
                                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                                    Log.d("get key", "" + childDataSnapshot.getKey());   //Gaunu visus knygų ID
+                                    Log.d(TAG, "get key" + childDataSnapshot.getKey());   //Gaunu visus knygų ID
 
                                     String path = childDataSnapshot.getRef().toString();
-                                    Log.d("path:", path + " ");
+                                    Log.d(TAG, "path "+path);
 
                                     tempKey = childDataSnapshot.getKey();
                                     BookKeyToDetails = childDataSnapshot.getKey();
@@ -189,7 +198,7 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("onCancelled", " Suveikė canceled2");
+                Log.d(TAG, " Suveikė canceled2");
             }
         });
 
@@ -204,7 +213,7 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                    Log.d("All userID", "" + childDataSnapshot.getKey()); //got all users ID
+                    Log.d(TAG, "All userID" + childDataSnapshot.getKey()); //got all users ID
 
                     userID = childDataSnapshot.getKey();
 
@@ -223,10 +232,10 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 //String BookName = dataSnapshot.child("bookName").getValue(String.class);
                                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                                    Log.d("get key", "" + childDataSnapshot.getKey());   //Gaunu visus knygų ID
+                                    Log.d(TAG, "get key " + childDataSnapshot.getKey());   //Gaunu visus knygų ID
 
                                     String path = childDataSnapshot.getRef().toString();
-                                    Log.d("path:", path + " ");
+                                    Log.d(TAG, "path: "+path);
 
                                     tempKey = childDataSnapshot.getKey();
                                     BookKeyToDetails = childDataSnapshot.getKey();
@@ -267,7 +276,7 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("onCancelled", " Suveikė canceled2");
+                Log.d(TAG, " Suveikė canceled2");
             }
         });
 
@@ -302,7 +311,7 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
             intent.putExtra("BOOK_KEY", BookKeyToDetails);
             intent.putExtra("USER_KEY", UserKeyToDetails);
             startActivity(intent);
-            Log.d("NEW_INTENT", "VEIKIA");
+            Log.d(TAG, "NEW_INTENT VEIKIA");
         });
     }
 
@@ -317,7 +326,7 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.book_setting:
-                Log.d("press", "yes");
+                Log.d(TAG, "press yes");
                 showFilter();
                 return true;
             default:
@@ -327,8 +336,9 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
 
     @Override
     public void onTaskComplete() {
-        Log.d("taskComplete", "TAIP");
+        Log.d(TAG, "taskComplete TAIP");
         //pDialog.dismissWithAnimation();
 
     }
+
 }

@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.agobal.KnyguKeitykla.MainActivity;
 import com.agobal.KnyguKeitykla.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -29,6 +28,9 @@ import java.util.Map;
 import java.util.Objects;
 
 public class UserDataActivity extends Activity{
+
+    private static final String TAG = "UserDataActivity";
+
 
     private EditText inputName;
     private EditText inputLastName;
@@ -62,7 +64,7 @@ public class UserDataActivity extends Activity{
                     {
                         storeUserData(FirstName, LastName, CityName);
                         // Launch main activity
-                        Intent intent = new Intent(UserDataActivity.this, MainActivity.class);
+                        Intent intent = new Intent(UserDataActivity.this, LoginActivity.class);
                         startActivity(intent);
                         finish();
                     }

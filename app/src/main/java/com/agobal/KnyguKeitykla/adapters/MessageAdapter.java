@@ -1,14 +1,14 @@
 package com.agobal.KnyguKeitykla.adapters;
 
 
-import java.util.List;
-import java.util.Objects;
-
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.*;
-import android.widget.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.agobal.KnyguKeitykla.Entities.Messages;
 import com.agobal.KnyguKeitykla.R;
@@ -19,9 +19,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+import java.util.Objects;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder>{
+
+    private static final String TAG = "MsgAdapterActivity";
 
 
     private final List<Messages> mMessageList;
