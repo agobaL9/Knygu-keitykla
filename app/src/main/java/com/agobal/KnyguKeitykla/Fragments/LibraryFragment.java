@@ -3,7 +3,6 @@ package com.agobal.KnyguKeitykla.Fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -13,12 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.agobal.KnyguKeitykla.API.SearchBookAPI;
+import com.agobal.KnyguKeitykla.BookDetails.MyBookDetail;
 import com.agobal.KnyguKeitykla.Entities.MyBook;
 import com.agobal.KnyguKeitykla.R;
-import com.agobal.KnyguKeitykla.BookDetails.MyBookDetail;
-import com.agobal.KnyguKeitykla.API.SearchBookAPI;
 import com.agobal.KnyguKeitykla.adapters.MyBookAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -30,8 +30,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Objects;
-
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,6 +53,8 @@ public class LibraryFragment extends Fragment {
     private final FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
     private final String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
     private String BookKeyToDetails;
+    ProgressBar spinner;
+
 
     public LibraryFragment() {
         // Required empty public constructor
@@ -69,11 +69,12 @@ public class LibraryFragment extends Fragment {
 
         Log.d(TAG, "currentID " + current_uid);
 
-        SweetAlertDialog pDialog = new SweetAlertDialog(Objects.requireNonNull(getContext()), SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        pDialog.setTitleText("Prašome palaukti");
-        pDialog.setCancelable(true);
-        pDialog.show();
+//        SweetAlertDialog pDialog = new SweetAlertDialog(Objects.requireNonNull(getContext()), SweetAlertDialog.PROGRESS_TYPE);
+//        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+//        pDialog.setTitleText("Prašome palaukti");
+//        pDialog.setCancelable(true);
+//        pDialog.show();
+
 
         //DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
         mUserBooksDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks");
@@ -81,6 +82,9 @@ public class LibraryFragment extends Fragment {
         listView = v.findViewById(R.id.listMyBooks);
         tvEmpty = v.findViewById(R.id.tvEmpty);
         tvEmpty.setVisibility(View.GONE);
+        spinner = v.findViewById(R.id.progressBar);
+        spinner.setVisibility(View.VISIBLE);
+
 
         listView.setAdapter(myBookAdapter);
         myBookAdapter = new MyBookAdapter(Objects.requireNonNull(getContext()), MyBookList);
@@ -89,7 +93,7 @@ public class LibraryFragment extends Fragment {
 
         IsUserHaveBooks();
 
-        pDialog.dismissWithAnimation();
+        spinner.setVisibility(View.GONE);
 
         FloatingActionButton fab = v.findViewById(R.id.fab);
 

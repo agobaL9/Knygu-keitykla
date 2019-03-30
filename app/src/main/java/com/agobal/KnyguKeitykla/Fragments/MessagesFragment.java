@@ -1,7 +1,6 @@
 package com.agobal.KnyguKeitykla.Fragments;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -34,7 +33,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MessagesFragment extends Fragment {
@@ -49,6 +47,7 @@ public class MessagesFragment extends Fragment {
     private FirebaseRecyclerAdapter<Conversation, ConvViewHolder> firebaseConvAdapter;
 
     private TextView tvEmpty;
+    //ProgressBar spinner;
 
 
     public MessagesFragment() {
@@ -59,11 +58,13 @@ public class MessagesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View mMainView = inflater.inflate(R.layout.fragment_messages, container, false);
+        View v = inflater.inflate(R.layout.fragment_messages, container, false);
 
-        tvEmpty = mMainView.findViewById(R.id.tvEmpty);
+        tvEmpty = v.findViewById(R.id.tvEmpty);
         tvEmpty.setVisibility(View.GONE);
-        mConvList = mMainView.findViewById(R.id.conv_list);
+        mConvList = v.findViewById(R.id.conv_list);
+        // spinner = v.findViewById(R.id.progressBar);
+
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
         String mCurrent_user_id = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
@@ -108,7 +109,7 @@ public class MessagesFragment extends Fragment {
         onActivityStarted();
 
         // Inflate the layout for this fragment
-        return mMainView;
+        return v;
     }
 
     private void onActivityStarted() {
@@ -253,11 +254,13 @@ public class MessagesFragment extends Fragment {
 
         void setUserImage(String thumb_image){
 
-            SweetAlertDialog pDialog = new SweetAlertDialog(Objects.requireNonNull(getContext()), SweetAlertDialog.PROGRESS_TYPE);
-            pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-            pDialog.setTitleText("Prašome palaukti");
-            pDialog.setCancelable(true);
-            pDialog.show();
+//            SweetAlertDialog pDialog = new SweetAlertDialog(Objects.requireNonNull(getContext()), SweetAlertDialog.PROGRESS_TYPE);
+//            pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+//            pDialog.setTitleText("Prašome palaukti");
+//            pDialog.setCancelable(true);
+//            pDialog.show();
+            //spinner.setVisibility(View.VISIBLE);
+
 
             CircleImageView userImageView = mView.findViewById(R.id.user_single_image);
             Picasso.get()
@@ -266,13 +269,13 @@ public class MessagesFragment extends Fragment {
                     .into(userImageView, new Callback() {
                         @Override
                         public void onSuccess() {
-                            pDialog.dismissWithAnimation();
+                            //spinner.setVisibility(View.GONE);
 
                         }
 
                         @Override
                         public void onError(Exception e) {
-
+                            //spinner.setVisibility(View.GONE);
                         }
                     });
 

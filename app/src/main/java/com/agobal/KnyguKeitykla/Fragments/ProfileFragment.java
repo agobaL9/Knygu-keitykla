@@ -3,7 +3,6 @@ package com.agobal.KnyguKeitykla.Fragments;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,13 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.agobal.KnyguKeitykla.AccountActivity.ProfileEdit;
 import com.agobal.KnyguKeitykla.BookDetails.BookDetails;
 import com.agobal.KnyguKeitykla.Entities.Books;
 import com.agobal.KnyguKeitykla.Entities.UserData;
 import com.agobal.KnyguKeitykla.R;
-import com.agobal.KnyguKeitykla.AccountActivity.ProfileEdit;
 import com.agobal.KnyguKeitykla.adapters.BooksAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -37,14 +37,12 @@ import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 import id.zelory.compressor.Compressor;
 
@@ -83,6 +81,8 @@ public class ProfileFragment extends Fragment {
     private String userID;
     private Boolean isUserHaveFavBooks = false;
     private TextView tvEmpty;
+    ProgressBar spinner;
+
 
 
     public ProfileFragment() {
@@ -95,11 +95,14 @@ public class ProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        SweetAlertDialog pDialog = new SweetAlertDialog(Objects.requireNonNull(getContext()), SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        pDialog.setTitleText("Prašome palaukti");
-        pDialog.setCancelable(true);
-        pDialog.show();
+        spinner = v.findViewById(R.id.progressBar);
+
+//        SweetAlertDialog pDialog = new SweetAlertDialog(Objects.requireNonNull(getContext()), SweetAlertDialog.PROGRESS_TYPE);
+//        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+//        pDialog.setTitleText("Prašome palaukti");
+//        pDialog.setCancelable(true);
+//        pDialog.show();
+        spinner.setVisibility(View.VISIBLE);
 
         ViewCompat.setNestedScrollingEnabled(v, true);
 
@@ -150,7 +153,7 @@ public class ProfileFragment extends Fragment {
                             .into(ProfilePic, new Callback() {
                         @Override
                         public void onSuccess() {
-                            pDialog.dismissWithAnimation();
+                            spinner.setVisibility(View.GONE);
                         }
 
                         @Override
@@ -205,7 +208,7 @@ public class ProfileFragment extends Fragment {
                 } else
                     tvEmpty.setVisibility(View.VISIBLE);
 
-                pDialog.dismissWithAnimation();
+                spinner.setVisibility(View.GONE);
             }
 
             @Override
@@ -306,11 +309,13 @@ public class ProfileFragment extends Fragment {
             if (resultCode == RESULT_OK) {
 
                 //progress dialog
-                SweetAlertDialog pDialog = new SweetAlertDialog(Objects.requireNonNull(getContext()), SweetAlertDialog.PROGRESS_TYPE);
-                pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-                pDialog.setTitleText("Prašome palaukti");
-                pDialog.setCancelable(true);
-                pDialog.show();
+//                SweetAlertDialog pDialog = new SweetAlertDialog(Objects.requireNonNull(getContext()), SweetAlertDialog.PROGRESS_TYPE);
+//                pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+//                pDialog.setTitleText("Prašome palaukti");
+//                pDialog.setCancelable(true);
+//                pDialog.show();
+                spinner.setVisibility(View.VISIBLE);
+
 
                 Uri resultUri = result.getUri();
 
@@ -350,14 +355,14 @@ public class ProfileFragment extends Fragment {
 
                     String download_url = uri.toString();
                     mUserDatabase.child("image").setValue(download_url);
-                    pDialog.dismiss();
+                    spinner.setVisibility(View.GONE);
                 }));
 
                 thumb_filepath.putFile(resultUri).addOnSuccessListener(taskSnapshot -> thumb_filepath.getDownloadUrl().addOnSuccessListener(uri -> {
                     String thumb_download_url = uri.toString();
                     Log.d(TAG, "thumb URL: "+thumb_download_url);
                     mUserDatabase.child("thumb_image").setValue(thumb_download_url);
-                    pDialog.dismiss();
+                    spinner.setVisibility(View.GONE);
 
                 }));
 

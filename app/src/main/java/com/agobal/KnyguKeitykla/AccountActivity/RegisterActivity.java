@@ -2,15 +2,16 @@ package com.agobal.KnyguKeitykla.AccountActivity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.agobal.KnyguKeitykla.MainActivity;
@@ -27,8 +28,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
-
 public class RegisterActivity extends Activity {
 
     private static final String TAG = "RegisterActivity";
@@ -39,6 +38,8 @@ public class RegisterActivity extends Activity {
     private EditText inputPassword;
     private EditText inputPassword2;
     private FirebaseAuth auth;
+    ProgressBar spinner;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,8 +55,12 @@ public class RegisterActivity extends Activity {
         inputPassword2 = findViewById(R.id.password2);
         Button btnRegister = findViewById(R.id.btnRegister);
         Button btnLinkToLogin = findViewById(R.id.btnLinkToLoginScreen);
+        spinner = findViewById(R.id.progressBar);
+
 
         auth = FirebaseAuth.getInstance();
+
+        spinner.setVisibility(View.GONE);
 
         // Register Button Click event
         btnRegister.setOnClickListener(view -> {
@@ -123,18 +128,20 @@ public class RegisterActivity extends Activity {
 
     private void registerUser(final String userName, final String email, final String password) {
 
-        SweetAlertDialog pDialog = new SweetAlertDialog(RegisterActivity.this, SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        pDialog.setTitleText("Prašome palaukti");
-        pDialog.setCancelable(false);
-        pDialog.show();
+//        SweetAlertDialog pDialog = new SweetAlertDialog(RegisterActivity.this, SweetAlertDialog.PROGRESS_TYPE);
+//        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+//        pDialog.setTitleText("Prašome palaukti");
+//        pDialog.setCancelable(false);
+//        pDialog.show();
+        spinner.setVisibility(View.VISIBLE);
+
 
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(RegisterActivity.this, task -> {
 
                     if (!task.isSuccessful()) {
                         Toast.makeText(RegisterActivity.this, "Registuojantis įvyko klaida!" ,Toast.LENGTH_SHORT).show();
-                        pDialog.dismissWithAnimation();
+                        spinner.setVisibility(View.GONE);
                     }
                     else
                     {
@@ -155,7 +162,7 @@ public class RegisterActivity extends Activity {
                         String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
                         DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
 
-                        pDialog.dismissWithAnimation();
+                        spinner.setVisibility(View.GONE);
 
                         mUserDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override

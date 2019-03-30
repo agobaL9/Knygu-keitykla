@@ -2,17 +2,19 @@ package com.agobal.KnyguKeitykla.BookDetails;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.agobal.KnyguKeitykla.API.SearchBookAPI;
 import com.agobal.KnyguKeitykla.API.BookEditAPI;
+import com.agobal.KnyguKeitykla.API.SearchBookAPI;
 import com.agobal.KnyguKeitykla.Entities.BookAPI;
 import com.agobal.KnyguKeitykla.R;
 import com.agobal.KnyguKeitykla.helper.BookClient;
@@ -47,6 +49,8 @@ public class BookDetailActivityAPI extends AppCompatActivity {
     private TextView tvPublishYear;
     private String imageURL;
     private TextView title;
+    ProgressBar spinner;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,11 +72,13 @@ public class BookDetailActivityAPI extends AppCompatActivity {
         tvAuthor = findViewById(R.id.tvAuthor);
         tvPublisher = findViewById(R.id.tvPublisher);
         tvPublishYear = findViewById(R.id.tvPublishYear);
+        spinner = findViewById(R.id.progressBar);
 
         Button btnSaveAndEdit = findViewById(R.id.btnSaveAndEdit);
         // Use the bookAPI to populate the data into our views
         BookAPI bookAPI = (BookAPI) getIntent().getSerializableExtra(SearchBookAPI.BOOK_DETAIL_KEY);
         loadBook(bookAPI);
+        spinner.setVisibility(View.GONE);
 
         btnSaveAndEdit.setOnClickListener(view -> saveAndEdit());
 
@@ -98,6 +104,7 @@ public class BookDetailActivityAPI extends AppCompatActivity {
     }
 
     private void loadBook(BookAPI bookAPI) {
+        spinner.setVisibility(View.VISIBLE);
         //change activity title
         title.setText(bookAPI.getTitle());
         // Populate data

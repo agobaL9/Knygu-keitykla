@@ -1,14 +1,15 @@
 package com.agobal.KnyguKeitykla.BookDetails;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.agobal.KnyguKeitykla.Books.MyBookEdit;
@@ -50,6 +51,8 @@ public class MyBookDetail extends AppCompatActivity {
     private String BookKey;
 
     private String imageURL;
+    ProgressBar spinner;
+
 
     private final FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
     private final String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
@@ -73,6 +76,9 @@ public class MyBookDetail extends AppCompatActivity {
         tvBookYear= findViewById(R.id.tvBookYear);
         tvBookCondition= findViewById(R.id.tvBookCondition);
         tvBookCategory= findViewById(R.id.tvBookCategory);
+        spinner = findViewById(R.id.progressBar);
+        spinner.setVisibility(View.GONE);
+
 
         FloatingActionButton fabEdit = findViewById(R.id.fb_edit);
         FloatingActionButton fabDelete = findViewById(R.id.fb_delete);
@@ -121,11 +127,13 @@ public class MyBookDetail extends AppCompatActivity {
 
     private void loadBook(MyBook myBook) {
         //change activity title
-        SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        pDialog.setTitleText("Prašome palaukti...");
-        pDialog.setCancelable(true);
-        pDialog.show();
+//        SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
+//        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+//        pDialog.setTitleText("Prašome palaukti...");
+//        pDialog.setCancelable(true);
+//        pDialog.show();
+        spinner.setVisibility(View.VISIBLE);
+
 
         title.setText(myBook.getBookName());
         // Populate data
@@ -140,7 +148,7 @@ public class MyBookDetail extends AppCompatActivity {
                     .into(ivBookCover, new Callback() {
                         @Override
                         public void onSuccess() {
-                            pDialog.dismissWithAnimation();
+                            spinner.setVisibility(View.GONE);
                         }
 
                         @Override
@@ -159,7 +167,7 @@ public class MyBookDetail extends AppCompatActivity {
                     .into(ivBookCover, new Callback() {
                         @Override
                         public void onSuccess() {
-                            pDialog.dismissWithAnimation();
+                            spinner.setVisibility(View.GONE);
                         }
 
                         @Override

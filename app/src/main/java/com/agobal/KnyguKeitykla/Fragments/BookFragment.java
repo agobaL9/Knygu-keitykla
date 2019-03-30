@@ -3,7 +3,6 @@ package com.agobal.KnyguKeitykla.Fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -15,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.agobal.KnyguKeitykla.BookDetails.BookDetails;
@@ -34,8 +34,6 @@ import com.yarolegovich.lovelydialog.LovelyTextInputDialog;
 
 import java.util.ArrayList;
 import java.util.Objects;
-
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 
 /**
@@ -61,10 +59,17 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
     private String BookKeyToDetails;
     private String UserKeyToDetails;
     private String queryText;
-    SweetAlertDialog pDialog;
+
 
     public BookFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+
     }
 
     @Override
@@ -72,60 +77,64 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
                              Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_books, container, false);
-
+        //SweetAlertDialog pDialog;
+        ProgressBar spinner = v.findViewById(R.id.progressBar1);
         Log.d(TAG, "started");
 
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-            current_uid = Objects.requireNonNull(mCurrentUser).getUid();
-            mUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
+        current_uid = Objects.requireNonNull(mCurrentUser).getUid();
+        mUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
 
 
-            pDialog = new SweetAlertDialog(Objects.requireNonNull(getContext()), SweetAlertDialog.PROGRESS_TYPE);
-            pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-            pDialog.setTitleText("Prašome palaukti");
-            pDialog.setCancelable(true);
-            pDialog.show();
+//            pDialog = new SweetAlertDialog(Objects.requireNonNull(getContext()), SweetAlertDialog.PROGRESS_TYPE);
+//            pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+//            pDialog.setTitleText("Prašome palaukti");
+//            pDialog.setCancelable(true);
+//            pDialog.show();
+        spinner.setVisibility(View.VISIBLE);
 
-            setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
 
-            //DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
-            mUserBookDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks");
+        //DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
+        mUserBookDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks");
 
-            listViewBooks = v.findViewById(R.id.listAllBooks);
-            tvEmpty = v.findViewById(R.id.tvEmpty);
-            tvEmpty.setVisibility(View.GONE);
+        listViewBooks = v.findViewById(R.id.listAllBooks);
+        tvEmpty = v.findViewById(R.id.tvEmpty);
+        tvEmpty.setVisibility(View.GONE);
 
-            setupBookSelectedListener();
+        setupBookSelectedListener();
 
-            mUserBookDatabase.keepSynced(true);
+        mUserBookDatabase.keepSynced(true);
 
-            mUserBookDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        mUserBookDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                    if (dataSnapshot.hasChildren()) {
-                        for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                            userID = childDataSnapshot.getKey();
+                if (dataSnapshot.hasChildren()) {
+                    for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                        userID = childDataSnapshot.getKey();
 
-                            if (userID != null && userID.equals(current_uid)) { // ar yra dabartinis vartotojas userbooks šakoje
-                                Log.d(TAG, "ar yra šakoje? taip");
-                                isUserHaveBooks = true;
-                            }
+                        if (userID != null && userID.equals(current_uid)) { // ar yra dabartinis vartotojas userbooks šakoje
+                            Log.d(TAG, "ar yra šakoje? taip");
+                            isUserHaveBooks = true;
                         }
-                        tvEmpty.setVisibility(View.GONE);
-                        fetchBooks();
-                    } else
-                        tvEmpty.setVisibility(View.VISIBLE);
+                    }
+                    tvEmpty.setVisibility(View.GONE);
+                    fetchBooks();
+                } else
+                    tvEmpty.setVisibility(View.VISIBLE);
 
-                    pDialog.dismissWithAnimation();
-                }
+                //pDialog.dismissWithAnimation();
+                spinner.setVisibility(View.GONE);
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Log.d(TAG, " Suveikė canceled");
-                }
-            });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d(TAG, " Suveikė canceled");
+            }
+        });
         return v;
     }
 
@@ -285,20 +294,20 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
 
     private void showFilter() {
 
-                new LovelyTextInputDialog(getContext())
-                        .setTopColorRes(R.color.colorPrimary)
-                        .setTitle("Paieška")
-                        .setMessage("Įrašykite knygos pavadinimą")
-                        .setInputFilter("Paieška nepavyko, patikrinkite įvedimo lauką", text -> text.matches("\\w+"))
-                        .setConfirmButton(android.R.string.ok, text -> {
-                            queryText = text;
-                            Log.d("querrytext", queryText + " ");
-                            fetchBooksWithFilter(queryText);
+        new LovelyTextInputDialog(getContext())
+                .setTopColorRes(R.color.colorPrimary)
+                .setTitle("Paieška")
+                .setMessage("Įrašykite knygos pavadinimą")
+                .setInputFilter("Paieška nepavyko, patikrinkite įvedimo lauką", text -> text.matches("\\w+"))
+                .setConfirmButton(android.R.string.ok, text -> {
+                    queryText = text;
+                    Log.d("querrytext", queryText + " ");
+                    fetchBooksWithFilter(queryText);
 
-                        })
-                        .setNegativeButton("Išvalyti filtrą", text -> fetchBooks())
-                        .setNegativeButtonColor(R.color.Red)
-                        .show();
+                })
+                .setNegativeButton("Išvalyti filtrą", text -> fetchBooks())
+                .setNegativeButtonColor(R.color.Red)
+                .show();
 
     }
 

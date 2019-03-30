@@ -2,14 +2,15 @@ package com.agobal.KnyguKeitykla.BookDetails;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +33,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class BookDetails extends AppCompatActivity {
@@ -66,6 +66,8 @@ public class BookDetails extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private DatabaseReference mUserFavBookDelete;
     private DatabaseReference mUserFavBooks;
+    ProgressBar spinner;
+
 
 
     @Override
@@ -76,6 +78,7 @@ public class BookDetails extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.action_bar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        spinner = findViewById(R.id.progressBar);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
@@ -90,6 +93,7 @@ public class BookDetails extends AppCompatActivity {
 
         fab_star.setButtonColor(getResources().getColor(R.color.colorAccent));
         fab_star.setButtonColorPressed(getResources().getColor(R.color.fab_material_amber_500));
+
 
         mUserFavBookDelete = FirebaseDatabase.getInstance().getReference();
 
@@ -227,11 +231,13 @@ public class BookDetails extends AppCompatActivity {
 
     private void loadBook(Books Book) {
         //change activity title
-        SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        pDialog.setTitleText("Prašome palaukti...");
-        pDialog.setCancelable(true);
-        pDialog.show();
+//        SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
+//        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+//        pDialog.setTitleText("Prašome palaukti...");
+//        pDialog.setCancelable(true);
+//        pDialog.show();
+        spinner.setVisibility(View.VISIBLE);
+
 
         title.setText(Book.getBookName());
 
@@ -247,7 +253,7 @@ public class BookDetails extends AppCompatActivity {
                     .into(ivBookCover, new Callback() {
                         @Override
                         public void onSuccess() {
-                            pDialog.dismissWithAnimation();
+                            spinner.setVisibility(View.GONE);
                         }
 
                         @Override
@@ -266,7 +272,7 @@ public class BookDetails extends AppCompatActivity {
                     .into(ivBookCover, new Callback() {
                         @Override
                         public void onSuccess() {
-                            pDialog.dismissWithAnimation();
+                            spinner.setVisibility(View.GONE);
                         }
 
                         @Override

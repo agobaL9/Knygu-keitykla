@@ -8,6 +8,12 @@
     android:orientation="vertical"
     tools:context=".API.SearchBookAPI">
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,6 +38,8 @@
                     app:contentPaddingLeft="15dp"
                     app:contentPaddingRight="15dp"
                     app:contentPaddingTop="15dp">
+
+
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -68,6 +76,15 @@
                     app:contentPaddingLeft="15dp"
                     app:contentPaddingRight="15dp"
                     app:contentPaddingTop="15dp">
+
+                    <ProgressBar
+                        android:id="@+id/progressBar"
+                        style="?android:attr/progressBarStyleLarge"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:visibility="gone"/>
+
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -291,4 +308,7 @@
             </LinearLayout>
 
         </LinearLayout>
+    </FrameLayout>
+
+
     </ScrollView>

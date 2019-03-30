@@ -2,9 +2,11 @@
 .gradle
 /local.properties
 /.idea
-/.idea/modules.xml
-/.idea/workspace.xml
 .DS_Store
 /build
 /captures
 .externalNativeBuild
+app/libs/
+app/lint-baseline.xml
+app/sampledata/
+app/src/main/res/color/

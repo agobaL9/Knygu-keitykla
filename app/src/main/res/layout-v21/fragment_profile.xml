@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,6 +7,8 @@
     android:orientation="vertical"
     tools:context=".API.SearchBookAPI"
     tools:ignore="Overdraw">
+
+
 
     <ScrollView
         android:layout_width="match_parent"
@@ -56,7 +58,18 @@
                             app:contentPaddingLeft="15dp"
                             app:contentPaddingRight="15dp"
                             app:contentPaddingTop="15dp">
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center">
 
+                                <ProgressBar
+                                    android:id="@+id/progressBar"
+                                    style="?android:attr/progressBarStyleLarge"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content" />
+
+                            </LinearLayout>
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -184,7 +197,7 @@
 
     </ScrollView>
 
-</LinearLayout>
+</FrameLayout>
 
 
 

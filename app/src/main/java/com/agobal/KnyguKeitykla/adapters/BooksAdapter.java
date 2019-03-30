@@ -51,7 +51,6 @@ public class BooksAdapter extends ArrayAdapter<Books> {
             {
                 Glide.with(getContext())
                         .load(currentBook.getBookImage())
-
                         .into(image);
 
                 /*

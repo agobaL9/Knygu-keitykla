@@ -1,7 +1,6 @@
 package com.agobal.KnyguKeitykla.API;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
@@ -12,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.agobal.KnyguKeitykla.BookDetails.BookDetailActivityAPI;
@@ -29,7 +29,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import cz.msebera.android.httpclient.Header;
 
 public class SearchBookAPI extends AppCompatActivity {
@@ -41,6 +40,7 @@ public class SearchBookAPI extends AppCompatActivity {
     private BookAdapterAPI bookAdapterAPI;
     private ListView lvBooks;
     private TextView empty_list_view;
+    ProgressBar spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +50,10 @@ public class SearchBookAPI extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.action_bar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        spinner = findViewById(R.id.progressBar);
+        spinner.setVisibility(View.GONE);
+
 
         TextView title = findViewById(getResources().getIdentifier("action_bar_title", "id", getPackageName()));
         title.setText("Paieška");
@@ -65,8 +69,8 @@ public class SearchBookAPI extends AppCompatActivity {
         bookAdapterAPI = new BookAdapterAPI(this, aBookAPIS);
         lvBooks.setEmptyView(empty_list_view);
         lvBooks.setAdapter(bookAdapterAPI);
-        String emptyString = "";
-        fetchBooks(emptyString);
+        //String emptyString = "";
+        //fetchBooks(emptyString);
         empty_list_view.setVisibility(View.VISIBLE);
 
         setupBookSelectedListener();
@@ -90,18 +94,20 @@ public class SearchBookAPI extends AppCompatActivity {
 
     private void fetchBooks(String query) {
 
-        SweetAlertDialog pDialog = new SweetAlertDialog(SearchBookAPI.this, SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        pDialog.setTitleText("Prašome palaukti");
-        pDialog.setCancelable(false);
-        pDialog.show();
+//        SweetAlertDialog pDialog = new SweetAlertDialog(SearchBookAPI.this, SweetAlertDialog.PROGRESS_TYPE);
+//        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+//        pDialog.setTitleText("Prašome palaukti");
+//        pDialog.setCancelable(false);
+//        pDialog.show();
+        empty_list_view.setVisibility(View.GONE);
+        spinner.setVisibility(View.VISIBLE);
 
         BookClient client = new BookClient();
         client.getBooks(query, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
-                    pDialog.dismissWithAnimation();
+                    spinner.setVisibility(View.GONE);
 
                     Log.d("response API", response + " ");
                     JSONArray docs;
@@ -127,7 +133,7 @@ public class SearchBookAPI extends AppCompatActivity {
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                pDialog.dismissWithAnimation();
+                spinner.setVisibility(View.GONE);
 
             }
         });

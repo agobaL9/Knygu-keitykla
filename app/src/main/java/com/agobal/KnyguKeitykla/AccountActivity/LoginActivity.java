@@ -1,7 +1,6 @@
 package com.agobal.KnyguKeitykla.AccountActivity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +10,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,7 +18,6 @@ import com.agobal.KnyguKeitykla.MainActivity;
 import com.agobal.KnyguKeitykla.R;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
@@ -35,8 +34,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Objects;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
-
 public class LoginActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
@@ -46,6 +43,7 @@ public class LoginActivity extends AppCompatActivity implements
     private GoogleApiClient mGoogleApiClient;
     FirebaseAuth auth;
     FirebaseAuth.AuthStateListener mAuthListener;
+    ProgressBar spinner;
 
     @Override
     protected void onStart() {
@@ -99,6 +97,9 @@ public class LoginActivity extends AppCompatActivity implements
 
         setContentView(R.layout.activity_login);
 
+        spinner = findViewById(R.id.progressBar);
+        spinner.setVisibility(View.GONE);
+
 
         // Assign fields
         mSignInButton = findViewById(R.id.sign_in_button);
@@ -106,7 +107,7 @@ public class LoginActivity extends AppCompatActivity implements
         // Set click listeners
         mSignInButton.setOnClickListener(this);
 
-        // Configure Google Sign In
+       /* // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -114,7 +115,7 @@ public class LoginActivity extends AppCompatActivity implements
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
+                .build();*/
 
         final EditText inputEmail = findViewById(R.id.email);
         final EditText inputPassword = findViewById(R.id.password);
@@ -163,19 +164,20 @@ public class LoginActivity extends AppCompatActivity implements
 
         if (!email.isEmpty() && !password.isEmpty()) {
         //firebase/*
-            SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
-            pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-            pDialog.setTitleText("Prašome palaukti...");
-            pDialog.setCancelable(false);
-            pDialog.show();
+//            SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
+//            pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+//            pDialog.setTitleText("Prašome palaukti...");
+//            pDialog.setCancelable(false);
+//            pDialog.show();
+            spinner.setVisibility(View.VISIBLE);
 
-        auth.signInWithEmailAndPassword(email, password)
+
+            auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(LoginActivity.this, task -> {
                     if (!task.isSuccessful())
                     {
                         Toast.makeText(getApplicationContext(), "Prisijungti nepavyko, prašome patikrinti įvestus duomenis", Toast.LENGTH_LONG).show();
-                        if(pDialog.isShowing())
-                            pDialog.dismissWithAnimation();
+                        spinner.setVisibility(View.GONE);
 
                     }
                     else
@@ -190,16 +192,16 @@ public class LoginActivity extends AppCompatActivity implements
 
                                 if (dataSnapshot.child("cityName").exists()) {
                                     //isUserDataExist = true;
-                                    if(pDialog.isShowing())
-                                        pDialog.dismissWithAnimation();
+                                    spinner.setVisibility(View.GONE);
+
                                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                     startActivity(intent);
                                     finish();
                                 }
                                 else
                                 {
-                                    if(pDialog.isShowing())
-                                        pDialog.dismissWithAnimation();
+                                    spinner.setVisibility(View.GONE);
+
                                     startActivity(new Intent(LoginActivity.this, UserDataActivity.class));
                                 }
 
@@ -225,7 +227,7 @@ public class LoginActivity extends AppCompatActivity implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.sign_in_button:
-                signIn();
+                //signIn();
                 break;
         }
     }

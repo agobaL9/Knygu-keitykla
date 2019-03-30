@@ -3,7 +3,6 @@ package com.agobal.KnyguKeitykla.Chat;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -48,43 +47,31 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Chat_activity extends AppCompatActivity {
 
     private static final String TAG = "ChatAtivity";
-
-
     private String mChatUser;
-
     private DatabaseReference mRootRef; // comment
-
     private TextView mLastSeenView;
     private CircleImageView mProfileImage;
-
     private String mCurrentUserId;
-
     private EditText mChatMessageView;
-
     private RecyclerView mMessagesList;
     private SwipeRefreshLayout mRefreshLayout;
-
     private final List<Messages> messagesList = new ArrayList<>();
     private LinearLayoutManager mLinearLayout;
     private MessageAdapter mAdapter;
-
     private static final int TOTAL_ITEMS_TO_LOAD = 10;
     private int mCurrentPage = 1;
-
     private static final int GALLERY_PICK = 1;
-
     private StorageReference mImageStorage;
-
     // testing solution
     private int itemPos = 0;
     private String mLastKey = "";
     private String mPrevKey = "";
+    //ProgressBar spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +87,6 @@ public class Chat_activity extends AppCompatActivity {
         actionBar.setDisplayShowCustomEnabled(true);
 
         mRootRef = FirebaseDatabase.getInstance().getReference();
-
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         mCurrentUserId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
 
@@ -112,8 +98,6 @@ public class Chat_activity extends AppCompatActivity {
 
         actionBar.setCustomView(action_bar_view);
 
-        // -------- Custom Action Bar Items ---------
-
         TextView mTitleView = findViewById(R.id.custom_bar_title);
         mLastSeenView = findViewById(R.id.custom_bar_seen);
         mProfileImage = findViewById(R.id.custom_bar_image);
@@ -121,6 +105,7 @@ public class Chat_activity extends AppCompatActivity {
         ImageButton mChatAddBtn = findViewById(R.id.chat_add_btn);
         ImageButton mChatSendBtn = findViewById(R.id.chat_send_btn);
         mChatMessageView = findViewById(R.id.chat_message_view);
+        //spinner = findViewById(R.id.progressBar);
 
         mAdapter = new MessageAdapter(messagesList);
 
@@ -137,11 +122,8 @@ public class Chat_activity extends AppCompatActivity {
 
         mImageStorage = FirebaseStorage.getInstance().getReference();
 
-        SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        pDialog.setTitleText("Prašome palaukti...");
-        pDialog.setCancelable(true);
-        pDialog.show();
+        //spinner.setVisibility(View.VISIBLE);
+
 
         mRootRef.child("Chat").child(mCurrentUserId).child(mChatUser).child("seen").setValue(true);
         mRootRef.keepSynced(true);
@@ -173,11 +155,12 @@ public class Chat_activity extends AppCompatActivity {
                         .into(mProfileImage, new Callback() {
                             @Override
                             public void onSuccess() {
-                                pDialog.dismissWithAnimation();
+                                //spinner.setVisibility(View.GONE);
                             }
 
                             @Override
                             public void onError(Exception e) {
+                                //spinner.setVisibility(View.GONE);
 
                             }
                         });
