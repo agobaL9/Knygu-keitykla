@@ -101,29 +101,20 @@ public class Chat_activity extends AppCompatActivity {
         TextView mTitleView = findViewById(R.id.custom_bar_title);
         mLastSeenView = findViewById(R.id.custom_bar_seen);
         mProfileImage = findViewById(R.id.custom_bar_image);
-
         ImageButton mChatAddBtn = findViewById(R.id.chat_add_btn);
         ImageButton mChatSendBtn = findViewById(R.id.chat_send_btn);
         mChatMessageView = findViewById(R.id.chat_message_view);
         //spinner = findViewById(R.id.progressBar);
-
         mAdapter = new MessageAdapter(messagesList);
-
         mMessagesList = findViewById(R.id.messages_list);
         mRefreshLayout = findViewById(R.id.message_swipe_layout);
-
         mLinearLayout = new LinearLayoutManager(this);
-
         mMessagesList.setHasFixedSize(true);
         mMessagesList.setLayoutManager(mLinearLayout);
         mMessagesList.setAdapter(mAdapter);
-
         // image storage
-
         mImageStorage = FirebaseStorage.getInstance().getReference();
-
         //spinner.setVisibility(View.VISIBLE);
-
 
         mRootRef.child("Chat").child(mCurrentUserId).child(mChatUser).child("seen").setValue(true);
         mRootRef.keepSynced(true);
