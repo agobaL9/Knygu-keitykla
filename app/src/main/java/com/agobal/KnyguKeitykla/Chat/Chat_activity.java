@@ -71,7 +71,7 @@ public class Chat_activity extends AppCompatActivity {
     private int itemPos = 0;
     private String mLastKey = "";
     private String mPrevKey = "";
-    
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

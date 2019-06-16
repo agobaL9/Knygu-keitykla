@@ -12,11 +12,10 @@
         android:layout_height="wrap_content">
 
 
-
         <LinearLayout
-            android:gravity="center_horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
             android:orientation="vertical">
 
             <LinearLayout
@@ -79,12 +78,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
+                    app:cardBackgroundColor="@color/white"
                     app:cardCornerRadius="20dp"
                     app:contentPaddingBottom="15dp"
                     app:contentPaddingLeft="15dp"
                     app:contentPaddingRight="15dp"
-                    app:contentPaddingTop="15dp"
-                    app:cardBackgroundColor="@color/white">
+                    app:contentPaddingTop="15dp">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -95,70 +94,70 @@
                             android:id="@+id/tvTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Knygos pavadinimas"
-                            android:textSize="24sp"
-                            android:textAlignment="center"
-                            android:gravity="center_horizontal"
                             android:layout_gravity="center"
+                            android:gravity="center_horizontal"
                             android:paddingLeft="10dp"
-                            android:paddingRight="10dp"/>
+                            android:paddingRight="10dp"
+                            android:text="Knygos pavadinimas"
+                            android:textAlignment="center"
+                            android:textSize="24sp" />
 
                         <TextView
                             android:id="@+id/tvAuthor"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Autorius"
-                            android:textAlignment="center"
-                            android:gravity="center_horizontal"
-                            android:textSize="18sp"
+                            android:layout_gravity="center"
                             android:layout_marginTop="10dp"
+                            android:gravity="center_horizontal"
                             android:paddingLeft="10dp"
                             android:paddingRight="10dp"
-                            android:layout_gravity="center"/>
+                            android:text="Autorius"
+                            android:textAlignment="center"
+                            android:textSize="18sp" />
 
                         <View
-                            android:background="@android:color/darker_gray"
                             android:layout_width="330dp"
                             android:layout_height="2dp"
-                            android:layout_marginTop="8dp" />
+                            android:layout_marginTop="8dp"
+                            android:background="@android:color/darker_gray" />
 
                         <TextView
                             android:id="@+id/tvPublisher"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Leidykla:"
+                            android:layout_gravity="center"
                             android:layout_marginTop="6dp"
-                            android:textSize="16sp"
-                            android:textAlignment="center"
                             android:gravity="center_horizontal"
-                            android:layout_gravity="center"/>
+                            android:text="Leidykla:"
+                            android:textAlignment="center"
+                            android:textSize="16sp" />
 
                         <TextView
                             android:id="@+id/tvBookYear"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             android:layout_marginTop="8dp"
                             android:text="Išleidimo metai:"
-                            android:textSize="16sp"
-                            android:layout_gravity="center"/>
+                            android:textSize="16sp" />
 
                         <TextView
                             android:id="@+id/tvBookCondition"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             android:layout_marginTop="8dp"
                             android:text="Knygos būklė:"
-                            android:textSize="16sp"
-                            android:layout_gravity="center"/>
+                            android:textSize="16sp" />
 
                         <TextView
                             android:id="@+id/tvBookCategory"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             android:layout_marginTop="8dp"
                             android:text="Knygos kategorija:"
-                            android:textSize="16sp"
-                            android:layout_gravity="center"/>
+                            android:textSize="16sp" />
 
                     </LinearLayout>
 
@@ -170,25 +169,25 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="15dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingTop="15dp">
 
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/fb_edit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:layout_margin="16dp"
                     app:fabSize="normal"
-                    android:layout_gravity="center_horizontal"
                     app:srcCompat="@drawable/ic_edit_black_24dp" />
 
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/fb_delete"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:layout_margin="16dp"
                     app:fabSize="normal"
-                    android:layout_gravity="center_horizontal"
                     app:srcCompat="@drawable/ic_delete_black_24dp" />
 
             </LinearLayout>
