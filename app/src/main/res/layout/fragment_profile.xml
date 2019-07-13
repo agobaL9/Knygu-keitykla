@@ -5,8 +5,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:background="@color/colorPrimary"
-        android:orientation="vertical"
-        tools:context=".API.SearchBookAPI">
+        android:orientation="vertical">
 
         <FrameLayout
             android:layout_width="match_parent"
