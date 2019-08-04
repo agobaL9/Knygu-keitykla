@@ -72,7 +72,7 @@ public class LoginActivity extends AppCompatActivity implements
         // remove title
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         //Remove notification bar
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 
         auth = FirebaseAuth.getInstance();
@@ -120,8 +120,9 @@ public class LoginActivity extends AppCompatActivity implements
         final EditText inputEmail = findViewById(R.id.email);
         final EditText inputPassword = findViewById(R.id.password);
         Button btnLogin = findViewById(R.id.btnLogin);
-        Button btnLinkToRegister = findViewById(R.id.btnLinkToRegisterScreen);
+        //Button btnLinkToRegister = findViewById(R.id.btnLinkToRegisterScreen);
         TextView btn_reset_password = findViewById(R.id.btn_reset_password);
+        TextView linkToRegister = findViewById(R.id.linkToRegister);
 
 /*
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -141,7 +142,7 @@ public class LoginActivity extends AppCompatActivity implements
         });
 
         // Link to Register Screen
-        btnLinkToRegister.setOnClickListener(view -> {
+        linkToRegister.setOnClickListener(view -> {
             Intent i = new Intent(getApplicationContext(),
                     RegisterActivity.class);
             startActivity(i);

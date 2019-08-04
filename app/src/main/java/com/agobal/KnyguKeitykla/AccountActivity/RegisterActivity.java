@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.agobal.KnyguKeitykla.MainActivity;
@@ -37,6 +38,7 @@ public class RegisterActivity extends Activity {
     private EditText inputEmail;
     private EditText inputPassword;
     private EditText inputPassword2;
+    private  TextView linkToLogin;
     private FirebaseAuth auth;
     ProgressBar spinner;
 
@@ -54,8 +56,9 @@ public class RegisterActivity extends Activity {
         inputPassword = findViewById(R.id.password);
         inputPassword2 = findViewById(R.id.password2);
         Button btnRegister = findViewById(R.id.btnRegister);
-        Button btnLinkToLogin = findViewById(R.id.btnLinkToLoginScreen);
+        //Button btnLinkToLogin = findViewById(R.id.btnLinkToLoginScreen);
         spinner = findViewById(R.id.progressBar);
+        linkToLogin = findViewById(R.id.linkToLogin);
 
 
         auth = FirebaseAuth.getInstance();
@@ -73,7 +76,7 @@ public class RegisterActivity extends Activity {
         });
 
         // Link to Login Screen
-        btnLinkToLogin.setOnClickListener(view -> {
+        linkToLogin.setOnClickListener(view -> {
             Intent i = new Intent(getApplicationContext(),
                     LoginActivity.class);
             startActivity(i);
