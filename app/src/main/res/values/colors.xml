@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#B0C4DE</color>
+    <color name="colorPrimary">#f7faff</color>
     <color name="colorPrimaryDark">#0947E8</color>
     <color name="colorAccent">#00A5FF</color>
     <color name="bgBottomNavigation">#C5CDEC</color>

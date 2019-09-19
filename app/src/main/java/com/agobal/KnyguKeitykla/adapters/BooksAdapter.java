@@ -15,6 +15,9 @@ import android.widget.TextView;
 import com.agobal.KnyguKeitykla.Entities.Books;
 import com.agobal.KnyguKeitykla.R;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,11 +52,13 @@ public class BooksAdapter extends ArrayAdapter<Books> {
             String imageURL = currentBook.getBookImage();
             if(imageURL.startsWith("https://firebasestorage"))
             {
+                /*
                 Glide.with(getContext())
                         .load(currentBook.getBookImage())
-                        .into(image);
+                        .into(image)
+                        ;
+                */
 
-                /*
                 Picasso.get().load(currentBook.getBookImage())
                         .rotate(90)
                         .resize(200,200)
@@ -69,12 +74,13 @@ public class BooksAdapter extends ArrayAdapter<Books> {
                             public void onError(Exception e) {
 
                             }
-                        });*/
+                        });
             }
             else
             {
                 Glide.with(getContext())
                         .load(currentBook.getBookImage())
+                        .apply(new RequestOptions().error(R.drawable.ic_nocover))
                         .into(image);
 /*
                 Picasso.get().load(currentBook.getBookImage())
@@ -105,6 +111,8 @@ public class BooksAdapter extends ArrayAdapter<Books> {
 
             return listItem;
         }
+
+
     }
 
 

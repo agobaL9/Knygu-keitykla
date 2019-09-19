@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.agobal.KnyguKeitykla.R;
@@ -39,7 +40,7 @@ public class ResetPasswordActivity extends Activity {
 
         inputEmail = findViewById(R.id.email);
         Button btnReset = findViewById(R.id.btn_reset_password);
-        Button btnBack = findViewById(R.id.btn_back);
+        TextView txtBack = findViewById(R.id.linkToLogin);
         spinner = findViewById(R.id.progressBar);
 
         spinner.setVisibility(View.GONE);
@@ -47,7 +48,7 @@ public class ResetPasswordActivity extends Activity {
 
         auth = FirebaseAuth.getInstance();
 
-        btnBack.setOnClickListener(v -> {
+        txtBack.setOnClickListener(v -> {
             Intent i = new Intent(getApplicationContext(),
                     LoginActivity.class);
             startActivity(i);

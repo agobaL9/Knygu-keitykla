@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,6 +23,7 @@ import com.agobal.KnyguKeitykla.Fragments.LibraryFragment;
 import com.agobal.KnyguKeitykla.Fragments.MessagesFragment;
 import com.agobal.KnyguKeitykla.Fragments.ProfileFragment;
 import com.agobal.KnyguKeitykla.helper.BottomNavigationBehavior;
+import com.agobal.KnyguKeitykla.helper.NightModeHelper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private FirebaseAuth auth;
     private DatabaseReference mUserRef;
     private TextView title;
+
 
     FirebaseAuth.AuthStateListener mAuthListener;
 
@@ -83,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         Log.d(TAG, "started");

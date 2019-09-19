@@ -12,8 +12,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content">
 
 
         <LinearLayout
@@ -25,7 +24,7 @@
                 android:id="@+id/progressBar"
                 style="?android:attr/progressBarStyleLarge"
                 android:layout_width="match_parent"
-                android:layout_marginBottom="100dp"
+                android:layout_marginBottom="110dp"
                 android:layout_height="wrap_content" />
 
         </LinearLayout>

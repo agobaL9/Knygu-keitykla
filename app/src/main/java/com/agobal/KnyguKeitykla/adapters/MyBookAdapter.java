@@ -59,7 +59,7 @@ public class MyBookAdapter extends ArrayAdapter<MyBook> {
         {
             Glide.with(getContext())
                     .load(currentBook.getBookImage())
-                    .apply(new RequestOptions().transform(new RotateTransformation(this,90f)))
+                    .apply(new RequestOptions().error(R.drawable.ic_nocover).transform(new RotateTransformation(this,90f)))
                     .into(image);
             /*
             Picasso.get().load(currentBook.getBookImage())
@@ -74,6 +74,7 @@ public class MyBookAdapter extends ArrayAdapter<MyBook> {
         {
             Glide.with(getContext())
                     .load(currentBook.getBookImage())
+                    .apply(new RequestOptions().error(R.drawable.ic_nocover))
                     .into(image);
             /*
             Picasso.get().load(currentBook.getBookImage())

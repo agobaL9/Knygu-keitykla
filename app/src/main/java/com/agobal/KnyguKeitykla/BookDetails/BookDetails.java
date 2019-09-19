@@ -265,20 +265,20 @@ public class BookDetails extends AppCompatActivity {
         else
         {
             Picasso.get().load(Book.getBookImage())
-                    //.rotate(90)
-                    .resize(400,600)
+                                        //.rotate(90)
+                                        .resize(400,600)
                     .error(R.drawable.ic_nocover)
                     .centerCrop()
                     .into(ivBookCover, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            spinner.setVisibility(View.GONE);
-                        }
+                                    @Override
+                                    public void onSuccess() {
+                                        spinner.setVisibility(View.GONE);
+                                    }
 
-                        @Override
-                        public void onError(Exception e) {
+                                    @Override
+                                    public void onError(Exception e) {
 
-                        }
+                                    }
                     });
             Log.d(" else if", "yes");
         }
