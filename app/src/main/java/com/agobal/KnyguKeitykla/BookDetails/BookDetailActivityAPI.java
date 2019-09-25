@@ -99,6 +99,7 @@ public class BookDetailActivityAPI extends AppCompatActivity {
         intent.putExtra("bookPublisher", BookPublisher);
         intent.putExtra("bookPublishYear", BookPublishYear);
         intent.putExtra("bookCover", imageURL);
+        //intent.putExtra("bookCity", BookCity);
         startActivity(intent);
 
     }

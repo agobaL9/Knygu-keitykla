@@ -108,6 +108,15 @@ public class BooksAdapter extends ArrayAdapter<Books> {
             TextView author = listItem.findViewById(R.id.tvAuthor);
             author.setText(currentBook.getBookAuthor());
 
+            TextView years = listItem.findViewById(R.id.tvYear);
+            years.setText(Integer.toString(currentBook.getBookYear()));
+
+            TextView quality = listItem.findViewById(R.id.tvQuality);
+            quality.setText(currentBook.getBookCondition());
+
+            TextView city = listItem.findViewById(R.id.tvCity);
+            city.setText(currentBook.getBookCity());
+
 
             return listItem;
         }

@@ -269,7 +269,10 @@ public class ProfileFragment extends Fragment {
                             String UserID = childDataSnapshot.child("userID").getValue(String.class);
                             String BookID = childDataSnapshot.child("bookKey").getValue(String.class);
 
-                            BookList.add(new Books(BookName, BookAuthor, BookPublisher, BookYear, BookCondition, BookCategory, BookAbout, Image, Tradable, UserID, BookID));
+                            String BookCity = childDataSnapshot.child("bookCity").getValue(String.class);
+
+
+                            BookList.add(new Books(BookName, BookAuthor, BookPublisher, BookYear, BookCondition, BookCategory, BookAbout, Image, Tradable, UserID, BookID, BookCity));
 
                             booksAdapter = new BooksAdapter(Objects.requireNonNull(getContext()), BookList);
                             listAllFavBooks.setAdapter(booksAdapter);

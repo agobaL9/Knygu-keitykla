@@ -92,6 +92,15 @@ public class MyBookAdapter extends ArrayAdapter<MyBook> {
         TextView author = listItem.findViewById(R.id.tvAuthor);
         author.setText(currentBook.getBookAuthor());
 
+        TextView years = listItem.findViewById(R.id.tvYear);
+        years.setText(Integer.toString(currentBook.getBookYear()));
+
+        TextView quality = listItem.findViewById(R.id.tvQuality);
+        quality.setText(currentBook.getBookCondition());
+
+        TextView city = listItem.findViewById(R.id.tvCity);
+        city.setText(currentBook.getBookCity());
+
         Log.d(TAG, "Tradable "+ currentBook.getBookTradable());
 
 /*

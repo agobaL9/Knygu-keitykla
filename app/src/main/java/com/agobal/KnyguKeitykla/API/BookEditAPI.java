@@ -25,6 +25,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.agobal.KnyguKeitykla.Fragments.BookFragment;
 import com.agobal.KnyguKeitykla.MainActivity;
 import com.agobal.KnyguKeitykla.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -56,6 +57,7 @@ public class BookEditAPI extends AppCompatActivity {
     private StorageReference mImageStorage;
     private DatabaseReference mBookDatabase;
     private DatabaseReference mUserBookDatabase;
+    private DatabaseReference mUserDatabase;
 
     private final FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
     private final String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
@@ -74,6 +76,7 @@ public class BookEditAPI extends AppCompatActivity {
     private String key;
     private String download_url;
     private String ImageURL;
+    String BookCity;
     private Boolean isPhotoSelected= false;
 
     @Override
@@ -89,7 +92,7 @@ public class BookEditAPI extends AppCompatActivity {
         title.setText("Knygos redagavimas");
 
         mImageStorage = FirebaseStorage.getInstance().getReference();
-        //DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
+        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
         mBookDatabase = FirebaseDatabase.getInstance().getReference().child("Books");
         mUserBookDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks");
 
@@ -110,6 +113,8 @@ public class BookEditAPI extends AppCompatActivity {
         FloatingActionButton fabCamera = findViewById(R.id.fab_pick_camera);
         FloatingActionButton fabGallery = findViewById(R.id.fab_pick_gallery);
 
+        loadBookCity();
+
         fabCamera.setOnClickListener(view -> pickImageFromSource(Sources.CAMERA));
         fabGallery.setOnClickListener(view -> pickImageFromSource(Sources.GALLERY));
 
@@ -120,7 +125,11 @@ public class BookEditAPI extends AppCompatActivity {
 
     }
 
+
+
     private void loadBookfromAPI() {
+
+
 
         String BookName= getIntent().getStringExtra("bookName");
         String BookAuthor= getIntent().getStringExtra("bookAuthor");
@@ -282,6 +291,8 @@ public class BookEditAPI extends AppCompatActivity {
         mUserBookDatabase.child(current_uid).child(key).child("userID").setValue(current_uid);
         mUserBookDatabase.child(current_uid).child(key).child("bookKey").setValue(key);
 
+        mUserBookDatabase.child(current_uid).child(key).child("bookCity").setValue(BookCity);
+
         Log.d(TAG, "bookKeyAPI "+ key);
 
         new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
@@ -351,6 +362,25 @@ public class BookEditAPI extends AppCompatActivity {
         AlertDialog alertDialog = d.create();
         alertDialog.show();
 
+    }
+
+    private void loadBookCity()
+    {
+
+        mUserDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    BookCity = dataSnapshot.child("cityName").getValue(String.class);
+                    Log.d(TAG, "cityName: "+ BookCity);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public void onBackPressed() {

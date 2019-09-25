@@ -25,6 +25,7 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -67,6 +68,8 @@ public class MyBookDetail extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         title = findViewById(getResources().getIdentifier("action_bar_title", "id", getPackageName()));
+        BookKey = getIntent().getStringExtra("BOOK_KEY");
+
 
         // Fetch views
         ivBookCover = findViewById(R.id.ivBookCover);
@@ -93,7 +96,6 @@ public class MyBookDetail extends AppCompatActivity {
             intent.putExtra("bookCategory", BookCategory);
             intent.putExtra("bookCover", imageURL);
             intent.putExtra("bookKey", BookKey);
-            //intent.putExtra("bookPageCount", BookPageCount);
             startActivity(intent);
         });
 
@@ -103,7 +105,9 @@ public class MyBookDetail extends AppCompatActivity {
                 .setConfirmText("Taip")
                 .setCancelText("Ne")
                 .setConfirmClickListener(sDialog -> {
-                    deleteMyBook();
+                    deleteMyBook(BookKey);
+                    Log.d(TAG," Delete Book key  "+ BookKey);
+
                     sDialog.dismissWithAnimation();
                     new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
                             .setTitleText("Pavyko!")
@@ -120,7 +124,6 @@ public class MyBookDetail extends AppCompatActivity {
 
         // Use the book to populate the data into our views
         MyBook myBook = (MyBook) getIntent().getSerializableExtra(LibraryFragment.MY_BOOK_DETAIL_KEY);
-        BookKey = getIntent().getStringExtra("BOOK_KEY");
         loadBook(myBook);
 
     }
@@ -190,13 +193,15 @@ public class MyBookDetail extends AppCompatActivity {
         BookCondition = tvBookCondition.getText().toString().trim();
         BookCategory = tvBookCategory.getText().toString().trim();
 
+        BookKey = myBook.getBookKey();
+
+
     }
 
-    private void deleteMyBook() {
+    private void deleteMyBook(String BookKey) {
 
-        //DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
         DatabaseReference mUserBookDelete = FirebaseDatabase.getInstance().getReference().child("UserBooks").child(current_uid).child(BookKey);
-        Log.d(TAG,"Book key "+ BookKey);
+        Log.d(TAG," Delete Book key n user  "+ BookKey +" "+ current_uid);
         mUserBookDelete.setValue(null);
     }
 

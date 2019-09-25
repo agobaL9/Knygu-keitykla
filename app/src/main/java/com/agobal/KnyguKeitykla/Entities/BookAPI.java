@@ -14,6 +14,8 @@ public class BookAPI implements Serializable {
     private String openLibraryId;
     private String author;
     private String title;
+    private String city;
+
 
     public String getOpenLibraryId() {
         return openLibraryId;
@@ -34,6 +36,10 @@ public class BookAPI implements Serializable {
     public String getLargeCoverUrl() {
         return "http://covers.openlibrary.org/b/olid/" + openLibraryId + "-L.jpg?default=false";
     }
+
+    public String getCity() { return city; }
+
+    public void setCity(String city) { this.city = city; }
 
 
     private static BookAPI fromJson(JSONObject jsonObject) {

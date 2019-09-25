@@ -56,6 +56,7 @@ public class AddNewBook extends AppCompatActivity {
     private StorageReference mImageStorage;
     private DatabaseReference mBookDatabase;
     private DatabaseReference mUserBookDatabase;
+    private DatabaseReference mUserDatabase;
 
     private final FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
     private final String current_uid = Objects.requireNonNull(mCurrentUser).getUid();
@@ -75,6 +76,7 @@ public class AddNewBook extends AppCompatActivity {
     private String key;
     private String download_url;
     private Boolean isPhotoSelected= false;
+    private String cityName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,9 +92,21 @@ public class AddNewBook extends AppCompatActivity {
         title.setText("Pridėti naują knygą");
 
         mImageStorage = FirebaseStorage.getInstance().getReference();
-        //DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
+        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid).child("cityName");
         mBookDatabase = FirebaseDatabase.getInstance().getReference().child("Books");
         mUserBookDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks");
+
+        mUserDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                cityName = dataSnapshot.getValue(String.class);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "onCancelled", databaseError.toException());
+            }
+        });
 
         etBookName = findViewById(R.id.etBookName);
         etBookAuthor = findViewById(R.id.etBookAuthor);
@@ -260,6 +274,9 @@ public class AddNewBook extends AppCompatActivity {
 
         mUserBookDatabase.child(current_uid).child(key).child("userID").setValue(current_uid);
         mUserBookDatabase.child(current_uid).child(key).child("bookKey").setValue(key);
+
+        mUserBookDatabase.child(current_uid).child(key).child("bookCity").setValue(cityName);
+
 
         new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
                 .setTitleText("Pavyko!")

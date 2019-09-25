@@ -69,14 +69,6 @@ public class LibraryFragment extends Fragment {
 
         Log.d(TAG, "currentID " + current_uid);
 
-//        SweetAlertDialog pDialog = new SweetAlertDialog(Objects.requireNonNull(getContext()), SweetAlertDialog.PROGRESS_TYPE);
-//        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-//        pDialog.setTitleText("Prašome palaukti");
-//        pDialog.setCancelable(true);
-//        pDialog.show();
-
-
-        //DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
         mUserBooksDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks");
 
         listView = v.findViewById(R.id.listMyBooks);
@@ -176,7 +168,8 @@ public class LibraryFragment extends Fragment {
                             String path = childDataSnapshot.getRef().toString();
                             Log.d(TAG,"path:" +path);
 
-                            BookKeyToDetails = childDataSnapshot.getKey();
+                            BookKeyToDetails = String.valueOf(childDataSnapshot.child("bookKey"));
+                            Log.d(TAG,"book Key" + BookKeyToDetails);
 
                             String BookName = childDataSnapshot.child("bookName").getValue(String.class);
                             String BookAuthor = childDataSnapshot.child("bookAuthor").getValue(String.class);
@@ -186,8 +179,10 @@ public class LibraryFragment extends Fragment {
                             String BookCategory = childDataSnapshot.child("bookCategory").getValue(String.class);
                             String Image = childDataSnapshot.child("image").getValue(String.class);
                             String Tradable = childDataSnapshot.child("tradable").getValue(String.class);
+                            String BookKey = childDataSnapshot.child("bookKey").getValue(String.class);
+                            String BookCity = childDataSnapshot.child("bookCity").getValue(String.class);
 
-                            MyBookList.add(new MyBook(BookName, BookAuthor, BookPublisher, BookYear, BookCondition, BookCategory, Image, Tradable));
+                            MyBookList.add(new MyBook(BookName, BookAuthor, BookPublisher, BookYear, BookCondition, BookCategory, Image, Tradable, BookKey, BookCity));
 
                             myBookAdapter = new MyBookAdapter(Objects.requireNonNull(getContext()), MyBookList);
                             listView.setAdapter(myBookAdapter);

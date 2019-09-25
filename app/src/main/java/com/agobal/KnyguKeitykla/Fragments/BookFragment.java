@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,13 +25,13 @@ import com.agobal.KnyguKeitykla.adapters.BooksAdapter;
 import com.agobal.KnyguKeitykla.helper.AsyncTaskCompleteListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.yarolegovich.lovelydialog.LovelyTextInputDialog;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -136,6 +136,8 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
                 Log.d(TAG, " Suveikė canceled");
             }
         });
+
+
         return v;
     }
 
@@ -185,8 +187,11 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
                                     String UserID = childDataSnapshot.child("userID").getValue(String.class);
                                     String BookID = childDataSnapshot.child("bookKey").getValue(String.class);
 
+                                    String BookCity = childDataSnapshot.child("bookCity").getValue(String.class);
 
-                                    BookList.add(new Books(BookName, BookAuthor, BookPublisher, BookYear, BookCondition, BookCategory, BookAbout, Image, Tradable, UserID, BookID));
+
+
+                                    BookList.add(new Books(BookName, BookAuthor, BookPublisher, BookYear, BookCondition, BookCategory, BookAbout, Image, Tradable, UserID, BookID, BookCity));
 
                                     booksAdapter = new BooksAdapter(Objects.requireNonNull(getContext()), BookList);
                                     listViewBooks.setAdapter(booksAdapter);
@@ -195,6 +200,8 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
 
                                 }
                             }
+
+
 
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -217,7 +224,6 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
     private void fetchBooksWithFilter(String queryText) {
 
         BookList = new ArrayList<>();
-
         mUserBookDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks");
         mUserBookDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -233,6 +239,7 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
                         mUserBooksUserDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks").child(userID);
 
                         Query query = mUserBooksUserDatabase.orderByChild("bookName").startAt(queryText);
+                        Log.d(TAG, "QueryText: "+ queryText);
 
 
                         mUserBooksUserDatabase.keepSynced(true);
@@ -265,8 +272,10 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
                                     String UserID = childDataSnapshot.child("userID").getValue(String.class);
                                     String BookID = childDataSnapshot.child("bookKey").getValue(String.class);
 
+                                    String BookCity = childDataSnapshot.child("bookCity").getValue(String.class);
 
-                                    BookList.add(new Books(BookName, BookAuthor, BookPublisher, BookYear, BookCondition, BookCategory, BookAbout, Image, Tradable, UserID, BookID));
+
+                                    BookList.add(new Books(BookName, BookAuthor, BookPublisher, BookYear, BookCondition, BookCategory, BookAbout, Image, Tradable, UserID, BookID, BookCity));
 
                                     booksAdapter = new BooksAdapter(Objects.requireNonNull(getContext()), BookList);
                                     listViewBooks.setAdapter(booksAdapter);
@@ -292,7 +301,7 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
 
 
     }
-
+/*
     private void showFilter() {
 
         new LovelyTextInputDialog(getContext())
@@ -311,7 +320,7 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
                 .show();
 
     }
-
+*/
 
     private void setupBookSelectedListener() {
         listViewBooks.setOnItemClickListener((parent, view, position, id) -> {
@@ -329,15 +338,38 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.filter_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
+        final MenuItem searchItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) searchItem.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // Fetch the data remotely
+                fetchBooksWithFilter(query);
+                // Reset SearchView
+                searchView.clearFocus();
+                searchView.setQuery("", false);
+                searchView.setIconified(true);
+                searchItem.collapseActionView();
+                // Set activity title to search query
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
+        //return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
-            case R.id.book_setting:
+            case R.id.action_search:
                 Log.d(TAG, "press yes");
-                showFilter();
+                //showFilter();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
