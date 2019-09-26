@@ -71,7 +71,7 @@
                             android:maxLength="15"
                             android:ellipsize="end"
                             android:maxLines="1"
-                            android:layout_width="wrap_content"
+                            android:layout_width="100dp"
                             android:layout_height="wrap_content"
                             android:textColor="@android:color/black"
                             tools:text="Author" />
