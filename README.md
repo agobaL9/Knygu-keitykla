@@ -7,17 +7,17 @@ Functionality includes the integration of the Open Library API into an app where
 
 ![alt text](https://i.imgur.com/eofWgLc.png)
 
-![alt text](https://github.com/agobaL9/Knygu-Keitykla/tree/master/app/src/main/res/Images/Screenshot_2.png)
+![alt text](https://i.imgur.com/BQc0t6F.png)
 
-![alt text](https://github.com/agobaL9/Knygu-Keitykla/tree/master/app/src/main/res/Images/Screenshot_3.png)
+![alt text](https://i.imgur.com/YiKHO2j.png)
 
-![alt text](https://github.com/agobaL9/Knygu-Keitykla/tree/master/app/src/main/res/Images/Screenshot_4.png)
+![alt text](https://i.imgur.com/MC2TtGp.png)
 
-![alt text](https://github.com/agobaL9/Knygu-Keitykla/tree/master/app/src/main/res/Images/Screenshot_5.png)
+![alt text](https://i.imgur.com/wKHCl9d.png)
 
-![alt text](https://github.com/agobaL9/Knygu-Keitykla/tree/master/app/src/main/res/Images/Screenshot_6.png)
+![alt text](https://i.imgur.com/77zlLAn.png)
 
-![alt text](https://github.com/agobaL9/Knygu-Keitykla/tree/master/app/src/main/res/Images/Screenshot_7.png)
+![alt text](https://i.imgur.com/RSLMS7g.png)
 
-![alt text](https://github.com/agobaL9/Knygu-Keitykla/tree/master/app/src/main/res/Images/Screenshot_8.png)
+![alt text](https://i.imgur.com/Zetva9E.png)
 
