@@ -181,8 +181,9 @@ public class LibraryFragment extends Fragment {
                             String Tradable = childDataSnapshot.child("tradable").getValue(String.class);
                             String BookKey = childDataSnapshot.child("bookKey").getValue(String.class);
                             String BookCity = childDataSnapshot.child("bookCity").getValue(String.class);
+                            String BookChange =childDataSnapshot.child("bookChange").getValue(String.class);
 
-                            MyBookList.add(new MyBook(BookName, BookAuthor, BookPublisher, BookYear, BookCondition, BookCategory, Image, Tradable, BookKey, BookCity));
+                            MyBookList.add(new MyBook(BookName, BookAuthor, BookPublisher, BookYear, BookCondition, BookCategory, Image, Tradable, BookKey, BookCity, BookChange));
 
                             myBookAdapter = new MyBookAdapter(Objects.requireNonNull(getContext()), MyBookList);
                             listView.setAdapter(myBookAdapter);

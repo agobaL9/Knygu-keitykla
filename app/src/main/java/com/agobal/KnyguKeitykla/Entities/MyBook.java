@@ -17,11 +17,11 @@ public class MyBook implements Serializable {
     private String BookTradable;
     private String BookKey;
     private String BookCity;
+    private String BookChange;
 
 
 
-
-    public MyBook (String BookName, String BookAuthor, String BookPublisher, Integer BookYear, String BookCondition, String BookCategory, String BookImage, String BookTradable, String BookKey, String BookCity)
+    public MyBook (String BookName, String BookAuthor, String BookPublisher, Integer BookYear, String BookCondition, String BookCategory, String BookImage, String BookTradable, String BookKey, String BookCity, String BookChange)
     {
         this.BookName = BookName;
         this.BookAuthor = BookAuthor;
@@ -33,6 +33,7 @@ public class MyBook implements Serializable {
         this.BookTradable = BookTradable;
         this.BookKey = BookKey;
         this.BookCity = BookCity;
+        this.BookChange =BookChange;
 
 
     }
@@ -92,6 +93,12 @@ public class MyBook implements Serializable {
     public String getBookCity() { return BookCity; }
 
     public void setBookCity(String bookCity) { BookCity = bookCity; }
+
+    public String getBookChange() { return BookChange; }
+
+    public void setBookChange(String bookChangeMoney) { BookChange = bookChangeMoney; }
+
+
 
     @NonNull
     public String toString(){

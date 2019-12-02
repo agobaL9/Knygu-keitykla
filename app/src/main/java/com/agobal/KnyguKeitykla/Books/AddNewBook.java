@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
@@ -68,6 +69,8 @@ public class AddNewBook extends AppCompatActivity {
     private Spinner spinCategory;
     private Button btnYear;
     private RadioGroup radioGroup;
+    private CheckBox cbMoney;
+    private CheckBox cbBook;
     //Switch switchButton;
 
     private ImageView ivPickedImage;
@@ -77,6 +80,9 @@ public class AddNewBook extends AppCompatActivity {
     private String download_url;
     private Boolean isPhotoSelected= false;
     private String cityName;
+    private String CheckedChange;
+    //private String CheckedMoney;
+    //private String CheckedBoth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +123,8 @@ public class AddNewBook extends AppCompatActivity {
         //RadioButton rbBookNew = findViewById(R.id.rbBookNew);
         //RadioButton rbBookGood = findViewById(R.id.rbBookGood);
         //RadioButton rbBookFair = findViewById(R.id.rbBookFair);
+        cbMoney = findViewById(R.id.cbMoney);
+        cbBook = findViewById(R.id.cbBook);
         Button btnSave = findViewById(R.id.btnSave);
         btnYear = findViewById(R.id.btnYear);
 
@@ -254,6 +262,24 @@ public class AddNewBook extends AppCompatActivity {
 
         String bookCondition = ((RadioButton)findViewById(radioGroup.getCheckedRadioButtonId())).getText().toString();
 
+        if (!cbBook.isChecked() && !cbMoney.isChecked()){
+            Toast.makeText(getApplicationContext(), "Turite pasirinkti į ką norite keisti knygą!",
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
+
+        if (cbMoney.isChecked()) {
+            CheckedChange = "Domina keitimas į pinigus";
+        }
+        if (cbBook.isChecked()) {
+            CheckedChange = "Domina keitimas į knygą";
+        }
+        if (cbBook.isChecked() && cbMoney.isChecked())
+        {
+            CheckedChange = "Domina keitimas ir į knygas ir į pinigus";
+        }
+
         mBookDatabase.child(key).child("bookName").setValue(BookName);
         mBookDatabase.child(key).child("bookAuthor").setValue(BookAuthor);
         mBookDatabase.child(key).child("bookAbout").setValue(BookAbout);
@@ -262,6 +288,7 @@ public class AddNewBook extends AppCompatActivity {
         mBookDatabase.child(key).child("bookCondition").setValue(bookCondition);
         mBookDatabase.child(key).child("bookYear").setValue(BookYear);
         mBookDatabase.child(key).child("image").setValue(download_url);
+        mBookDatabase.child(key).child("bookChange").setValue(CheckedChange);
 
         mUserBookDatabase.child(current_uid).child(key).child("bookName").setValue(BookName);
         mUserBookDatabase.child(current_uid).child(key).child("bookAuthor").setValue(BookAuthor);
@@ -276,6 +303,8 @@ public class AddNewBook extends AppCompatActivity {
         mUserBookDatabase.child(current_uid).child(key).child("bookKey").setValue(key);
 
         mUserBookDatabase.child(current_uid).child(key).child("bookCity").setValue(cityName);
+
+        mUserBookDatabase.child(current_uid).child(key).child("bookChange").setValue(CheckedChange);
 
 
         new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
@@ -342,5 +371,6 @@ public class AddNewBook extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 
 }

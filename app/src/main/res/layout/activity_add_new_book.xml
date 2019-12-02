@@ -202,6 +202,22 @@
             android:text="Patenkinama" />
     </RadioGroup>
 
+
+
+            <CheckBox android:id="@+id/cbMoney"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Noriu keisti į pinigus"
+                />
+
+            <CheckBox android:id="@+id/cbBook"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Noriu keisti į knygą"
+                />
+
+
+
     <Button
         android:id="@+id/btnYear"
         android:layout_width="match_parent"

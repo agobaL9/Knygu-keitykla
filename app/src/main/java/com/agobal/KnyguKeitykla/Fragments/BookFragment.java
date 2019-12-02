@@ -6,11 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,12 +22,10 @@ import com.agobal.KnyguKeitykla.adapters.BooksAdapter;
 import com.agobal.KnyguKeitykla.helper.AsyncTaskCompleteListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -189,9 +184,11 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
 
                                     String BookCity = childDataSnapshot.child("bookCity").getValue(String.class);
 
+                                    String BookChange = childDataSnapshot.child("bookChange").getValue(String.class);
 
 
-                                    BookList.add(new Books(BookName, BookAuthor, BookPublisher, BookYear, BookCondition, BookCategory, BookAbout, Image, Tradable, UserID, BookID, BookCity));
+
+                                    BookList.add(new Books(BookName, BookAuthor, BookPublisher, BookYear, BookCondition, BookCategory, BookAbout, Image, Tradable, UserID, BookID, BookCity, BookChange));
 
                                     booksAdapter = new BooksAdapter(Objects.requireNonNull(getContext()), BookList);
                                     listViewBooks.setAdapter(booksAdapter);
@@ -220,7 +217,7 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
         });
 
     }
-
+/*
     private void fetchBooksWithFilter(String queryText) {
 
         BookList = new ArrayList<>();
@@ -287,7 +284,7 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
                             public void onCancelled(@NonNull DatabaseError databaseError) {
 
                             }
-                        });
+                        });/*
 
                     }
                 }
@@ -333,7 +330,7 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
             Log.d(TAG, "NEW_INTENT VEIKIA");
         });
     }
-
+/*
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.filter_menu, menu);
@@ -361,7 +358,7 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
             }
         });
         //return true;
-    }
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

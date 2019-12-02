@@ -101,7 +101,7 @@ public class Chat_activity extends AppCompatActivity {
         TextView mTitleView = findViewById(R.id.custom_bar_title);
         mLastSeenView = findViewById(R.id.custom_bar_seen);
         mProfileImage = findViewById(R.id.custom_bar_image);
-        ImageButton mChatAddBtn = findViewById(R.id.chat_add_btn);
+       // ImageButton mChatAddBtn = findViewById(R.id.chat_add_btn);
         ImageButton mChatSendBtn = findViewById(R.id.chat_send_btn);
         mChatMessageView = findViewById(R.id.chat_message_view);
         //spinner = findViewById(R.id.progressBar);
@@ -193,6 +193,7 @@ public class Chat_activity extends AppCompatActivity {
 
         mChatSendBtn.setOnClickListener(view -> sendMessage());
 
+        /*
         // IMG SEND
         mChatAddBtn.setOnClickListener(view -> {
             Intent galleryIntent = new Intent();
@@ -201,7 +202,7 @@ public class Chat_activity extends AppCompatActivity {
 
             startActivityForResult(Intent.createChooser(galleryIntent, "Pasirinkite nuotrauką"), GALLERY_PICK);
         });
-
+*/
 
         mRefreshLayout.setOnRefreshListener(() -> {
             mCurrentPage++;

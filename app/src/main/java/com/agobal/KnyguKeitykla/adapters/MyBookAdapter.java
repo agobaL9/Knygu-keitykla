@@ -101,6 +101,8 @@ public class MyBookAdapter extends ArrayAdapter<MyBook> {
         TextView city = listItem.findViewById(R.id.tvCity);
         city.setText(currentBook.getBookCity());
 
+
+
         Log.d(TAG, "Tradable "+ currentBook.getBookTradable());
 
 /*

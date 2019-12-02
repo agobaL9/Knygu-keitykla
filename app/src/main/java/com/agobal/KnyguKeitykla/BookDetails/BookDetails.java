@@ -60,7 +60,11 @@ public class BookDetails extends AppCompatActivity {
     private TextView tvBookCondition;
     private TextView tvBookCategory;
     private TextView tvBookAbout;
+    private TextView tvBookChange;
+    private TextView tvBookMoney;
     private DatabaseReference mUserFavBookKey;
+    private String BookChange;
+    private String BookMoney;
 
     private DatabaseReference mUserFavBookButton;
     private DatabaseReference mDatabase;
@@ -106,6 +110,7 @@ public class BookDetails extends AppCompatActivity {
         tvBookCondition= findViewById(R.id.tvBookCondition);
         tvBookCategory= findViewById(R.id.tvBookCategory);
         tvBookAbout= findViewById(R.id.tvBookAbout);
+        tvBookChange = findViewById(R.id.tvBookChange);
 
         // Use the book to populate the data into our views
         Books Book = (Books) getIntent().getSerializableExtra(BookFragment.BOOK_DETAIL_KEY);
@@ -291,6 +296,7 @@ public class BookDetails extends AppCompatActivity {
         tvBookYear.setText("Išleidimo metai: " + Book.getBookYear());
         tvBookCondition.setText("Būklė: " + Book.getBookCondition());
         tvBookCategory.setText("Kategorija: " + Book.getBookCategory());
+        tvBookChange.setText(Book.getBookChange());
 
         UserID =Book.getUserID();
         BookKey = Book.getBookID();

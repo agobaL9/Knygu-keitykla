@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -20,7 +19,6 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,7 +37,7 @@ public class LoginActivity extends AppCompatActivity implements
 
     private static final String TAG = "LoginActivity";
     private static final int RC_SIGN_IN = 9001;
-    private SignInButton mSignInButton;
+    //private SignInButton mSignInButton;
     private GoogleApiClient mGoogleApiClient;
     FirebaseAuth auth;
     FirebaseAuth.AuthStateListener mAuthListener;
@@ -102,10 +100,10 @@ public class LoginActivity extends AppCompatActivity implements
 
 
         // Assign fields
-        mSignInButton = findViewById(R.id.sign_in_button);
+        //mSignInButton = findViewById(R.id.sign_in_button);
 
         // Set click listeners
-        mSignInButton.setOnClickListener(this);
+        //mSignInButton.setOnClickListener(this);
 
        /* // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -227,9 +225,9 @@ public class LoginActivity extends AppCompatActivity implements
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.sign_in_button:
+           // case R.id.sign_in_button:
                 //signIn();
-                break;
+               // break;
         }
     }
 

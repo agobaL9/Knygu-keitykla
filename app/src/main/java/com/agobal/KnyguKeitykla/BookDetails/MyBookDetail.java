@@ -25,7 +25,6 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
-import java.util.stream.Stream;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -42,6 +41,8 @@ public class MyBookDetail extends AppCompatActivity {
     private TextView tvBookCondition;
     private TextView tvBookCategory;
     private TextView title;
+    private TextView tvBookChange;
+    private TextView tvBookMoney;
 
     private String BookName;
     private String BookAuthor;
@@ -50,6 +51,7 @@ public class MyBookDetail extends AppCompatActivity {
     private String BookCondition;
     private String BookCategory;
     private String BookKey;
+    private String BookChange;
 
     private String imageURL;
     ProgressBar spinner;
@@ -79,6 +81,8 @@ public class MyBookDetail extends AppCompatActivity {
         tvBookYear= findViewById(R.id.tvBookYear);
         tvBookCondition= findViewById(R.id.tvBookCondition);
         tvBookCategory= findViewById(R.id.tvBookCategory);
+        tvBookChange = findViewById(R.id.tvBookChange);
+
         spinner = findViewById(R.id.progressBar);
         spinner.setVisibility(View.GONE);
 
@@ -185,6 +189,7 @@ public class MyBookDetail extends AppCompatActivity {
         tvBookYear.setText("Išleidimo metai: " + myBook.getBookYear());
         tvBookCondition.setText("Būklė: " + myBook.getBookCondition());
         tvBookCategory.setText("Kategorija: " + myBook.getBookCategory());
+        tvBookChange.setText(myBook.getBookChange());
 
         BookName = tvTitle.getText().toString().trim();
         BookAuthor = tvAuthor.getText().toString().trim();
@@ -192,9 +197,9 @@ public class MyBookDetail extends AppCompatActivity {
         BookPublishYear = tvBookYear.getText().toString().trim();
         BookCondition = tvBookCondition.getText().toString().trim();
         BookCategory = tvBookCategory.getText().toString().trim();
+        BookChange =tvBookChange.getText().toString().trim();
 
         BookKey = myBook.getBookKey();
-
 
     }
 

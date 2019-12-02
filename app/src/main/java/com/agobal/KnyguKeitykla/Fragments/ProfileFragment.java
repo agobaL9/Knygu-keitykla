@@ -265,6 +265,7 @@ public class ProfileFragment extends Fragment {
                             String BookAbout = childDataSnapshot.child("bookAbout").getValue(String.class);
                             String Image = childDataSnapshot.child("image").getValue(String.class);
                             String Tradable = childDataSnapshot.child("tradable").getValue(String.class);
+                            String BookChange = childDataSnapshot.child("bookChange").getValue(String.class);
 
                             String UserID = childDataSnapshot.child("userID").getValue(String.class);
                             String BookID = childDataSnapshot.child("bookKey").getValue(String.class);
@@ -272,7 +273,7 @@ public class ProfileFragment extends Fragment {
                             String BookCity = childDataSnapshot.child("bookCity").getValue(String.class);
 
 
-                            BookList.add(new Books(BookName, BookAuthor, BookPublisher, BookYear, BookCondition, BookCategory, BookAbout, Image, Tradable, UserID, BookID, BookCity));
+                            BookList.add(new Books(BookName, BookAuthor, BookPublisher, BookYear, BookCondition, BookCategory, BookAbout, Image, Tradable, UserID, BookID, BookCity, BookChange));
 
                             booksAdapter = new BooksAdapter(Objects.requireNonNull(getContext()), BookList);
                             listAllFavBooks.setAdapter(booksAdapter);

@@ -37,7 +37,7 @@
         android:background="@android:color/white"
         android:orientation="horizontal"
         android:weightSum="10">
-
+<!--
         <ImageButton
             android:id="@+id/chat_add_btn"
             android:layout_width="wrap_content"
@@ -48,7 +48,7 @@
             android:padding="10dp"
             app:srcCompat="@drawable/ic_add_black_24dp1"
             android:contentDescription="TODO" />
-
+-->
         <EditText
             android:id="@+id/chat_message_view"
             android:layout_width="wrap_content"

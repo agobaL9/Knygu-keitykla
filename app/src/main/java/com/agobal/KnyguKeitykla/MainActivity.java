@@ -205,8 +205,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             case R.id.logOut:
                 logoutUser();
                 return true;
-            case R.id.crash_menu:
-                    //throw new NullPointerException("Fake null pointer exception");
             default:
                 return super.onOptionsItemSelected(item);
         }

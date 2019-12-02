@@ -6,16 +6,6 @@ tools:context="example.javatpoint.com.optionmenu.MainActivity">
 <item  android:id="@+id/logOut"
     android:title="Atsijungti"
     app:showAsAction="withText"/>
-    <item
-        android:id="@+id/fresh_config_menu"
-        android:title="fresh config"
-        app:showAsAction="never"/>
-    <item
-        android:id="@+id/invite_menu"
-        android:title="invite menu label"
-        app:showAsAction="never"/>
-    <item
-        android:id="@+id/crash_menu"
-        android:title="cause crash"/>
+
 
 </menu>
