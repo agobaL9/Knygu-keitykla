@@ -47,8 +47,6 @@ public class LoginActivity extends AppCompatActivity implements
     protected void onStart() {
         super.onStart();
 
-        Log.d(TAG, "onStart");
-
         auth.addAuthStateListener(mAuthListener);
     }
 
@@ -56,16 +54,12 @@ public class LoginActivity extends AppCompatActivity implements
     protected void onStop() {
         super.onStop();
         auth.removeAuthStateListener(mAuthListener);
-        Log.d(TAG, "on Stop");
-
     }
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Log.d(TAG, "on create");
 
         // remove title
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -255,12 +249,9 @@ public class LoginActivity extends AppCompatActivity implements
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        Log.d(TAG, "firebaseAuthWithGooogle:" + acct.getId());
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         auth.signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {
-                    Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
-
                     // If sign in fails, display a message to the user. If sign in succeeds
                     // the auth state listener will be notified and logic to handle the
                     // signed in user can be handled in the listener.
@@ -279,7 +270,6 @@ public class LoginActivity extends AppCompatActivity implements
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 // An unresolvable error has occurred and Google APIs (including Sign-In) will not
         // be available.
-        Log.d(TAG, "onConnectionFailed:" + connectionResult);
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
     }
 

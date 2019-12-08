@@ -25,7 +25,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.agobal.KnyguKeitykla.Fragments.BookFragment;
 import com.agobal.KnyguKeitykla.MainActivity;
 import com.agobal.KnyguKeitykla.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -137,8 +136,6 @@ public class BookEditAPI extends AppCompatActivity {
         String BookPublishYear= getIntent().getStringExtra("bookPublishYear");
         ImageURL= getIntent().getStringExtra("bookCover");
 
-        Log.d("metai ", " "+BookPublishYear);
-
         BookPublishYear = BookPublishYear.replaceAll("\\D+","");
 
         if(!BookPublishYear.equals(""))
@@ -177,7 +174,6 @@ public class BookEditAPI extends AppCompatActivity {
 
             filepath.putBytes(data).addOnSuccessListener(taskSnapshot -> filepath.getDownloadUrl().addOnSuccessListener(uri1 ->
                                     download_url = uri1.toString()));
-            Log.d(TAG, "pickImgFromSrcDwnldUrl "+download_url);
 
 
             return Observable.just(uri);
@@ -195,11 +191,9 @@ public class BookEditAPI extends AppCompatActivity {
         if (result instanceof Bitmap)
         {
             ivBookCover.setImageBitmap((Bitmap) result);
-            Log.d(TAG, "instance: taip");
         }
         else
         {
-            Log.d(TAG, "instace1 taip");
             Picasso.get().load(result.toString())
                     .rotate(90)
                     .fit()
@@ -208,7 +202,6 @@ public class BookEditAPI extends AppCompatActivity {
                     .into(ivBookCover);
 
             download_url = result.toString();
-            Log.d(TAG, "onImagePicker_dwnld_url "+download_url);
         }
     }
 
@@ -221,8 +214,6 @@ public class BookEditAPI extends AppCompatActivity {
         String BookCategory = spinCategory.getSelectedItem().toString();
         String BookPublisher = etPublisher.getText().toString().trim();
 
-        Log.d(TAG, "DOWNLOAD_URL " +download_url);
-        Log.d(TAG, "IMAGE_URL" +ImageURL);
 
         if(BookYear==0)
         {
@@ -293,7 +284,6 @@ public class BookEditAPI extends AppCompatActivity {
 
         mUserBookDatabase.child(current_uid).child(key).child("bookCity").setValue(BookCity);
 
-        Log.d(TAG, "bookKeyAPI "+ key);
 
         new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
                 .setTitleText("Pavyko!")
@@ -349,7 +339,6 @@ public class BookEditAPI extends AppCompatActivity {
         numberPicker.setOnValueChangedListener((numberPicker1, i, i1) -> Log.d("TAG", "onValueChange: "));
 
         d.setPositiveButton("Done", (dialogInterface, i) -> {
-            Log.d(TAG, "onClick: " + numberPicker.getValue());
             BookYear = numberPicker.getValue();
 
             btnYear.setText("Pasirinkti metai: "+BookYear);
@@ -372,7 +361,6 @@ public class BookEditAPI extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                     BookCity = dataSnapshot.child("cityName").getValue(String.class);
-                    Log.d(TAG, "cityName: "+ BookCity);
 
             }
 

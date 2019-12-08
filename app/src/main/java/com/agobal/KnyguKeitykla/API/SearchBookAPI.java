@@ -6,7 +6,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -109,7 +108,6 @@ public class SearchBookAPI extends AppCompatActivity {
                 try {
                     spinner.setVisibility(View.GONE);
 
-                    Log.d("response API", response + " ");
                     JSONArray docs;
                     if(response != null) {
                         empty_list_view.setVisibility(View.GONE);

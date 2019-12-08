@@ -1,10 +1,9 @@
 package com.agobal.KnyguKeitykla.AccountActivity;
 
 import android.app.ActionBar;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -100,7 +99,6 @@ public class ProfileEdit extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 String userCity = dataSnapshot.getValue(String.class);
-                Log.d(TAG, "miestas: "+ userCity);
 
                 FirebaseDatabase  database = FirebaseDatabase.getInstance();
                 DatabaseReference mDatabaseRef = database.getReference("City");
@@ -124,7 +122,6 @@ public class ProfileEdit extends AppCompatActivity {
                         areaSpinner.setAdapter(areasAdapter);
 
                         areaSpinner.setSelection(getIndex(areaSpinner, userCity));
-                        Log.d(TAG, "Miestas: "+ userCity);
 
                     }
 

@@ -7,7 +7,6 @@ import android.graphics.Matrix;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +51,6 @@ public class MyBookAdapter extends ArrayAdapter<MyBook> {
         MyBook currentBook = myBookList.get(position);
 
         ImageView image = listItem.findViewById(R.id.ivBookCover);
-        Log.d(TAG, "imageUrl " + currentBook.getBookImage());
         String imageURL = currentBook.getBookImage();
 
         if(imageURL.startsWith("https://firebasestorage"))
@@ -70,6 +68,7 @@ public class MyBookAdapter extends ArrayAdapter<MyBook> {
                     .into(image);
                     */
         }
+
         else
         {
             Glide.with(getContext())
@@ -101,9 +100,6 @@ public class MyBookAdapter extends ArrayAdapter<MyBook> {
         TextView city = listItem.findViewById(R.id.tvCity);
         city.setText(currentBook.getBookCity());
 
-
-
-        Log.d(TAG, "Tradable "+ currentBook.getBookTradable());
 
 /*
         if(currentBook.getBookTradable().equals("true"))

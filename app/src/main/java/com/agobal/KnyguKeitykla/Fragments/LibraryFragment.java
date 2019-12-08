@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,8 +66,6 @@ public class LibraryFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_library, container, false);
 
-        Log.d(TAG, "currentID " + current_uid);
-
         mUserBooksDatabase = FirebaseDatabase.getInstance().getReference().child("UserBooks");
 
         listView = v.findViewById(R.id.listMyBooks);
@@ -111,7 +108,6 @@ public class LibraryFragment extends Fragment {
                         userID = childDataSnapshot.getKey();
 
                         if (Objects.requireNonNull(userID).equals(current_uid)) { // ar yra dabartinis vartotojas userbooks šakoje
-                            Log.d(TAG, "yra šakoje? taip");
                             isUserHaveBooks = true;
                         }
                     }
@@ -131,7 +127,6 @@ public class LibraryFragment extends Fragment {
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d(TAG," Suveikė canceled");
             }
         }) ;
     }
@@ -143,7 +138,6 @@ public class LibraryFragment extends Fragment {
             intent.putExtra(MY_BOOK_DETAIL_KEY, myBookAdapter.getItem(position));
             intent.putExtra("BOOK_KEY", BookKeyToDetails);
             startActivity(intent);
-            Log.d(TAG, "NEW_INTENT VEIKIA");
         });
     }
 
@@ -163,13 +157,10 @@ public class LibraryFragment extends Fragment {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                            Log.d(TAG, "get key " + childDataSnapshot.getKey());//Gaunu visus knygų ID
 
                             String path = childDataSnapshot.getRef().toString();
-                            Log.d(TAG,"path:" +path);
 
                             BookKeyToDetails = String.valueOf(childDataSnapshot.child("bookKey"));
-                            Log.d(TAG,"book Key" + BookKeyToDetails);
 
                             String BookName = childDataSnapshot.child("bookName").getValue(String.class);
                             String BookAuthor = childDataSnapshot.child("bookAuthor").getValue(String.class);
@@ -201,7 +192,6 @@ public class LibraryFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d(TAG," Suveikė canceled2");
             }
         });
 

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -75,7 +74,6 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
         View v = inflater.inflate(R.layout.fragment_books, container, false);
         //SweetAlertDialog pDialog;
         ProgressBar spinner = v.findViewById(R.id.progressBar1);
-        Log.d(TAG, "started");
 
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -112,7 +110,6 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
                         userID = childDataSnapshot.getKey();
 
                         if (userID != null && userID.equals(current_uid)) { // ar yra dabartinis vartotojas userbooks šakoje
-                            Log.d(TAG, "ar yra šakoje? taip");
                             isUserHaveBooks = true;
                         }
                     }
@@ -128,7 +125,6 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d(TAG, " Suveikė canceled");
             }
         });
 
@@ -145,7 +141,6 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                    Log.d(TAG, "All userID " + childDataSnapshot.getKey()); //got all users ID
 
                     userID = childDataSnapshot.getKey();
 
@@ -157,12 +152,7 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
                             @SuppressLint("SetTextI18n")
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                //String BookName = dataSnapshot.child("bookName").getValue(String.class);
                                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                                    Log.d(TAG, "get key" + childDataSnapshot.getKey());   //Gaunu visus knygų ID
-
-                                    String path = childDataSnapshot.getRef().toString();
-                                    Log.d(TAG, "path "+path);
 
                                     tempKey = childDataSnapshot.getKey();
                                     BookKeyToDetails = childDataSnapshot.getKey();
@@ -212,7 +202,6 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d(TAG, " Suveikė canceled2");
             }
         });
 
@@ -327,7 +316,6 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
             intent.putExtra("BOOK_KEY", BookKeyToDetails);
             intent.putExtra("USER_KEY", UserKeyToDetails);
             startActivity(intent);
-            Log.d(TAG, "NEW_INTENT VEIKIA");
         });
     }
 /*
@@ -365,7 +353,6 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.action_search:
-                Log.d(TAG, "press yes");
                 //showFilter();
                 return true;
             default:
@@ -375,7 +362,6 @@ public class BookFragment extends Fragment implements AsyncTaskCompleteListener 
 
     @Override
     public void onTaskComplete() {
-        Log.d(TAG, "taskComplete TAIP");
         //pDialog.dismissWithAnimation();
 
     }

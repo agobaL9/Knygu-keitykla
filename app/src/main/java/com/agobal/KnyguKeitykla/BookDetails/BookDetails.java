@@ -60,11 +60,8 @@ public class BookDetails extends AppCompatActivity {
     private TextView tvBookCondition;
     private TextView tvBookCategory;
     private TextView tvBookAbout;
-    private TextView tvBookChange;
-    private TextView tvBookMoney;
+    TextView tvBookChange;
     private DatabaseReference mUserFavBookKey;
-    private String BookChange;
-    private String BookMoney;
 
     private DatabaseReference mUserFavBookButton;
     private DatabaseReference mDatabase;
@@ -78,6 +75,17 @@ public class BookDetails extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_details);
+
+        // Fetch views
+        ivBookCover = findViewById(R.id.ivBookCover);
+        tvTitle = findViewById(R.id.tvTitle);
+        tvAuthor = findViewById(R.id.tvAuthor);
+        tvPublisher = findViewById(R.id.tvPublisher);
+        tvBookYear= findViewById(R.id.tvBookYear);
+        tvBookCondition= findViewById(R.id.tvBookCondition);
+        tvBookCategory= findViewById(R.id.tvBookCategory);
+        tvBookAbout= findViewById(R.id.tvBookAbout);
+        tvBookChange = findViewById(R.id.tvBookChange);
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.action_bar);
@@ -101,22 +109,9 @@ public class BookDetails extends AppCompatActivity {
 
         mUserFavBookDelete = FirebaseDatabase.getInstance().getReference();
 
-        // Fetch views
-        ivBookCover = findViewById(R.id.ivBookCover);
-        tvTitle = findViewById(R.id.tvTitle);
-        tvAuthor = findViewById(R.id.tvAuthor);
-        tvPublisher = findViewById(R.id.tvPublisher);
-        tvBookYear= findViewById(R.id.tvBookYear);
-        tvBookCondition= findViewById(R.id.tvBookCondition);
-        tvBookCategory= findViewById(R.id.tvBookCategory);
-        tvBookAbout= findViewById(R.id.tvBookAbout);
-        tvBookChange = findViewById(R.id.tvBookChange);
 
         // Use the book to populate the data into our views
         Books Book = (Books) getIntent().getSerializableExtra(BookFragment.BOOK_DETAIL_KEY);
-
-        Log.d(TAG, "BookKey "+ BookKey);
-        Log.d(TAG, "UserKey "+ UserID);
 
         loadBook(Book);
         loadUserInfo();
@@ -204,17 +199,12 @@ public class BookDetails extends AppCompatActivity {
     }
 
     private void deleteBookFromFav() {
-        Log.d(TAG, "UserFabBooks "+ mUserFavBookKey);
         mUserFavBookDelete.child("UserFavBooks").child(current_uid).child(BookKey).setValue(null);
-        Log.d(TAG, "UserFabBooks1 "+ mUserFavBookKey);
         Toast.makeText(getApplicationContext(), "Knyga panaikinta!", Toast.LENGTH_LONG).show();
 
     }
 
     private void saveUserFavBook(Books Book) {
-
-        Log.d(TAG,"currentID "+ current_uid);
-        Log.d(TAG, "BookKey "+ BookKey);
 
         mUserFavBookKey = mDatabase.child("UserFavBooks").child(current_uid);
         mUserFavBooks = mDatabase.child("UserFavBooks").child(current_uid).child(BookKey);
@@ -244,10 +234,12 @@ public class BookDetails extends AppCompatActivity {
         spinner.setVisibility(View.VISIBLE);
 
 
+        String bookChange = Book.getBookChange();
+        Log.d(TAG, "Stringas "+ bookChange);
+
         title.setText(Book.getBookName());
 
         String imageURL = Book.getBookImage();
-        Log.d(TAG, "bookDetailImageURL "+ imageURL);
         if(imageURL.startsWith("https://firebasestorage"))
         {
             Picasso.get().load(Book.getBookImage())
@@ -285,7 +277,6 @@ public class BookDetails extends AppCompatActivity {
 
                                     }
                     });
-            Log.d(" else if", "yes");
         }
 
         // Populate data
@@ -296,7 +287,8 @@ public class BookDetails extends AppCompatActivity {
         tvBookYear.setText("Išleidimo metai: " + Book.getBookYear());
         tvBookCondition.setText("Būklė: " + Book.getBookCondition());
         tvBookCategory.setText("Kategorija: " + Book.getBookCategory());
-        tvBookChange.setText(Book.getBookChange());
+        Log.d(TAG, " "+ Book.getBookChange());
+        tvBookChange.setText(bookChange);
 
         UserID =Book.getUserID();
         BookKey = Book.getBookID();
@@ -314,7 +306,6 @@ public class BookDetails extends AppCompatActivity {
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         DatabaseReference mUserInfoInDetais = mDatabase.child("Users").child(UserID);
 
-        Log.d(TAG, "UserID "+ mUserInfoInDetais);
 
         mUserInfoInDetais.keepSynced(true);
 
@@ -330,9 +321,6 @@ public class BookDetails extends AppCompatActivity {
                 about = dataSnapshot.child("about").getValue(String.class);
                 //String thumb_image = dataSnapshot.child("thumb_image").getValue(String.class);
                 final String image = dataSnapshot.child("image").getValue(String.class);
-
-                Log.d(TAG,"user info "+userName +" " + email + " " +firstName+" "+ lastName+ " "+cityName);
-                Log.d(TAG,"Image "+ image);
 
                 Picasso.get().load(image);
 
@@ -357,7 +345,6 @@ public class BookDetails extends AppCompatActivity {
                 userData.setCityName(cityName);
                 userData.setEmail(email);
                 userData.setUserName(userName);
-                Log.d(TAG,"user info: " + userName +" " + email + " " +firstName+" "+ lastName+ " "+cityName);
 
                 T_firstAndLastName.setText(userData.firstName+" "+userData.lastName);
                 T_Desc.setText(userData.email);

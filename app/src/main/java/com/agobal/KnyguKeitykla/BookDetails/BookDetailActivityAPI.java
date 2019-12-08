@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -91,7 +90,6 @@ public class BookDetailActivityAPI extends AppCompatActivity {
         String BookPublisher = tvPublisher.getText().toString().trim();
         String BookPublishYear = tvPublishYear.getText().toString().trim();
 
-        Log.d(TAG,"aveAndEdit image " + imageURL);
 
         Intent intent = new Intent(BookDetailActivityAPI.this,BookEditAPI.class);
         intent.putExtra("bookName", BookName);
@@ -113,7 +111,6 @@ public class BookDetailActivityAPI extends AppCompatActivity {
         //Picasso.get().load(Uri.parse(bookAPI.getLargeCoverUrl())).into(imageURL);
         imageURL = bookAPI.getLargeCoverUrl();
 
-        Log.d(TAG,"image " + imageURL);
         tvTitle.setText(bookAPI.getTitle());
         tvAuthor.setText(bookAPI.getAuthor());
         // fetch extra bookAPI data from books API
@@ -135,7 +132,7 @@ public class BookDetailActivityAPI extends AppCompatActivity {
                     }
                     if(response.has("publish_date"))
                     {
-                        tvPublishYear.setText("Išleidimo metai: "+Integer.toString(response.getInt("publish_date")));
+                        tvPublishYear.setText("Išleidimo metai: "+ response.getInt("publish_date"));
                     }
                     else
                         tvPublishYear.setText("");

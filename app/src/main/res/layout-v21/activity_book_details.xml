@@ -162,6 +162,15 @@
                             android:textSize="16sp" />
 
                         <TextView
+                            android:id="@+id/tvBookChange"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="8dp"
+                            android:text="Domina keitimas"
+                            android:textSize="16sp" />
+
+                        <TextView
                             android:id="@+id/tvBookAbout"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -170,6 +179,8 @@
                             android:layout_marginTop="8dp"
                             android:text="Knygos aprašymas:"
                             android:textSize="16sp" />
+
+
 
                     </LinearLayout>
 

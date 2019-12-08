@@ -176,11 +176,9 @@ public class AddNewBook extends AppCompatActivity {
         if (result instanceof Bitmap)
         {
             ivPickedImage.setImageBitmap((Bitmap) result);
-            Log.d(TAG, "instance taip");
         }
         else
         {
-            Log.d(TAG, "instace1 taip");
             Picasso.get().load(result.toString())
                     .rotate(90)
                     //.fit()
@@ -335,7 +333,6 @@ public class AddNewBook extends AppCompatActivity {
         numberPicker.setOnValueChangedListener((numberPicker1, i, i1) -> Log.d("TAG", "onValueChange: "));
 
         d.setPositiveButton("Done", (dialogInterface, i) -> {
-            Log.d(TAG, "onClick: " + numberPicker.getValue());
             BookYear = numberPicker.getValue();
 
             btnYear.setText("Pasirinkti metai: "+BookYear);

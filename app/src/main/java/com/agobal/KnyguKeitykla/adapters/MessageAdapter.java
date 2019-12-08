@@ -3,7 +3,6 @@ package com.agobal.KnyguKeitykla.adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -100,7 +99,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
         if(message_type.equals("text")) {
 
-            Log.d("c.getmessageTEXT ", msg.getMessage() + " ");
             viewHolder.messageText.setText(msg.getMessage());
             viewHolder.messageImage.setVisibility(View.INVISIBLE);
 
@@ -111,7 +109,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             viewHolder.messageText.setVisibility(View.INVISIBLE);
             viewHolder.messageImage.setVisibility(View.VISIBLE);
 
-            Log.d("c.getmessageIMAGE ", imageURL + " ");
             Picasso.get().load(imageURL)
                     .error(R.drawable.error_circle)
                     .resize(800,1200)

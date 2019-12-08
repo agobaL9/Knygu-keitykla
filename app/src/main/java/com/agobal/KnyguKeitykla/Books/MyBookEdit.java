@@ -3,12 +3,12 @@ package com.agobal.KnyguKeitykla.Books;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -132,14 +132,6 @@ public class MyBookEdit extends AppCompatActivity {
 
         loadBook();
 
-        Log.d("name ", BookName+ " ");
-        Log.d("author ", BookAuthor+ " ");
-        Log.d("bookPublisher ", BookPublisher+ " ");
-        Log.d("bookPublishYear ", BookPublishYear+ " ");
-        Log.d("bookCondition ", BookCondition+ " ");
-        Log.d("bookCategory ", BookCategory+ " ");
-        Log.d("bookCover ", ImageURL+ " ");
-        Log.d("bookKey ", BookKey+ " ");
     }
 
     private void loadBook()
@@ -175,7 +167,6 @@ public class MyBookEdit extends AppCompatActivity {
 
         switch (BookCondition) {
             case "Būklė: Gera":
-                Log.d(TAG, "gera yes");
                 radioGroup.check(R.id.rbBookGood);
                 break;
             case "Būklė: Nauja":
@@ -203,7 +194,6 @@ public class MyBookEdit extends AppCompatActivity {
                     .error(R.drawable.ic_nocover)
                     .centerCrop()
                     .into(ivPickedImage);
-            Log.d(" else if", "yes");
         }
     }
 
@@ -412,7 +402,6 @@ public class MyBookEdit extends AppCompatActivity {
         numberPicker.setOnValueChangedListener((numberPicker1, i, i1) -> Log.d("TAG", "onValueChange: "));
 
         d.setPositiveButton("Done", (dialogInterface, i) -> {
-            Log.d("TAG1", "onClick: " + numberPicker.getValue());
             BookYear = numberPicker.getValue();
 
             btnYear.setText("Pasirinkti metai: "+BookYear);

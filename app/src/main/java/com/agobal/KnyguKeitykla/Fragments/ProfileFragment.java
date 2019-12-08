@@ -165,7 +165,6 @@ public class ProfileFragment extends Fragment {
 
                 }
 
-                Log.d(TAG,"user info: "+ userName +" " + email + " " +firstName+" "+ lastName+ " "+cityName);
 
                 UserData userData = new UserData();
 
@@ -199,7 +198,6 @@ public class ProfileFragment extends Fragment {
                         userID = childDataSnapshot.getKey();
 
                         if (userID != null && userID.equals(current_uid)) { // ar yra dabartinis vartotojas userbooks šakoje
-                            Log.d(TAG, "ar yra šakoje? taip");
                             isUserHaveFavBooks = true;
                         }
                     }
@@ -213,7 +211,6 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d(TAG, " Suveikė canceled");
             }
         });
 
@@ -233,7 +230,6 @@ public class ProfileFragment extends Fragment {
     }
 
     private void fetchFavBooks() {
-        Log.d(TAG, "favbooks yes");
         BookList = new ArrayList<>();
         mUserFavBooks = FirebaseDatabase.getInstance().getReference().child("UserFavBooks");
         mUserFavBooks.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -247,10 +243,6 @@ public class ProfileFragment extends Fragment {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                            Log.d(TAG, "get key " + childDataSnapshot.getKey());//Gaunu visus knygų ID
-
-                            String path = childDataSnapshot.getRef().toString();
-                            Log.d(TAG,"path:" +path);
 
                             BookKeyToDetails = childDataSnapshot.getKey();
 
@@ -291,7 +283,6 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d(TAG," Suveikė canceled2");
             }
         });
     }
@@ -337,10 +328,8 @@ public class ProfileFragment extends Fragment {
                             .setMaxHeight(200)
                             .setQuality(50)
                             .compressToBitmap(thumb_filePath);
-                    Log.d(TAG, "Compresor YES");
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Log.d(TAG, "Compresor: NO");
                 }
 
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -364,7 +353,6 @@ public class ProfileFragment extends Fragment {
 
                 thumb_filepath.putFile(resultUri).addOnSuccessListener(taskSnapshot -> thumb_filepath.getDownloadUrl().addOnSuccessListener(uri -> {
                     String thumb_download_url = uri.toString();
-                    Log.d(TAG, "thumb URL: "+thumb_download_url);
                     mUserDatabase.child("thumb_image").setValue(thumb_download_url);
                     spinner.setVisibility(View.GONE);
 
@@ -372,7 +360,6 @@ public class ProfileFragment extends Fragment {
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
 
-                Log.d(TAG, "resultCode == error");
             }
         }
     }
@@ -393,7 +380,6 @@ public class ProfileFragment extends Fragment {
             intent.putExtra("BOOK_KEY", BookKeyToDetails);
             intent.putExtra("USER_KEY", UserKeyToDetails);
             startActivity(intent);
-            Log.d(TAG, "NEW_INTENT VEIKIA");
         });
     }
 

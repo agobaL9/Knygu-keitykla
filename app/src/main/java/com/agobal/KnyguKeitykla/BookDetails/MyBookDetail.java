@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -100,6 +99,7 @@ public class MyBookDetail extends AppCompatActivity {
             intent.putExtra("bookCategory", BookCategory);
             intent.putExtra("bookCover", imageURL);
             intent.putExtra("bookKey", BookKey);
+            intent.putExtra("bookKey", BookChange);
             startActivity(intent);
         });
 
@@ -110,7 +110,6 @@ public class MyBookDetail extends AppCompatActivity {
                 .setCancelText("Ne")
                 .setConfirmClickListener(sDialog -> {
                     deleteMyBook(BookKey);
-                    Log.d(TAG," Delete Book key  "+ BookKey);
 
                     sDialog.dismissWithAnimation();
                     new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
@@ -206,7 +205,6 @@ public class MyBookDetail extends AppCompatActivity {
     private void deleteMyBook(String BookKey) {
 
         DatabaseReference mUserBookDelete = FirebaseDatabase.getInstance().getReference().child("UserBooks").child(current_uid).child(BookKey);
-        Log.d(TAG," Delete Book key n user  "+ BookKey +" "+ current_uid);
         mUserBookDelete.setValue(null);
     }
 

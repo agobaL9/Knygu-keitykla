@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -51,8 +50,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     public void onStart()
     {
         super.onStart();
-        Log.d(TAG, "on Start");
-
 
         mAuthListener = firebaseAuth -> {
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -73,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     @Override
     public void onStop() {
         super.onStop();
-        Log.d(TAG, "on Stop");
 
         mUserRef.child("online").setValue(ServerValue.TIMESTAMP);
 
@@ -87,14 +83,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         setContentView(R.layout.activity_main);
 
-        Log.d(TAG, "started");
-
         Trace myTrace = FirebasePerformance.getInstance().newTrace("test_trace");
         myTrace.start();
 
         FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        Log.d(TAG, "current user: " + mCurrentUser);
 
         auth = FirebaseAuth.getInstance();
 
@@ -181,12 +173,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         FirebaseUser currentUser = auth.getCurrentUser();
 
-        //Log.d("ar online?", currentUser + "");
-
         startActivity(new Intent(MainActivity.this, LoginActivity.class));
         finish();
         //sendToStart();
-        Log.d(TAG, " Atsijunge");
 
     }
 
@@ -214,7 +203,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
         // be available.
-        Log.d(TAG, "onConnectionFailed:" + connectionResult);
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
     }
 }
