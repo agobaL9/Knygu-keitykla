@@ -193,6 +193,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         switch (id){
             case R.id.logOut:
                 logoutUser();
+            case R.id.PrivatePolicy:
+                Intent intent = new Intent(MainActivity.this, PrivacyPolicyActivity.class);
+                startActivity(intent);
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
