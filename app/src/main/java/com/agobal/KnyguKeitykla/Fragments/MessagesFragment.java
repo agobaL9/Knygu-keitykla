@@ -1,9 +1,13 @@
 package com.agobal.KnyguKeitykla.Fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.design.internal.BottomNavigationItemView;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -237,6 +241,7 @@ public class MessagesFragment extends Fragment {
 
             if(!isSeen){
                 userStatusView.setTypeface(userStatusView.getTypeface(), Typeface.BOLD);
+               // showBadge();
             } else {
                 userStatusView.setTypeface(userStatusView.getTypeface(), Typeface.NORMAL);
             }
@@ -277,6 +282,23 @@ public class MessagesFragment extends Fragment {
                         }
                     });
 
+        }
+
+        public void showBadge(Context context, BottomNavigationView
+                bottomNavigationView, @IdRes int itemId, String value) {
+            BottomNavigationItemView itemView = bottomNavigationView.findViewById(itemId);
+            View badge = LayoutInflater.from(context).inflate(R.layout.notifcation_badge, bottomNavigationView, false);
+
+            TextView text = badge.findViewById(R.id.badge_text_view);
+            text.setText(value);
+            itemView.addView(badge);
+        }
+
+        public void removeBadge(BottomNavigationView bottomNavigationView, @IdRes int itemId) {
+            BottomNavigationItemView itemView = bottomNavigationView.findViewById(itemId);
+            if (itemView.getChildCount() == 4) {
+                itemView.removeViewAt(4);
+            }
         }
 
         void setUserOnline(String online_status) {

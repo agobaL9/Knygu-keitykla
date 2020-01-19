@@ -1,0 +1,18 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/badge_frame_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginStart="10dp"
+    android:layout_marginTop="11dp">
+
+    <TextView
+        android:id="@+id/badge_text_view"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="top"
+        android:background="@drawable/badge_circle"
+        android:padding="2dp"
+        android:textColor="@android:color/white"
+        android:textSize="11sp"/> </RelativeLayout>

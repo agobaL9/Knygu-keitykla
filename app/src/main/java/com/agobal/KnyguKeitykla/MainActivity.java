@@ -176,8 +176,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         startActivity(new Intent(MainActivity.this, LoginActivity.class));
         finish();
         //sendToStart();
-
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
